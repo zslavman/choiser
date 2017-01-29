@@ -96,7 +96,7 @@ package
 			nextFrame();
 			view = new Scene(stage, model_data);
 			view.x = 130;
-			view.y = 90;
+			view.y = 0;
 			addChild(view);
 		}
 	}

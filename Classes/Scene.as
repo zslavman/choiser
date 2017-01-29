@@ -30,13 +30,12 @@ package
 		private var clicker:Sound = new _clicker();
 		private var wheel_sound:Sound = new _wheel_sound();
 		private var wheel_sound_double:Sound = new _wheel_sound_double();
+		private var key_click:Sound = new _key_click();
 		
 		private var rot_duration:Number = 3000; // мс, устанавливать не менее 2000 
 		private var Timer_DurationRot:Timer = new Timer(250);
 		private var Timer_Listing:Timer = new Timer(80);
 		
-		
-	
 		
 		
 		
@@ -45,19 +44,67 @@ package
 			
 			data = model_data;
 		
-			button1.addEventListener(MouseEvent.MOUSE_DOWN, button1_MOUSE_DOWN);
+			pusk_block.button1.addEventListener(MouseEvent.MOUSE_DOWN, button1_MOUSE_DOWN);
+			button_config.addEventListener(MouseEvent.MOUSE_DOWN, button_config_MOUSE_DOWN);
+			
 			Timer_DurationRot.addEventListener(TimerEvent.TIMER, func_Timer_DurationRot);
 			Timer_Listing.addEventListener(TimerEvent.TIMER, func_Timer_Listing);
-			lineStart_y = left_type.y;
 			
+			lineStart_y = left_type.y;
 			left_type.w1.text = Phrazes_arr[2]; // Сделать
 			right_type.w1.text = Phrazes_arr[3]; // что-то :)
 			right_type.w2.text = Verb_arr[1]; // что-то :)
 			
-			statusbar.text = Phrazes_arr[0];
+			pusk_block.statusbar.text = Phrazes_arr[0];
+			changeTurn();
+			pusk_block.button1.buttonMode = true;
+			button_config.buttonMode = true;
+		}
+		
+		
+		
+		
+		
+		
+		/*********************************************
+		 *                Кнопка "Config"            *
+		 *                                           *
+		 */ //****************************************
+		private function button_config_MOUSE_DOWN(event:MouseEvent):void{ 
+
+			trace('нажали Конфиг');
+			key_click.play();
 		}
 		
 	
+		
+		
+		
+		
+		private function changeTurn():void {
+			
+			var digit0:uint;
+			var digit1:uint;
+			
+			if (Player_flag) {
+				digit0 = 0;
+				digit1 = 1;
+			}
+			else {
+				digit0 = 1;
+				digit1 = 0;
+			}
+
+			turn.text = Phrazes_arr[7] + Players_names[digit1]; // Ходит Игрок1
+			who.text = Players_names[digit0] + Phrazes_arr[6]; //Игроку2 нужно:
+			whom.text = Players_names[digit1]; // Игроку1;
+			pusk_block.tip.text = '(' + Players_names[digit0] + ')';
+			
+			Player_flag = !Player_flag; // инверсия флага хода игрока
+		}
+		
+		
+		
 	
 		
 		/*********************************************
@@ -110,8 +157,15 @@ package
 		public function button1_MOUSE_DOWN(event:MouseEvent):void {
 			
 			if (!spinning_flag) {
+				
+				key_click.play();
 				spinning_flag = true;
-				statusbar.text = Phrazes_arr[1];
+				
+				pusk_block.alpha = 0.4;
+				pusk_block.button1.buttonMode = false;
+				
+				Games_count++;
+				if (Games_count != 1) changeTurn();
 				
 				// запуск случайной сортировки массива:
 				SortMe();
@@ -134,7 +188,7 @@ package
 		
 			Timer_DurationRot.reset();
 			spinning_flag = false;
-			statusbar.text = Phrazes_arr[0];
+			//statusbar.text = Phrazes_arr[0];
 			
 			tween_duration = 0.1;
 			Timer_Listing.delay = 80;
@@ -185,6 +239,9 @@ package
 			else { // если остановлено
 				// выпавшее слово всегда будет находиться во 2-й текст. ячейке,
 				// т.к. остановка происходит лишь после доезда до финиша
+				turn.text = '';
+				pusk_block.alpha = 1;
+				pusk_block.button1.buttonMode = true;
 			}
 		}
 		
@@ -279,7 +336,25 @@ package
 		public function get anim_flag():String {
 			return data.anim_flag;
 		}
+		
+		public function get Players_names():* {
+			return data.players_names;
+		}
 
 		
+		public function get Player_flag():Boolean {
+			return data.player_flag;
+		}
+		public function set Player_flag(value:Boolean):void {
+			data.player_flag = value;
+		}
+		
+		
+		public function get Games_count():uint {
+			return data.games_count;
+		}
+		public function set Games_count(value:uint):void {
+			data.games_count = value;
+		}
 	}
 }
