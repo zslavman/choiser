@@ -20,7 +20,8 @@ package
 	
 		private var data:Model;
 		
-		private var roleTween:Tween;
+		private var roleTween1:Tween;
+		private var roleTween2:Tween;
 		private var lineStart_y;
 		
 		private var tween_duration:Number = 0.1;
@@ -30,7 +31,7 @@ package
 		private var wheel_sound:Sound = new _wheel_sound();
 		private var wheel_sound_double:Sound = new _wheel_sound_double();
 		
-		private var rot_duration:Number = 3000; // мс
+		private var rot_duration:Number = 3000; // мс, устанавливать не менее 2000 
 		private var Timer_DurationRot:Timer = new Timer(250);
 		private var Timer_Listing:Timer = new Timer(80);
 		
@@ -47,14 +48,11 @@ package
 			button1.addEventListener(MouseEvent.MOUSE_DOWN, button1_MOUSE_DOWN);
 			Timer_DurationRot.addEventListener(TimerEvent.TIMER, func_Timer_DurationRot);
 			Timer_Listing.addEventListener(TimerEvent.TIMER, func_Timer_Listing);
-			lineStart_y = line_short1.y;
+			lineStart_y = left_type.y;
 			
-			line_short1.w1.text = Phrazes_arr[2]; // Сделать
-			//line_short1.w2.text = Words_arr[2];
-			
-			line_short2.w1.text = Phrazes_arr[3]; // что-то :)
-			//line_short2.w2.text = Words_arr[2];
-			
+			left_type.w1.text = Phrazes_arr[2]; // Сделать
+			right_type.w1.text = Phrazes_arr[3]; // что-то :)
+			right_type.w2.text = Verb_arr[1]; // что-то :)
 			
 			statusbar.text = Phrazes_arr[0];
 		}
@@ -91,8 +89,11 @@ package
 				circles++;
 				wheel_sound.play();
 				if (circles == Words_arr.length) circles = 1;
-				line_short1.w1.text = Words_arr[circles];
-				line_short1.w2.text = Words_arr[circles];
+				left_type.w1.text = Words_arr[circles];
+				left_type.w2.text = Words_arr[circles];
+				
+				right_type.w1.text = Verb_arr[circles];
+				right_type.w2.text = Verb_arr[circles];
 			}
 		}
 		
@@ -116,8 +117,8 @@ package
 				SortMe();
 				
 				Timer_DurationRot.start();
-				if (!rotation_flag) startMoove(); // запуск твина вращения слов
-				else Timer_Listing.start(); // запуск перебора слов (слова будут просто перечисляться по таймеру)
+				if (anim_flag == 'rotate' || anim_flag == 'half') startMoove(); // запуск твина вращения слов
+				else if (anim_flag == 'list') Timer_Listing.start(); // запуск перебора слов (слова будут просто перечисляться по таймеру)
 			}
 		}
 		
@@ -147,8 +148,11 @@ package
 		 */ //****************************************
 		public function startMoove():void {
 		
-			roleTween = new Tween (line_short1, 'y', None.easeInOut, lineStart_y, lineStart_y + 47, tween_duration, true);
-			roleTween.addEventListener(TweenEvent.MOTION_FINISH, Loop);
+			if (anim_flag != 'half') {
+				roleTween1 = new Tween (left_type, 'y', None.easeInOut, lineStart_y, lineStart_y + 47, tween_duration, true);
+			}
+			roleTween2 = new Tween (right_type, 'y', None.easeInOut, lineStart_y, lineStart_y + 47, tween_duration, true);
+			roleTween2.addEventListener(TweenEvent.MOTION_FINISH, Loop);
 		}
 		
 		
@@ -158,7 +162,7 @@ package
 		 */ //****************************************
 		public function Loop(event:TweenEvent):void {
 			
-			roleTween.removeEventListener(TweenEvent.MOTION_FINISH, Loop);
+			roleTween2.removeEventListener(TweenEvent.MOTION_FINISH, Loop);
 			
 			//wheel_sound_double.play();
 			wheel_sound.play();
@@ -167,12 +171,14 @@ package
 				circles++;
 	
 				// запись в первое поле
-				line_short1.w1.text = Words_arr[circles];
+				left_type.w1.text = Words_arr[circles];
+				right_type.w1.text = Verb_arr[circles];
 				
 				if (circles == Words_arr.length - 1) circles = 0;
 
 				// запись во второе поле
-				line_short1.w2.text = Words_arr[circles + 1];
+				left_type.w2.text = Words_arr[circles + 1];
+				right_type.w2.text = Verb_arr[circles + 1];
 				
 				startMoove();
 			}
@@ -193,12 +199,14 @@ package
 		 */ //****************************************
 		private function SortMe():void { 
 			
-			trace (line_short1.w2.text);
-			
 			Words_arr.sort(randomSortFunc);
+			Verb_arr.sort(randomSortFunc);
 			// перемещение элемента 'not used' на 0-е место:
-			Words_arr = replaceNotUsed(data.words_arr);
+			Words_arr = replaceNotUsed(Words_arr);
+			Verb_arr = replaceNotUsed(Verb_arr);
+			
 			trace (Words_arr);
+			trace (Verb_arr);
 		}
 		 
 		 private function randomSortFunc(a, b):Number {
@@ -211,7 +219,7 @@ package
 		private function replaceNotUsed(array:Array):Array{ 
 
 			for (var i:int = 0; i < array.length; i++){ 
-				if (array[i] == 'not used') {
+				if (array[i] == 'not_used') {
 					
 					// перемещение метод 1:
 					//array.splice(i, 1); // удаляем найденный элемент массива
@@ -220,7 +228,7 @@ package
 					// перемещение метод 2:
 					var temp:String = array[0];
 					array[i] = temp;
-					array[0] = 'not used';
+					array[0] = 'not_used';
 				}
 			}
 			return array;
@@ -244,6 +252,14 @@ package
 		}
 		
 		
+		public function get Verb_arr():* {
+			return data.verb_arr;
+		}
+		public function set Verb_arr(value:*):void {
+			data.verb_arr = value;
+		}
+		
+		
 		public function get Phrazes_arr():* {
 			return data.phrazes_arr;
 		}
@@ -260,12 +276,10 @@ package
 		}
 		
 		
-		public function get rotation_flag():Boolean {
-			return data.rotation_flag;
+		public function get anim_flag():String {
+			return data.anim_flag;
 		}
-		public function set rotation_flag(value:Boolean):void {
-			data.rotation_flag = value;
-		}
+
 		
 	}
 }
