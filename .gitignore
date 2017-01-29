@@ -12,7 +12,7 @@ bin-release/
 
 # Executables
 *.swf
-*.fla
+
 *.as3proj
 *.air
 *.ipa
