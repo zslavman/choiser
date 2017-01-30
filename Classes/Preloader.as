@@ -93,14 +93,16 @@ package
 			// удаление желтой рамочки с элементов для листания элементов с клавиатуры
 			stage.stageFocusRect = false;
 
-			nextFrame();
+			gotoAndStop(3);
 			view = new Scene(stage, model_data);
-			view.x = 130;
+			view.x = 0;
 			view.y = 0;
 			addChild(view);
 		}
 	}
 }
+
+// TODO: для корректного отображения лоадингбара, нужно попробовать добавить в 3-й кадр (в котором флешка никогда не будет) все визуальные классы
 
 
 

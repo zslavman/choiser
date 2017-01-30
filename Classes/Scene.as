@@ -19,9 +19,12 @@ package
 	public class Scene extends Sprite {
 	
 		private var data:Model;
+		private var config_bar:Config_bar;
+		private var mask_config:Mask;
 		
 		private var roleTween1:Tween;
 		private var roleTween2:Tween;
+		private var open_config:Tween;
 		private var lineStart_y;
 		
 		private var tween_duration:Number = 0.1;
@@ -45,7 +48,7 @@ package
 			data = model_data;
 		
 			pusk_block.button1.addEventListener(MouseEvent.MOUSE_DOWN, button1_MOUSE_DOWN);
-			button_config.addEventListener(MouseEvent.MOUSE_DOWN, button_config_MOUSE_DOWN);
+			config_bar_on.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_on_MOUSE_DOWN);
 			
 			Timer_DurationRot.addEventListener(TimerEvent.TIMER, func_Timer_DurationRot);
 			Timer_Listing.addEventListener(TimerEvent.TIMER, func_Timer_Listing);
@@ -58,7 +61,7 @@ package
 			pusk_block.statusbar.text = Phrazes_arr[0];
 			changeTurn();
 			pusk_block.button1.buttonMode = true;
-			button_config.buttonMode = true;
+			config_bar_on.buttonMode = true;
 		}
 		
 		
@@ -70,10 +73,27 @@ package
 		 *                Кнопка "Config"            *
 		 *                                           *
 		 */ //****************************************
-		private function button_config_MOUSE_DOWN(event:MouseEvent):void{ 
+		private function config_bar_on_MOUSE_DOWN(event:MouseEvent):void{ 
 
 			trace('нажали Конфиг');
 			key_click.play();
+			
+			if (config_bar == null) {
+				
+				config_bar = new Config_bar();
+				//config_bar.x = config_bar.y = 0;
+				addChild(config_bar);
+				
+				// добаление маски
+				mask_config = new Mask();
+				addChild(mask_config);
+				config_bar.mask = mask_config;
+			}
+			if (config_bar.x == 0) {
+				
+				open_config = new Tween (config_bar, 'x', Strong.easeOut, 0, 640, 1, true);
+			}
+			
 		}
 		
 	
@@ -94,10 +114,17 @@ package
 				digit0 = 1;
 				digit1 = 0;
 			}
+			var names_padej = []; // массив имен в дательном падеже
+			// создание массива имен в дательном падеже
+			for (var i:int = 0; i < Players_names.length; i++){ 
+			
+				names_padej[i] = Players_names[i].slice(0, Players_names[i].length - 1) + 'е';
+			}
+			
 
 			turn.text = Phrazes_arr[7] + Players_names[digit1]; // Ходит Игрок1
-			who.text = Players_names[digit0] + Phrazes_arr[6]; //Игроку2 нужно:
-			whom.text = Players_names[digit1]; // Игроку1;
+			who.text = names_padej[digit0] + Phrazes_arr[6]; //Игроку2 нужно:
+			whom.text = names_padej[digit1]; // Игроку1;
 			pusk_block.tip.text = '(' + Players_names[digit0] + ')';
 			
 			Player_flag = !Player_flag; // инверсия флага хода игрока
