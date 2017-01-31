@@ -25,6 +25,7 @@ package
 		private var roleTween1:Tween;
 		private var roleTween2:Tween;
 		private var open_config:Tween;
+		private var close_config:Tween;
 		private var lineStart_y;
 		
 		private var tween_duration:Number = 0.1;
@@ -71,36 +72,84 @@ package
 		
 		/*********************************************
 		 *                Кнопка "Config"            *
-		 *                                           *
+		 *                 (вызов меню)              *
 		 */ //****************************************
 		private function config_bar_on_MOUSE_DOWN(event:MouseEvent):void{ 
 
-			trace('нажали Конфиг');
 			key_click.play();
 			
 			if (config_bar == null) {
 				
-				config_bar = new Config_bar();
-				//config_bar.x = config_bar.y = 0;
+				config_bar = new Config_bar(data);
 				addChild(config_bar);
 				
 				// добаление маски
 				mask_config = new Mask();
 				addChild(mask_config);
 				config_bar.mask = mask_config;
-			}
-			if (config_bar.x == 0) {
 				
+				config_bar.config_bar_off.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_off_MOUSE_DOWN);
+			}
+			
+			if (config_bar.x == 0) {
 				open_config = new Tween (config_bar, 'x', Strong.easeOut, 0, 640, 1, true);
 			}
 			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/*********************************************
+		 *                Кнопка "Config"            *
+		 *                (убирание меню)            *
+		 */ //****************************************
+		private function config_bar_off_MOUSE_DOWN(event:MouseEvent):void{ 
+			
+			key_click.play();
+			close_config = new Tween (config_bar, 'x', Strong.easeOut, 640, 0, 1, true);
+			close_config.addEventListener(TweenEvent.MOTION_FINISH, Kill_config);
 		}
 		
 	
 		
 		
 		
+		/*********************************************
+		 *         Удаления класса Config            *
+		 *                                           *
+		 */ //****************************************
+		public function Kill_config(event:TweenEvent):void {
+			
+			config_bar.config_bar_off.removeEventListener(MouseEvent.MOUSE_DOWN, config_bar_off_MOUSE_DOWN);
+			removeChild(mask_config);
+			mask_config = null;
+			removeChild(config_bar);
+			config_bar = null;
+		}
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/*********************************************
+		 *           Ф-ция меняющая фразы при        *
+		 *               смене хода игроков          *
+		 */ //****************************************
 		private function changeTurn():void {
 			
 			var digit0:uint;
@@ -183,7 +232,7 @@ package
 		 */ //****************************************
 		public function button1_MOUSE_DOWN(event:MouseEvent):void {
 			
-			if (!spinning_flag) {
+			if (!spinning_flag && roleTween2 == null) {
 				
 				key_click.play();
 				spinning_flag = true;
@@ -215,10 +264,12 @@ package
 		
 			Timer_DurationRot.reset();
 			spinning_flag = false;
-			//statusbar.text = Phrazes_arr[0];
 			
 			tween_duration = 0.1;
+			Timer_Listing.reset();
 			Timer_Listing.delay = 80;
+			
+			if (anim_flag == 'list') lastStep();
 			//stopMoove(); // твин доходит до цикла след. запуска и останавливается
 		}
 		
@@ -244,8 +295,7 @@ package
 		public function Loop(event:TweenEvent):void {
 			
 			roleTween2.removeEventListener(TweenEvent.MOTION_FINISH, Loop);
-			
-			//wheel_sound_double.play();
+
 			wheel_sound.play();
 			
 			if (spinning_flag) {
@@ -266,9 +316,7 @@ package
 			else { // если остановлено
 				// выпавшее слово всегда будет находиться во 2-й текст. ячейке,
 				// т.к. остановка происходит лишь после доезда до финиша
-				turn.text = '';
-				pusk_block.alpha = 1;
-				pusk_block.button1.buttonMode = true;
+				lastStep();
 			}
 		}
 		
@@ -318,6 +366,20 @@ package
 			return array;
 		}
 		
+		
+		
+		
+		
+		
+		
+		// последний рывок до остановки колес
+		private function lastStep():void {
+
+			turn.text = '';
+			pusk_block.alpha = 1;
+			pusk_block.button1.buttonMode = true;
+			roleTween2 = null;
+		}
 		
 		
 		

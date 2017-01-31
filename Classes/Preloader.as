@@ -25,10 +25,11 @@ package
 		
 		private var view:Scene;
 		private var model_data:Model;
+		private var loading_bar:Loading_bar;
 		
 		private var bLoaded: uint = loaderInfo.bytesLoaded;
 		private var bTotal: uint = loaderInfo.bytesTotal;
-		private var Timer_Test:Timer = new Timer(50, 7); //50 
+		private var Timer_Test:Timer = new Timer(10, 50); //50 
 		private var my_menu:ContextMenu;
 		
 		
@@ -48,6 +49,11 @@ package
 			
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			loaderInfo.addEventListener(IOErrorEvent.IO_ERROR, ioError);
+			
+			loading_bar = new Loading_bar();
+			//loading_bar.loading_mask.scaleY = 0;
+			loading_bar.loading_mask.scaleX = 0;
+			addChild(loading_bar);
 			
 			Timer_Test.addEventListener(TimerEvent.TIMER, checkLoading);
 			Timer_Test.start();
@@ -75,9 +81,19 @@ package
 		
 		 private function checkLoading(event: TimerEvent):void {
 			
+			// формула с задержкой, что бы полюбоваться индикатором загрузки 
 			var drop: int = 100 * (Timer_Test.currentCount * bLoaded) / (Timer_Test.repeatCount * bTotal);
+			
+			// формула без задержки
+			//var drop: int = 100 * (bLoaded / bTotal);
+			
+			// масштабирование индикатора загрузки
+			//loading_bar.loading_mask.scaleY = drop / 100;
+			loading_bar.loading_mask.scaleX = drop / 100;
+			
 			if (drop >= 100) loadingFinished();
 		}
+		
 		
 		
 		/*********************************************
@@ -89,6 +105,8 @@ package
 			
 			loaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, ioError);
 			Timer_Test.reset();
+			removeChild(loading_bar);
+			loading_bar = null;
 			
 			// удаление желтой рамочки с элементов для листания элементов с клавиатуры
 			stage.stageFocusRect = false;

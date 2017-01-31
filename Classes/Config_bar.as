@@ -17,31 +17,89 @@ package
 	public class Config_bar extends Sprite {
 	
 		
+		private var data:Model;
+		
+		
 		private var key_click:Sound = new _key_click();
-		private var close_config:Tween;
+		private var mode_count:uint; // номер элемента массива, настройки которого сейчас включены
 		
-		
-		
-		
-		
-		public function Config_bar(){ 
 
-			config_bar_off.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_off_MOUSE_DOWN);
+		
+		
+		
+		
+		
+		public function Config_bar(_data){ 
+
+			data = _data;	
 			
+			button_change_mode.addEventListener(MouseEvent.MOUSE_DOWN, mode_MOUSE_DOWN);
+			mode.text = Anim_flag;
+			
+			// определение числа mode_count
+			for (var i:int = 0; i < Animation_kind.length; i++){ 
+				if (Animation_kind[i] == Anim_flag) {
+					mode_count = i;
+				}
+			}
+			trace ("mode_count = " + mode_count); 
+
 		}
 		
 		
-		//roleTween2.addEventListener(TweenEvent.MOTION_FINISH, Loop);
 		
 		
-		
-		
-		
-		
-		private function config_bar_off_MOUSE_DOWN(e:MouseEvent):void{ 
-		
-			key_click.play();
-			close_config = new Tween (this, 'x', Strong.easeOut, 640, 0, 1, true);
+		/*********************************************
+		 *         Кнопка "Режимы вращения"          *
+		 *                                           *
+		 */ //****************************************
+		private function mode_MOUSE_DOWN(event:MouseEvent):void{ 
+			
+			if (!Spinning_flag){
+				key_click.play();
+				mode_count++;
+				if (mode_count == Animation_kind.length) mode_count = 0;
+				Anim_flag = Animation_kind[mode_count];
+				mode.text = Anim_flag;
+			}
 		}
+		
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		public function get Animation_kind():* {
+			return data.animation_kind;
+		}
+		//public function set Animation_kind(value:uint):void {
+			//data.animation_kind = value;
+		//}
+		
+		
+		public function get Anim_flag():String {
+			return data.anim_flag;
+		}
+		public function set Anim_flag(value:String):void {
+			data.anim_flag = value;
+		}
+		
+		
+		public function get Spinning_flag():Boolean {
+			return data.spinning_flag;
+		}
+
 	}
 }
