@@ -112,7 +112,7 @@ package
 			stage.stageFocusRect = false;
 
 			gotoAndStop(3);
-			view = new Scene(stage, model_data);
+			view = new Scene(model_data);
 			view.x = 0;
 			view.y = 0;
 			addChild(view);

@@ -1,5 +1,6 @@
 package 
 {
+	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
@@ -44,9 +45,9 @@ package
 		
 		
 		
-		public function Scene(stage2, model_data) { 
+		public function Scene(_model_data:Model) { 
 			
-			data = model_data;
+			data = _model_data;
 		
 			pusk_block.button1.addEventListener(MouseEvent.MOUSE_DOWN, button1_MOUSE_DOWN);
 			config_bar_on.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_on_MOUSE_DOWN);

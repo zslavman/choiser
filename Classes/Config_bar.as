@@ -2,6 +2,8 @@ package
 {
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.events.TextEvent;
+	import flash.events.Event;
 	import flash.media.Sound;
 	import fl.transitions.Tween;
 	import fl.transitions.TweenEvent;
@@ -29,11 +31,13 @@ package
 		
 		
 		
-		public function Config_bar(_data){ 
+		public function Config_bar(_data:Model){ 
 
 			data = _data;	
 			
 			button_change_mode.addEventListener(MouseEvent.MOUSE_DOWN, mode_MOUSE_DOWN);
+			name1.addEventListener(Event.CHANGE, textInputCapture);
+			
 			mode.text = Anim_flag;
 			
 			// определение числа mode_count
@@ -42,8 +46,19 @@ package
 					mode_count = i;
 				}
 			}
-			trace ("mode_count = " + mode_count); 
+			
+			name1.text = Players_names[0];
+			name2.text = Players_names[1];
+			
+ 
 
+		}
+		
+		private function textInputCapture(event:Event):void{ 
+			
+			Players_names[0] = name1.text;
+			trace ("str = " + Players_names[0]);
+			name2.text = name1.text;
 		}
 		
 		
@@ -99,6 +114,14 @@ package
 		
 		public function get Spinning_flag():Boolean {
 			return data.spinning_flag;
+		}
+		
+		
+		public function get Players_names():* {
+			return data.players_names;
+		}
+		public function set Players_names(value:*):void {
+			data.players_names = value;
 		}
 
 	}
