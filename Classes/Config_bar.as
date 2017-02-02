@@ -48,11 +48,11 @@ package
 			about_button.addEventListener(MouseEvent.MOUSE_DOWN, about_button_MOUSE_DOWN);
 			about_button.buttonMode = true;
 			
-			about_scr.addEventListener(MouseEvent.MOUSE_DOWN, about_scr_MOUSE_DOWN);
+			about_scr.addEventListener(MouseEvent.CLICK, about_scr_CLICK);
 			
 			about_scr.visible = false;
 			about_scr.buttonMode = true;
-			about_scr.mouseChildren = false;
+			about_scr.container.mouseChildren = false;
 			
 			name1.addEventListener(Event.CHANGE, textInputCapture);
 			name2.addEventListener(Event.CHANGE, textInputCapture);
@@ -96,11 +96,11 @@ package
 			name1.text = Players_names[0];
 			name2.text = Players_names[1];
 			
-			about_scr.ver.text = Phrazes_arr[10];
-			about_scr.about_pro.text = Phrazes_arr[11]; 
-			about_scr.ksiu.text = Phrazes_arr[12];
-			//about_scr.author.htmlText = Phrazes_arr[13];
+			about_scr.container.ver.text = Phrazes_arr[10];
+			about_scr.container.about_pro.text = Phrazes_arr[11]; 
+			about_scr.container.ksiu.text = Phrazes_arr[12];
 			about_scr.author.text = Phrazes_arr[13];
+			//about_scr.container.author.htmlText = Phrazes_arr[13];
 		}
 		
 		
@@ -173,10 +173,9 @@ package
 		 *              Экран "About"                *
 		 *                                           *
 		 */ //****************************************
-		private function about_scr_MOUSE_DOWN(event:MouseEvent):void {
+		private function about_scr_CLICK(event:MouseEvent):void {
 			
-			//about_scr.visible = false;
-			//TODO: разобраться почему не работает переход на мыло
+			about_scr.visible = false;
 		}
 		
 		
@@ -194,7 +193,6 @@ package
 				var myRequest:URLRequest = new URLRequest(Phrazes_arr[14]);
 				navigateToURL(myRequest);
 			}
-			trace ('клик по ссылке');
 		}
 		
 		
@@ -215,7 +213,10 @@ package
 		
 		
 		
-		
+		/*********************************************
+		 *              GETTERS/SETTERS              *
+		 *                                           *
+		 */ //****************************************
 		public function get Phrazes_arr():* {
 			return data.phrazes_arr;
 		}

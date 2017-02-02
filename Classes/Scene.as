@@ -21,7 +21,7 @@ package
 	
 		private var data:Model;
 		public var config_bar:Config_bar;
-		private var mask_config:Mask;
+		private var mask_config:Sprite;
 		
 		private var roleTween1:Tween;
 		private var roleTween2:Tween;
@@ -40,6 +40,8 @@ package
 		private var rot_duration:Number = 3000; // мс, устанавливать не менее 2000 
 		private var Timer_DurationRot:Timer = new Timer(250);
 		private var Timer_Listing:Timer = new Timer(80);
+		
+		private var phraza_temp:String;
 		
 		
 		
@@ -84,11 +86,14 @@ package
 				config_bar = new Config_bar(data);
 				addChild(config_bar);
 				
-				// добаление маски
-				mask_config = new Mask();
+				// создание маски для экрана настроек
+				mask_config = new Sprite();
+				mask_config.graphics.beginFill(0x000000, 1);
+				mask_config.graphics.drawRect(0, 0, 640, 560);
+				mask_config.graphics.endFill();
 				addChild(mask_config);
 				config_bar.mask = mask_config;
-				
+
 				if (config_bar.x == 0) {
 					open_config = new Tween (config_bar, 'x', Strong.easeOut, 0, 640, 1, true);
 					open_config.addEventListener(TweenEvent.MOTION_FINISH, after_MOTION_FINISH);
@@ -180,9 +185,9 @@ package
 				digit1 = 0;
 			}
 			var names_padej = []; // массив имен в дательном падеже
+			
 			// создание массива имен в дательном падеже
 			for (var i:int = 0; i < Players_names.length; i++){ 
-			
 				names_padej[i] = Players_names[i].slice(0, Players_names[i].length - 1) + 'е';
 			}
 			
@@ -191,7 +196,12 @@ package
 			whom.text = names_padej[digit1]; // Игроку1;
 			pusk_block.tip.text = '(' + Players_names[digit0] + ')';
 			
-			// выполнять след. строку при любой команде кроме  'dont_turn'
+			// формирование фразы для архива
+			phraza_temp = Players_names[digit0] + ' ' + left_type.w2.text + ' ' + right_type.w2.text + ' ' + whom.text;
+			
+			//TODO: не правильно сохраняет результат 
+
+			// выполнять след. строку при любой команде кроме 'dont_turn'
 			if (comand != 'dont_turn') Player_flag = !Player_flag; // инверсия флага хода игрока
 		}
 		
@@ -353,8 +363,8 @@ package
 			Words_arr = replaceNotUsed(Words_arr);
 			Verb_arr = replaceNotUsed(Verb_arr);
 			
-			trace (Words_arr);
-			trace (Verb_arr);
+			//trace (Words_arr);
+			//trace (Verb_arr);
 		}
 		 
 		 private function randomSortFunc(a, b):Number {
@@ -395,7 +405,68 @@ package
 			pusk_block.alpha = 1;
 			pusk_block.button1.buttonMode = true;
 			roleTween2 = null;
+			
+			storeResult();
 		}
+		
+		
+		
+		// ф-ция добавления результатов в архив
+		private function storeResult():void { 
+			
+			var current_time:Array = getTimeNow();
+			
+			Storage.phraza.push(phraza_temp);
+			Storage.cur_date.push(current_time['chislo']);
+			Storage.cur_time.push(current_time['vremya']);
+			
+			trace ("vremya = " + Storage.phraza);
+
+			//Storage = {
+				//phraza:phraza_temp,
+				//cur_date: current_time['chislo'],
+				//cur_time: current_time['vremya']
+			//};
+		}
+		
+		
+		
+		
+		
+		// ф-ция получения текущей даты и время
+		private function getTimeNow():Array {
+		
+			var currentDate:Date = new Date();
+			
+			var hours:uint = currentDate.getHours();
+			var minutes:uint = currentDate.getMinutes();
+			var seconds:uint = currentDate.getSeconds();
+			
+			var date:uint = currentDate.getDate();
+			var month:uint = currentDate.getMonth() + 1;
+			//var year:uint = currentDate.getFullYear();
+			
+			var temp_arr:Array = [hours, minutes, seconds, date, month];
+			
+			for (var i:int = 0; i < temp_arr.length; i++){ 
+				if (temp_arr[i] < 10) temp_arr[i] = '0' + temp_arr[i];
+			}
+			
+			var temp_str:Array = [];
+			temp_str['chislo'] = temp_arr[3] + '.' + temp_arr[4]; 
+			temp_str['vremya'] = temp_arr[0] + ':' + temp_arr[1] + ':' + temp_arr[2];
+			
+			return temp_str;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -461,5 +532,17 @@ package
 		public function set Games_count(value:uint):void {
 			data.games_count = value;
 		}
+		
+		
+		public function get Storage():Object {
+			return data.storage;
+		}
+		public function set Storage(value:Object):void {
+			data.storage = value;
+		}
+		
+		
+		
+		
 	}
 }

@@ -21,6 +21,8 @@ package
 		
 		public var games_count:uint = 0;
 		
+		public var storage:Object = { }; // архив-хранилище
+		
 		
 
 		public function Model(){
@@ -30,8 +32,7 @@ package
 			// кусать, ласкать, щекотать, сосать, прикоснуться
 			
 			
-			verb_arr = ['not_used', 'ухо', '?', 'шею', 'грудь', 'губы', 'язык'];
-			// сосок, 
+			verb_arr = ['not_used', 'ухо', '?', 'шею', 'грудь', 'губы', 'соски'];
 			
 			
 			players_names = ['Таня', 'Ваня'];
@@ -40,6 +41,12 @@ package
 			// half - первое поле вращается а второе листается
 			
 			anim_flag = animation_kind[0]; // default
+			
+			storage = {
+				phraza:[],
+				cur_date:[],
+				cur_time:[]
+			}
 			
 			phrazes_arr[0] = ['След.ход'];
 			phrazes_arr[1] = ['. . .'];
