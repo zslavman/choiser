@@ -83,7 +83,7 @@ package
 			
 			if (config_bar == null) {
 				
-				config_bar = new Config_bar(data);
+				config_bar = new Config_bar(data, stage);
 				addChild(config_bar);
 				
 				// создание маски для экрана настроек
@@ -99,8 +99,6 @@ package
 					open_config.addEventListener(TweenEvent.MOTION_FINISH, after_MOTION_FINISH);
 				}
 			}
-			
-			
 		}
 		
 		
@@ -195,11 +193,6 @@ package
 			who.text = names_padej[digit0] + Phrazes_arr[6]; //Игроку2 нужно:
 			whom.text = names_padej[digit1]; // Игроку1;
 			pusk_block.tip.text = '(' + Players_names[digit0] + ')';
-			
-			// формирование фразы для архива
-			phraza_temp = Players_names[digit0] + ' ' + left_type.w2.text + ' ' + right_type.w2.text + ' ' + whom.text;
-			
-			//TODO: не правильно сохраняет результат 
 
 			// выполнять след. строку при любой команде кроме 'dont_turn'
 			if (comand != 'dont_turn') Player_flag = !Player_flag; // инверсия флага хода игрока
@@ -406,6 +399,11 @@ package
 			pusk_block.button1.buttonMode = true;
 			roleTween2 = null;
 			
+			// формирование фразы для архива
+			phraza_temp = who.text + ' ' + left_type.w2.text + ' ' + right_type.w2.text + ' ' + whom.text;
+			
+			//trace ("phraza_temp = " + phraza_temp);
+			
 			storeResult();
 		}
 		
@@ -420,7 +418,7 @@ package
 			Storage.cur_date.push(current_time['chislo']);
 			Storage.cur_time.push(current_time['vremya']);
 			
-			trace ("vremya = " + Storage.phraza);
+			//trace ("vremya = " + Storage.phraza);
 
 			//Storage = {
 				//phraza:phraza_temp,

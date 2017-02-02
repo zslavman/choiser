@@ -1,6 +1,7 @@
 package 
 {
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.events.Event;
 	import flash.media.Sound;
@@ -24,6 +25,8 @@ package
 	
 		
 		private var data:Model;
+		private var myScroll:CustomScroll;
+		private var myStage:Stage;
 		
 		
 		private var key_click:Sound = new _key_click();
@@ -36,9 +39,10 @@ package
 		
 		
 		
-		public function Config_bar(_data:Model){ 
+		public function Config_bar(_data:Model, stage:Stage){ 
 
 			data = _data;	
+			myStage = stage;
 			
 			button_change_mode.addEventListener(MouseEvent.MOUSE_DOWN, mode_MOUSE_DOWN);
 			button_change_mode.buttonMode = true;
@@ -65,8 +69,11 @@ package
 				}
 			}
 			
-
-			
+			myScroll = new CustomScroll(myStage, track4_mc, output, up4_btn, down4_btn);
+		
+			// ф-ция заполнения текстового поля скрола
+			scrollertextFill();
+				
 			if (!MUTE) mute.gotoAndStop('sound_on');
 			else mute.gotoAndStop('sound_off');
 
@@ -79,7 +86,37 @@ package
  
 			// заполнение текстовых полей
 			TextFill();
-
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/*********************************************
+		 *         Заполнение скролового текста      *
+		 *                                           *
+		 */ //****************************************
+		private function scrollertextFill():void { 
+			
+			//storage = {
+				//phraza:[],
+				//cur_date:[],
+				//cur_time:[]
+			//}
+			
+			var toSend:String;
+			
+			for (var i:int = 0; i < Storage.phraza.length; i++){ 
+				toSend += Storage.phraza[i] + Storage.cur_date[i] + Storage.cur_time[i] + '\r';
+			}
+			output.text = toSend;
 		}
 		
 		
@@ -265,6 +302,15 @@ package
 		}
 		public function set MUTE(value:Boolean):void {
 			data.mute_flag = value;
+		}
+		
+		
+		
+		public function get Storage():Object {
+			return data.storage;
+		}
+		public function set Storage(value:Object):void {
+			data.storage = value;
 		}
 
 	}
