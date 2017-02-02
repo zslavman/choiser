@@ -15,6 +15,7 @@ package
 		
 		public var spinning_flag:Boolean = false; // флаг наличия вращения колеса
 		public var player_flag:Boolean = true; // флаг какой игрок ходит, true - первый, false - второй
+		public var mute_flag:Boolean = false; // флаг mute
 		
 		public var anim_flag:String; // флаг - вид анимации колес
 		
@@ -48,6 +49,13 @@ package
 			phrazes_arr[5] = ['Игроку2'];
 			phrazes_arr[6] = [' нужно:'];
 			phrazes_arr[7] = ['Ходит '];
+			
+			phrazes_arr[10] = ['LoversGame v.1.0'];
+			phrazes_arr[11] = ['Игра для влюбленных. Просто кликайте по очереди на кнопку и делайте друг другу приятно :)'];
+			phrazes_arr[12] = ['Посвящается Ксюшеньке.'];
+			phrazes_arr[13] = ['© Вячеслав Зинько, 2017г.\r E-mail: <a href="event:myMail">zslavman@gmail.com</a>'];
+			phrazes_arr[14] = ["mailto:zslavman@gmail.com"];
+			phrazes_arr[15] = [''];
 		
 		}
 	

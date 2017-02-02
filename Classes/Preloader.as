@@ -49,6 +49,7 @@ package
 			
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			loaderInfo.addEventListener(IOErrorEvent.IO_ERROR, ioError);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, Key_DOWN);
 			
 			loading_bar = new Loading_bar();
 			//loading_bar.loading_mask.scaleY = 0;
@@ -117,6 +118,46 @@ package
 			view.y = 0;
 			addChild(view);
 		}
+		
+		
+		
+		/*********************************************
+		 *          Кнопка клавиатуры "Space"        *
+		 *                                           *
+		 */ //****************************************
+		 
+		// charCode - код символа; keyCode - код клавиши
+		//trace(String.fromCharCode(event.charCode));
+
+		public	function Key_DOWN(event: KeyboardEvent) {
+		
+			if (view != null) {
+				if (view.config_bar != null) {
+					if (event.keyCode == 27 || event.keyCode == 32) { // клавиша "Space"
+						view.config_bar.config_bar_off.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN));
+					}
+				}
+				else if (view.config_bar == null) {
+					if (event.keyCode == 32) { // нажатие "Space"
+						view.config_bar_on.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN));
+					}
+				}
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 }
 

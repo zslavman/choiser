@@ -20,7 +20,7 @@ package
 	public class Scene extends Sprite {
 	
 		private var data:Model;
-		private var config_bar:Config_bar;
+		public var config_bar:Config_bar;
 		private var mask_config:Mask;
 		
 		private var roleTween1:Tween;
@@ -89,16 +89,27 @@ package
 				addChild(mask_config);
 				config_bar.mask = mask_config;
 				
-				config_bar.config_bar_off.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_off_MOUSE_DOWN);
+				if (config_bar.x == 0) {
+					open_config = new Tween (config_bar, 'x', Strong.easeOut, 0, 640, 1, true);
+					open_config.addEventListener(TweenEvent.MOTION_FINISH, after_MOTION_FINISH);
+				}
 			}
 			
-			if (config_bar.x == 0) {
-				open_config = new Tween (config_bar, 'x', Strong.easeOut, 0, 640, 1, true);
-			}
 			
 		}
 		
 		
+		
+		
+		/*********************************************
+		 *         Добавление слушателя после        *
+		 *        того как меню выедет до конца      *
+		 */ //****************************************
+		public function after_MOTION_FINISH(event:TweenEvent):void {
+			open_config.removeEventListener(TweenEvent.MOTION_FINISH, after_MOTION_FINISH);
+			config_bar.config_bar_off.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_off_MOUSE_DOWN);
+			config_bar.config_bar_off.buttonMode = true;
+		}
 		
 		
 		
@@ -114,8 +125,12 @@ package
 		private function config_bar_off_MOUSE_DOWN(event:MouseEvent):void{ 
 			
 			key_click.play();
-			close_config = new Tween (config_bar, 'x', Strong.easeOut, 640, 0, 1, true);
-			close_config.addEventListener(TweenEvent.MOTION_FINISH, Kill_config);
+			
+			if (config_bar.x == 640) {
+				close_config = new Tween (config_bar, 'x', Strong.easeOut, 640, 0, 1, true);
+				close_config.addEventListener(TweenEvent.MOTION_FINISH, Kill_config);
+				changeTurn('dont_turn');
+			}
 		}
 		
 	
@@ -151,7 +166,7 @@ package
 		 *           Ф-ция меняющая фразы при        *
 		 *               смене хода игроков          *
 		 */ //****************************************
-		private function changeTurn():void {
+		private function changeTurn(comand:String = ''):void {
 			
 			var digit0:uint;
 			var digit1:uint;
@@ -171,13 +186,13 @@ package
 				names_padej[i] = Players_names[i].slice(0, Players_names[i].length - 1) + 'е';
 			}
 			
-
 			turn.text = Phrazes_arr[7] + Players_names[digit1]; // Ходит Игрок1
 			who.text = names_padej[digit0] + Phrazes_arr[6]; //Игроку2 нужно:
 			whom.text = names_padej[digit1]; // Игроку1;
 			pusk_block.tip.text = '(' + Players_names[digit0] + ')';
 			
-			Player_flag = !Player_flag; // инверсия флага хода игрока
+			// выполнять след. строку при любой команде кроме  'dont_turn'
+			if (comand != 'dont_turn') Player_flag = !Player_flag; // инверсия флага хода игрока
 		}
 		
 		
