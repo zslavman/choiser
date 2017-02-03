@@ -63,6 +63,20 @@ package
 			phrazes_arr[13] = ['© Вячеслав Зинько, 2017г.\r E-mail: <a href="event:myMail">zslavman@gmail.com</a>'];
 			phrazes_arr[14] = ["mailto:zslavman@gmail.com"];
 			phrazes_arr[15] = [''];
+			
+			phrazes_arr[16] = ['янв'];
+			phrazes_arr[17] = ['фев'];
+			phrazes_arr[18] = ['мар'];
+			phrazes_arr[19] = ['апр'];
+			phrazes_arr[20] = ['май'];
+			phrazes_arr[21] = ['июн'];
+			phrazes_arr[22] = ['июл'];
+			phrazes_arr[23] = ['авг'];
+			phrazes_arr[24] = ['сен'];
+			phrazes_arr[25] = ['окт'];
+			phrazes_arr[26] = ['ноя'];
+			phrazes_arr[27] = ['дек'];
+			phrazes_arr[28] = [''];
 		
 		}
 	

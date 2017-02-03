@@ -418,7 +418,8 @@ package
 			Storage.cur_date.push(current_time['chislo']);
 			Storage.cur_time.push(current_time['vremya']);
 			
-			//trace ("vremya = " + Storage.phraza);
+			// обновление отчёта если конфиг открыт
+			if (config_bar != null) config_bar.scrollertextFill();
 
 			//Storage = {
 				//phraza:phraza_temp,
@@ -446,16 +447,29 @@ package
 			
 			var temp_arr:Array = [hours, minutes, seconds, date, month];
 			
-			for (var i:int = 0; i < temp_arr.length; i++){ 
+			for (var i:int = 0; i < temp_arr.length - 2; i++){ 
 				if (temp_arr[i] < 10) temp_arr[i] = '0' + temp_arr[i];
 			}
 			
 			var temp_str:Array = [];
-			temp_str['chislo'] = temp_arr[3] + '.' + temp_arr[4]; 
-			temp_str['vremya'] = temp_arr[0] + ':' + temp_arr[1] + ':' + temp_arr[2];
+			// 15 - с 16-го числа начинается месяца в массиве фраз
+			temp_str['chislo'] = temp_arr[3] + ' ' + Phrazes_arr[temp_arr[4] + 15] + ' '; 
+			temp_str['vremya'] = temp_arr[0] + ':' + temp_arr[1] + ':' + temp_arr[2] + ' ';
 			
 			return temp_str;
 		}
+		
+		
+		
+		//TODO: добавить сохранение настроек и архива в локальное хранилище
+		
+		//TODO: добавить кнопку сброса архива
+		
+		//TODO: добавить пароль на просмотр архива
+		
+		//TODO: возможность изменения названия действия
+		
+		//TODO: дизайнерское оформление
 		
 		
 		

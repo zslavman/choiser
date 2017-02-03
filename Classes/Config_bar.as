@@ -103,7 +103,7 @@ package
 		 *         Заполнение скролового текста      *
 		 *                                           *
 		 */ //****************************************
-		private function scrollertextFill():void { 
+		public function scrollertextFill():void { 
 			
 			//storage = {
 				//phraza:[],
@@ -111,12 +111,21 @@ package
 				//cur_time:[]
 			//}
 			
-			var toSend:String;
+			var toSend:String = '';
 			
-			for (var i:int = 0; i < Storage.phraza.length; i++){ 
-				toSend += Storage.phraza[i] + Storage.cur_date[i] + Storage.cur_time[i] + '\r';
+			if (Storage.phraza.length) {
+				
+				// прямой порядок вывода инфы
+				//for (var i:int = 0; i < Storage.phraza.length; i++){ 
+					//toSend += Storage.cur_date[i] + Storage.cur_time[i] + Storage.phraza[i] + '\r';
+				//}
+				
+				// обратный порядок вывода инфы
+				for (var i:int = Storage.phraza.length - 1; i >= 0; i--) { 
+					toSend += Storage.cur_date[i] + Storage.cur_time[i] + Storage.phraza[i] + '\r';
+				}
+				output.text = toSend;
 			}
-			output.text = toSend;
 		}
 		
 		
