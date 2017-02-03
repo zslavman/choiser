@@ -356,8 +356,6 @@ package
 			Words_arr = replaceNotUsed(Words_arr);
 			Verb_arr = replaceNotUsed(Verb_arr);
 			
-			//trace (Words_arr);
-			//trace (Verb_arr);
 		}
 		 
 		 private function randomSortFunc(a, b):Number {
@@ -402,8 +400,6 @@ package
 			// формирование фразы для архива
 			phraza_temp = who.text + ' ' + left_type.w2.text + ' ' + right_type.w2.text + ' ' + whom.text;
 			
-			//trace ("phraza_temp = " + phraza_temp);
-			
 			storeResult();
 		}
 		
@@ -421,6 +417,10 @@ package
 			// обновление отчёта если конфиг открыт
 			if (config_bar != null) config_bar.scrollertextFill();
 
+			// т.к. при пуше не используется сеттер, то вызовем его принудительно
+			Storage = Storage;
+			
+			
 			//Storage = {
 				//phraza:phraza_temp,
 				//cur_date: current_time['chislo'],
@@ -453,8 +453,8 @@ package
 			
 			var temp_str:Array = [];
 			// 15 - с 16-го числа начинается месяца в массиве фраз
-			temp_str['chislo'] = temp_arr[3] + ' ' + Phrazes_arr[temp_arr[4] + 15] + ' '; 
-			temp_str['vremya'] = temp_arr[0] + ':' + temp_arr[1] + ':' + temp_arr[2] + ' ';
+			temp_str['chislo'] = '[' + temp_arr[3] + ' ' + Phrazes_arr[temp_arr[4] + 15] + ' '; 
+			temp_str['vremya'] = temp_arr[0] + ':' + temp_arr[1] + ':' + temp_arr[2] + ']' + ' ';
 			
 			return temp_str;
 		}
@@ -470,6 +470,8 @@ package
 		//TODO: возможность изменения названия действия
 		
 		//TODO: дизайнерское оформление
+		
+		//TODO: добавить фоновую музыку
 		
 		
 		
@@ -551,6 +553,8 @@ package
 		}
 		public function set Storage(value:Object):void {
 			data.storage = value;
+			data.SharedObj.data.storage = data.storage;
+			data.SharedObj.flush();
 		}
 		
 		

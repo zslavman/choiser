@@ -301,6 +301,7 @@ package
 		}
 		public function set Players_names(value:*):void {
 			data.players_names = value;
+			data.SharedObj.data.players_names = data.players_names;
 		}
 		
 		
@@ -318,9 +319,9 @@ package
 		public function get Storage():Object {
 			return data.storage;
 		}
-		public function set Storage(value:Object):void {
-			data.storage = value;
-		}
+		//public function set Storage(value:Object):void {
+			//data.storage = value;
+		//}
 
 	}
 }

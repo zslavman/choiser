@@ -5,6 +5,13 @@ package
 	 * ...
 	 * @author zslavman
 	 */
+	
+	 
+	import flash.net.SharedObject;
+	 
+	 
+	 
+	 
 	public class Model{
 	
 		public var phrazes_arr:Array = [];
@@ -21,7 +28,9 @@ package
 		
 		public var games_count:uint = 0;
 		
-		public var storage:Object = { }; // архив-хранилище
+		public var SharedObj:SharedObject;
+		
+		public var storage:Object; // архив-хранилище
 		
 		
 
@@ -42,11 +51,7 @@ package
 			
 			anim_flag = animation_kind[0]; // default
 			
-			storage = {
-				phraza:[],
-				cur_date:[],
-				cur_time:[]
-			}
+
 			
 			phrazes_arr[0] = ['След.ход'];
 			phrazes_arr[1] = ['. . .'];
@@ -57,7 +62,7 @@ package
 			phrazes_arr[6] = [' нужно:'];
 			phrazes_arr[7] = ['Ходит '];
 			
-			phrazes_arr[10] = ['LoversGame v.1.0'];
+			phrazes_arr[10] = ["LoversGame v.1.0"];
 			phrazes_arr[11] = ['Игра для влюбленных. Просто кликайте по очереди на кнопку и делайте друг другу приятно :)'];
 			phrazes_arr[12] = ['Посвящается Ксюшеньке.'];
 			phrazes_arr[13] = ['© Вячеслав Зинько, 2017г.\r E-mail: <a href="event:myMail">zslavman@gmail.com</a>'];
@@ -78,6 +83,33 @@ package
 			phrazes_arr[27] = ['дек'];
 			phrazes_arr[28] = [''];
 		
+			// создаем регулярное выражение для поиска пробелов в названии
+			var reg:RegExp = / /g; // парамерт /g маска для всех " " в выражении
+			var str1:String = phrazes_arr[10][0].replace(reg, '_');
+			
+			SharedObj = SharedObject.getLocal(str1, "/"); // параметр "/" - записывает *.SOL не создавая директории
+			
+			storage = SharedObj.data.storage;
+			if (SharedObj.data.storage == null) { // если в кукисах нет инфы о хранилище
+				
+				storage = {
+					phraza:[],
+					cur_date:[],
+					cur_time:[]
+				}
+			}
+			//else storage = SharedObj.data.storage;
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 		}
 	
 	}
