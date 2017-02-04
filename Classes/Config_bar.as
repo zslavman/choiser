@@ -4,10 +4,12 @@ package
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.events.Event;
+	import flash.events.TimerEvent;
 	import flash.media.Sound;
 	import fl.transitions.Tween;
 	import fl.transitions.TweenEvent;
 	import fl.transitions.easing.*;
+	import flash.utils.Timer;
 	
 	import flash.events.TextEvent;
 	import flash.net.URLRequest;
@@ -24,15 +26,17 @@ package
 	public class Config_bar extends Sprite {
 	
 		
-		private var data:Model;
+		private var model:Model;
 		private var myScroll:CustomScroll;
 		private var myStage:Stage;
 		
-		
 		private var key_click:Sound = new _key_click();
+		private var chpok:Sound = new _chpok();
 		private var mode_count:uint; // номер элемента массива, настройки которого сейчас включены
 		
 		private var mailCSS:StyleSheet = new StyleSheet();
+		
+		private var Timer_Press:Timer = new Timer (500); // таймер зажимания кн. сброса
 
 		
 		
@@ -41,13 +45,17 @@ package
 		
 		public function Config_bar(_data:Model, stage:Stage){ 
 
-			data = _data;	
+			model = _data;	
 			myStage = stage;
 			
 			button_change_mode.addEventListener(MouseEvent.MOUSE_DOWN, mode_MOUSE_DOWN);
 			button_change_mode.buttonMode = true;
 			mute.addEventListener(MouseEvent.MOUSE_DOWN, mute_MOUSE_DOWN);
 			mute.buttonMode = true;
+			
+			button_reset.addEventListener(MouseEvent.MOUSE_DOWN, button_reset_MOUSE_DOWN);
+			button_reset.buttonMode = true;
+			Timer_Press.addEventListener(TimerEvent.TIMER, func_Timer_Press);
 			
 			about_button.addEventListener(MouseEvent.MOUSE_DOWN, about_button_MOUSE_DOWN);
 			about_button.buttonMode = true;
@@ -88,9 +96,9 @@ package
 			TextFill();
 		}
 		
+
 		
-		
-		
+
 		
 		
 		
@@ -100,11 +108,95 @@ package
 		
 		
 		/*********************************************
-		 *         Заполнение скролового текста      *
+		 *                Кнопка "RESET"             *
 		 *                                           *
 		 */ //****************************************
-		public function scrollertextFill():void { 
+		private function button_reset_MOUSE_DOWN(event:MouseEvent):void {
 			
+			button_reset.addEventListener(MouseEvent.MOUSE_OUT, button_reset_MOUSE_UP_OUT);
+			button_reset.addEventListener(MouseEvent.MOUSE_UP, button_reset_MOUSE_UP_OUT);
+			Timer_Press.start();
+			key_click.play();
+			
+		}
+		private function button_reset_MOUSE_UP_OUT(event:MouseEvent):void {
+			
+			button_reset.removeEventListener(MouseEvent.MOUSE_OUT, button_reset_MOUSE_UP_OUT);
+			button_reset.removeEventListener(MouseEvent.MOUSE_UP, button_reset_MOUSE_UP_OUT);
+			
+			Timer_Press.reset();
+		}
+
+		
+		
+		/*********************************************
+		 *           Таймер зажимания кнопки         *
+		 *                  "RESET"                  *
+		 */ //****************************************
+		private function func_Timer_Press(event:TimerEvent):void{ 
+
+			trace (Timer_Press.currentCount);
+			
+			if (Timer_Press.currentCount == 6) {
+				Timer_Press.reset();
+				Load_default();
+			}
+			
+		}
+		
+		private function Load_default():void{ 
+
+			chpok.play();
+			
+			Anim_flag = 'Вращение';
+			Players_names = ['Оля', 'Саша'];
+			
+			MUTE = false;
+			mute.gotoAndStop('sound_on');
+			
+			Storage = {
+				phraza:[],
+				cur_date:[],
+				cur_time:[]
+			};
+				
+			TextFill();
+			output.text = '';
+			mode_count = 0;
+		}
+		
+		
+		
+
+		
+		/*********************************************
+		 *         Заполнение текстовых полей        *
+		 *                                           *
+		 */ //****************************************
+		public function TextFill():void{ 
+		
+			mode.text = Anim_flag;
+			name1.text = Players_names[0];
+			name2.text = Players_names[1];
+			
+			about_scr.container.ver.text = Phrazes_arr[10];
+			about_scr.container.about_pro.text = Phrazes_arr[11]; 
+			about_scr.container.ksiu.text = Phrazes_arr[12];
+			about_scr.author.text = Phrazes_arr[13];
+			//about_scr.container.author.htmlText = Phrazes_arr[13];
+		}
+		
+		
+		
+		
+		
+		
+		/*********************************************
+		 *         Заполнение скроллер поля          *
+		 *                                           *
+		 */ //****************************************
+		public function scrollertextFill():void{ 
+
 			//storage = {
 				//phraza:[],
 				//cur_date:[],
@@ -132,25 +224,8 @@ package
 		
 		
 		
-		/*********************************************
-		 *         Заполнение текстовых полей        *
-		 *                                           *
-		 */ //****************************************
-		private function TextFill():void{ 
 		
-			mode.text = Anim_flag;
-			name1.text = Players_names[0];
-			name2.text = Players_names[1];
-			
-			about_scr.container.ver.text = Phrazes_arr[10];
-			about_scr.container.about_pro.text = Phrazes_arr[11]; 
-			about_scr.container.ksiu.text = Phrazes_arr[12];
-			about_scr.author.text = Phrazes_arr[13];
-			//about_scr.container.author.htmlText = Phrazes_arr[13];
-		}
-		
-		
-		
+
 		/*********************************************
 		 *         Захват введенного текста          *
 		 *                                           *
@@ -161,8 +236,8 @@ package
 				Players_names[0] = name1.text;
 			}
 			else Players_names[1] = name2.text;
-
 		}
+		
 		
 		
 		
@@ -183,6 +258,7 @@ package
 		}
 		
 	
+		
 		
 		
 		/*********************************************
@@ -264,64 +340,77 @@ package
 		 *                                           *
 		 */ //****************************************
 		public function get Phrazes_arr():* {
-			return data.phrazes_arr;
+			return model.phrazes_arr;
 		}
 		public function set Phrazes_arr(value:*):void {
-			data.phrazes_arr = value;
+			model.phrazes_arr = value;
 		}
 		
 		
 		
 		
 		public function get Animation_kind():* {
-			return data.animation_kind;
+			return model.animation_kind;
 		}
 
 		
 		
 		public function get Anim_flag():String {
-			return data.anim_flag;
+			return model.anim_flag;
 		}
 		public function set Anim_flag(value:String):void {
-			data.anim_flag = value;
+			model.anim_flag = value;
+			model.SharedObj.data.anim_flag = model.anim_flag;
+			model.SharedObj.flush();
 		}
 		
 		
 		
 		
 		public function get Spinning_flag():Boolean {
-			return data.spinning_flag;
+			return model.spinning_flag;
 		}
 		
 		
 		
 		
 		public function get Players_names():* {
-			return data.players_names;
+			// запись в лок.хранил. из геттера потому что при установке Players_names[x] используется 
+			// именно геттер а не сеттер
+			model.SharedObj.data.players_names = model.players_names;
+			model.SharedObj.flush();
+			return model.players_names;
 		}
 		public function set Players_names(value:*):void {
-			data.players_names = value;
-			data.SharedObj.data.players_names = data.players_names;
+			model.players_names = value;
+			model.SharedObj.data.players_names = model.players_names;
+			model.SharedObj.flush();
 		}
-		
+	
 		
 		
 		
 		public function get MUTE():Boolean {
-			return data.mute_flag;
+			return model.mute_flag;
 		}
 		public function set MUTE(value:Boolean):void {
-			data.mute_flag = value;
+			model.mute_flag = value;
+			model.SharedObj.data.mute_flag = model.mute_flag;
+			model.SharedObj.flush();
 		}
 		
 		
 		
 		public function get Storage():Object {
-			return data.storage;
+			model.SharedObj.data.storage = model.storage;
+			model.SharedObj.flush();
+			return model.storage;
 		}
-		//public function set Storage(value:Object):void {
-			//data.storage = value;
-		//}
+		public function set Storage(value:Object):void {
+			model.storage = value;
+			model.SharedObj.data.storage = model.storage;
+			model.SharedObj.flush();
+		}
 
 	}
 }

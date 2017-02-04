@@ -10,6 +10,8 @@ package
 	import fl.transitions.easing.*;
 	import flash.events.TimerEvent;
 	import flash.media.Sound;
+	import flash.media.SoundChannel;
+	import flash.media.SoundTransform;
 	import flash.utils.Timer;
 	
 	
@@ -19,27 +21,32 @@ package
 	 */
 	public class Scene extends Sprite {
 	
-		private var data:Model;
-		public var config_bar:Config_bar;
-		private var mask_config:Sprite;
+		private var model		:Model;
+		public var config_bar	:Config_bar;
+		private var mask_config	:Sprite;
 		
-		private var roleTween1:Tween;
-		private var roleTween2:Tween;
-		private var open_config:Tween;
+		private var roleTween1	:Tween;
+		private var roleTween2	:Tween;
+		private var open_config	:Tween;
 		private var close_config:Tween;
 		private var lineStart_y;
 		
 		private var tween_duration:Number = 0.1;
 		
 		private var circles:uint = 1; // начало с 1 т.к. в массиве слов первое (нулевое) значение не учитывается
-		private var clicker:Sound = new _clicker();
-		private var wheel_sound:Sound = new _wheel_sound();
-		private var wheel_sound_double:Sound = new _wheel_sound_double();
-		private var key_click:Sound = new _key_click();
+		
+		private var clicker				:Sound = new _clicker();
+		private var wheel_sound			:Sound = new _wheel_sound();
+		private var wheel_sound_double	:Sound = new _wheel_sound_double();
+		private var key_click			:Sound = new _key_click();
+		private var principles_of_lust	:Sound = new _principles_of_lust();
+		private var back_channel		:SoundChannel = new SoundChannel();
+		private var s_transform			:SoundTransform;
+		private var channel_volume		:Number = 0.1;
 		
 		private var rot_duration:Number = 3000; // мс, устанавливать не менее 2000 
-		private var Timer_DurationRot:Timer = new Timer(250);
-		private var Timer_Listing:Timer = new Timer(80);
+		private var Timer_DurationRot	:Timer = new Timer(250);
+		private var Timer_Listing		:Timer = new Timer(80);
 		
 		private var phraza_temp:String;
 		
@@ -47,9 +54,9 @@ package
 		
 		
 		
-		public function Scene(_model_data:Model) { 
+		public function Scene(_data:Model) { 
 			
-			data = _model_data;
+			model = _data;
 		
 			pusk_block.button1.addEventListener(MouseEvent.MOUSE_DOWN, button1_MOUSE_DOWN);
 			config_bar_on.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_on_MOUSE_DOWN);
@@ -66,6 +73,25 @@ package
 			changeTurn();
 			pusk_block.button1.buttonMode = true;
 			config_bar_on.buttonMode = true;
+			
+			s_transform = new SoundTransform (channel_volume);
+			
+			if (!MUTE) back_channel = principles_of_lust.play(0, 1, s_transform);
+			back_channel.addEventListener(Event.SOUND_COMPLETE, loopSound);
+		}
+		
+		
+		
+		
+		
+		
+		
+		private function loopSound(event:Event):void{ 
+		
+			back_channel.removeEventListener(Event.SOUND_COMPLETE, loopSound);
+			
+			back_channel = principles_of_lust.play(0, 1, s_transform);
+			back_channel.addEventListener(Event.SOUND_COMPLETE, loopSound);
 		}
 		
 		
@@ -83,7 +109,7 @@ package
 			
 			if (config_bar == null) {
 				
-				config_bar = new Config_bar(data, stage);
+				config_bar = new Config_bar(model, stage);
 				addChild(config_bar);
 				
 				// создание маски для экрана настроек
@@ -266,8 +292,8 @@ package
 				SortMe();
 				
 				Timer_DurationRot.start();
-				if (anim_flag == 'rotate' || anim_flag == 'half') startMoove(); // запуск твина вращения слов
-				else if (anim_flag == 'list') Timer_Listing.start(); // запуск перебора слов (слова будут просто перечисляться по таймеру)
+				if (anim_flag == 'Вращение' || anim_flag == 'Наполовину') startMoove(); // запуск твина вращения слов
+				else if (anim_flag == 'Листание') Timer_Listing.start(); // запуск перебора слов (слова будут просто перечисляться по таймеру)
 			}
 		}
 		
@@ -288,7 +314,7 @@ package
 			Timer_Listing.reset();
 			Timer_Listing.delay = 80;
 			
-			if (anim_flag == 'list') lastStep();
+			if (anim_flag == 'Листание') lastStep();
 			//stopMoove(); // твин доходит до цикла след. запуска и останавливается
 		}
 		
@@ -299,7 +325,7 @@ package
 		 */ //****************************************
 		public function startMoove():void {
 		
-			if (anim_flag != 'half') {
+			if (anim_flag != 'Наполовину') {
 				roleTween1 = new Tween (left_type, 'y', None.easeInOut, lineStart_y, lineStart_y + 47, tween_duration, true);
 			}
 			roleTween2 = new Tween (right_type, 'y', None.easeInOut, lineStart_y, lineStart_y + 47, tween_duration, true);
@@ -461,9 +487,12 @@ package
 		
 		
 		
-		//TODO: добавить сохранение настроек и архива в локальное хранилище
 		
 		//TODO: добавить кнопку сброса архива
+		//TODO: перенести кнопку МУТЭ в класс Scene
+		
+		
+		
 		
 		//TODO: добавить пароль на просмотр архива
 		
@@ -471,7 +500,6 @@ package
 		
 		//TODO: дизайнерское оформление
 		
-		//TODO: добавить фоновую музыку
 		
 		
 		
@@ -492,73 +520,75 @@ package
 		 *                                           *
 		 */ //****************************************
 		public function get Words_arr():* {
-			return data.words_arr;
+			return model.words_arr;
 		}
 		public function set Words_arr(value:*):void {
-			data.words_arr = value;
+			model.words_arr = value;
 		}
 		
 		
 		public function get Verb_arr():* {
-			return data.verb_arr;
+			return model.verb_arr;
 		}
 		public function set Verb_arr(value:*):void {
-			data.verb_arr = value;
+			model.verb_arr = value;
 		}
 		
 		
 		public function get Phrazes_arr():* {
-			return data.phrazes_arr;
+			return model.phrazes_arr;
 		}
 		public function set Phrazes_arr(value:*):void {
-			data.phrazes_arr = value;
+			model.phrazes_arr = value;
 		}
 		
 		
 		public function get spinning_flag():Boolean {
-			return data.spinning_flag;
+			return model.spinning_flag;
 		}
 		public function set spinning_flag(value:Boolean):void {
-			data.spinning_flag = value;
+			model.spinning_flag = value;
 		}
 		
 		
 		public function get anim_flag():String {
-			return data.anim_flag;
+			return model.anim_flag;
 		}
 		
 		public function get Players_names():* {
-			return data.players_names;
+			return model.players_names;
 		}
 
 		
 		public function get Player_flag():Boolean {
-			return data.player_flag;
+			return model.player_flag;
 		}
 		public function set Player_flag(value:Boolean):void {
-			data.player_flag = value;
+			model.player_flag = value;
 		}
 		
 		
 		public function get Games_count():uint {
-			return data.games_count;
+			return model.games_count;
 		}
 		public function set Games_count(value:uint):void {
-			data.games_count = value;
+			model.games_count = value;
 		}
 		
 		
 		public function get Storage():Object {
-			return data.storage;
+			return model.storage;
 		}
 		public function set Storage(value:Object):void {
-			data.storage = value;
-			data.SharedObj.data.storage = data.storage;
-			data.SharedObj.flush();
+			model.storage = value;
+			model.SharedObj.data.storage = model.storage;
+			model.SharedObj.flush();
 		}
 		
 		
-		
+		public function get MUTE():Boolean {
+			return model.mute_flag;
+		}
 		
 	}
 }

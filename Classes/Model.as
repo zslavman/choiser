@@ -18,15 +18,15 @@ package
 		public var words_arr:Array = [];
 		public var verb_arr:Array = [];
 		public var animation_kind:Array = [];
-		public var players_names:Array = [];
+		public var players_names:Array;
 		
 		public var spinning_flag:Boolean = false; // флаг наличия вращения колеса
 		public var player_flag:Boolean = true; // флаг какой игрок ходит, true - первый, false - второй
-		public var mute_flag:Boolean = false; // флаг mute
+		public var mute_flag:Boolean; // флаг mute
 		
 		public var anim_flag:String; // флаг - вид анимации колес
 		
-		public var games_count:uint = 0;
+		public var games_count:uint = 0; // для того что бы не менять ход игроков при первом запуске
 		
 		public var SharedObj:SharedObject;
 		
@@ -40,19 +40,13 @@ package
 			words_arr = ['not_used', 'Тискать', 'Лизать', 'Ласкать', 'Покусать', 'Поцеловать', 'Массажировать'];
 			// кусать, ласкать, щекотать, сосать, прикоснуться
 			
-			
 			verb_arr = ['not_used', 'ухо', '?', 'шею', 'грудь', 'губы', 'соски'];
 			
-			
-			players_names = ['Таня', 'Ваня'];
-			
-			animation_kind = ['rotate', 'list', 'half']; // rotate - вращаются оба, list - замена слов в обоих полях, 
+			//animation_kind = ['rotate', 'list', 'half']; // rotate - вращаются оба, list - замена слов в обоих полях, 
 			// half - первое поле вращается а второе листается
-			
-			anim_flag = animation_kind[0]; // default
+			animation_kind = ['Вращение', 'Листание', 'Наполовину'];
 			
 
-			
 			phrazes_arr[0] = ['След.ход'];
 			phrazes_arr[1] = ['. . .'];
 			phrazes_arr[2] = ['Сделать'];
@@ -89,20 +83,23 @@ package
 			
 			SharedObj = SharedObject.getLocal(str1, "/"); // параметр "/" - записывает *.SOL не создавая директории
 			
-			storage = SharedObj.data.storage;
 			if (SharedObj.data.storage == null) { // если в кукисах нет инфы о хранилище
-				
 				storage = {
 					phraza:[],
 					cur_date:[],
 					cur_time:[]
 				}
 			}
-			//else storage = SharedObj.data.storage;
+			else storage = SharedObj.data.storage;
 			
+			if (SharedObj.data.players_names == null) players_names = ['Оля', 'Саша']; // default
+			else players_names = SharedObj.data.players_names;
 			
+			if (SharedObj.data.anim_flag == null) anim_flag = animation_kind[0]; // default 
+			else anim_flag = SharedObj.data.anim_flag;
 			
-			
+			if (SharedObj.data.mute_flag == null) mute_flag = false; // default 
+			else mute_flag = SharedObj.data.mute_flag;
 			
 			
 			
