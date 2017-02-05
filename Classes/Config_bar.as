@@ -36,7 +36,7 @@ package
 		
 		private var mailCSS:StyleSheet = new StyleSheet();
 		
-		private var Timer_Press:Timer = new Timer (500); // таймер зажимания кн. сброса
+		private var Timer_Press:Timer = new Timer (50); // таймер зажимания кн. сброса
 
 		
 		
@@ -50,8 +50,6 @@ package
 			
 			button_change_mode.addEventListener(MouseEvent.MOUSE_DOWN, mode_MOUSE_DOWN);
 			button_change_mode.buttonMode = true;
-			mute.addEventListener(MouseEvent.MOUSE_DOWN, mute_MOUSE_DOWN);
-			mute.buttonMode = true;
 			
 			button_reset.addEventListener(MouseEvent.MOUSE_DOWN, button_reset_MOUSE_DOWN);
 			button_reset.buttonMode = true;
@@ -68,6 +66,7 @@ package
 			
 			name1.addEventListener(Event.CHANGE, textInputCapture);
 			name2.addEventListener(Event.CHANGE, textInputCapture);
+			what.addEventListener(Event.CHANGE, textInputCapture);
 			
 			
 			// определение числа mode_count (какой режим включен)
@@ -77,14 +76,14 @@ package
 				}
 			}
 			
+			if (!MUTE) mute.gotoAndStop('sound_on');
+			else mute.gotoAndStop('sound_off');
+			
 			myScroll = new CustomScroll(myStage, track4_mc, output, up4_btn, down4_btn);
 		
 			// ф-ция заполнения текстового поля скрола
 			scrollertextFill();
 				
-			if (!MUTE) mute.gotoAndStop('sound_on');
-			else mute.gotoAndStop('sound_off');
-
 			// линка с почтой:
 			mailCSS.setStyle("a:link", {color:'#000000', textDecoration:'none'}); // 0000CC
 			mailCSS.setStyle("a:hover", {color:'#B4FAF9', textDecoration:'underline'}); // 0000FF
@@ -94,6 +93,9 @@ package
  
 			// заполнение текстовых полей
 			TextFill();
+			
+			reset_level.line.scaleX = 0;
+			reset_level.visible = false;
 		}
 		
 
@@ -117,12 +119,18 @@ package
 			button_reset.addEventListener(MouseEvent.MOUSE_UP, button_reset_MOUSE_UP_OUT);
 			Timer_Press.start();
 			key_click.play();
+			reset_txt.text = '';
+			reset_level.visible = true;
 			
 		}
 		private function button_reset_MOUSE_UP_OUT(event:MouseEvent):void {
 			
 			button_reset.removeEventListener(MouseEvent.MOUSE_OUT, button_reset_MOUSE_UP_OUT);
 			button_reset.removeEventListener(MouseEvent.MOUSE_UP, button_reset_MOUSE_UP_OUT);
+			
+			reset_txt.text = Phrazes_arr[8];
+			reset_level.visible = false;
+			reset_level.line.scaleX = 0;
 			
 			Timer_Press.reset();
 		}
@@ -135,9 +143,9 @@ package
 		 */ //****************************************
 		private function func_Timer_Press(event:TimerEvent):void{ 
 
-			trace (Timer_Press.currentCount);
+			reset_level.line.scaleX = Timer_Press.currentCount / 50;
 			
-			if (Timer_Press.currentCount == 6) {
+			if (Timer_Press.currentCount == 50) {
 				Timer_Press.reset();
 				Load_default();
 			}
@@ -148,8 +156,13 @@ package
 
 			chpok.play();
 			
+			reset_txt.text = Phrazes_arr[8];
+			reset_level.visible = false;
+			reset_level.line.scaleX = 0;
+			
 			Anim_flag = 'Вращение';
 			Players_names = ['Оля', 'Саша'];
+			Verb_arr[2] = '?';
 			
 			MUTE = false;
 			mute.gotoAndStop('sound_on');
@@ -178,6 +191,7 @@ package
 			mode.text = Anim_flag;
 			name1.text = Players_names[0];
 			name2.text = Players_names[1];
+			what.text = Verb_arr[2];
 			
 			about_scr.container.ver.text = Phrazes_arr[10];
 			about_scr.container.about_pro.text = Phrazes_arr[11]; 
@@ -235,7 +249,12 @@ package
 			if (event.currentTarget.name == 'name1') {
 				Players_names[0] = name1.text;
 			}
-			else Players_names[1] = name2.text;
+			else if (event.currentTarget.name == 'name2') {
+				Players_names[1] = name2.text;
+			}
+			else if (event.currentTarget.name == 'what') {
+				Verb_arr[2] = what.text;
+			}
 		}
 		
 		
@@ -261,23 +280,7 @@ package
 		
 		
 		
-		/*********************************************
-		 *              Кнопка "MUTE"                *
-		 *                                           *
-		 */ //****************************************
-		private function mute_MOUSE_DOWN(event:MouseEvent):void {
-		
-			key_click.play();
-			
-			if (MUTE) {
-				MUTE = false;
-				mute.gotoAndStop('sound_on');
-			}
-			else {
-				MUTE = true;
-				mute.gotoAndStop('sound_off');
-			}
-		}
+
 		
 		
 		
@@ -288,6 +291,7 @@ package
 		private function about_button_MOUSE_DOWN(event:MouseEvent):void {
 			
 			about_scr.visible = true;
+			key_click.play();
 		}
 		
 		
@@ -372,6 +376,15 @@ package
 		}
 		
 		
+		public function get MUTE():Boolean {
+			return model.mute_flag;
+		}
+		public function set MUTE(value:Boolean):void {
+			model.mute_flag = value;
+			model.SharedObj.data.mute_flag = model.mute_flag;
+			model.SharedObj.flush();
+		}
+		
 		
 		
 		public function get Players_names():* {
@@ -388,19 +401,7 @@ package
 		}
 	
 		
-		
-		
-		public function get MUTE():Boolean {
-			return model.mute_flag;
-		}
-		public function set MUTE(value:Boolean):void {
-			model.mute_flag = value;
-			model.SharedObj.data.mute_flag = model.mute_flag;
-			model.SharedObj.flush();
-		}
-		
-		
-		
+	
 		public function get Storage():Object {
 			model.SharedObj.data.storage = model.storage;
 			model.SharedObj.flush();
@@ -411,6 +412,16 @@ package
 			model.SharedObj.data.storage = model.storage;
 			model.SharedObj.flush();
 		}
+		
+		
+		
+		
+		public function get Verb_arr():* {
+			return model.verb_arr;
+		}
+		//public function set Verb_arr(value:*):void {
+			//model.verb_arr = value;
+		//}
 
 	}
 }

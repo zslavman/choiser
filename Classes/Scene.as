@@ -24,6 +24,7 @@ package
 		private var model		:Model;
 		public var config_bar	:Config_bar;
 		private var mask_config	:Sprite;
+		private var myStage		:Stage;
 		
 		private var roleTween1	:Tween;
 		private var roleTween2	:Tween;
@@ -35,14 +36,16 @@ package
 		
 		private var circles:uint = 1; // начало с 1 т.к. в массиве слов первое (нулевое) значение не учитывается
 		
-		private var clicker				:Sound = new _clicker();
-		private var wheel_sound			:Sound = new _wheel_sound();
-		private var wheel_sound_double	:Sound = new _wheel_sound_double();
-		private var key_click			:Sound = new _key_click();
-		private var principles_of_lust	:Sound = new _principles_of_lust();
-		private var back_channel		:SoundChannel = new SoundChannel();
-		private var s_transform			:SoundTransform;
-		private var channel_volume		:Number = 0.1;
+		private var clicker					:Sound = new _clicker();
+		private var wheel_sound				:Sound = new _wheel_sound();
+		private var wheel_sound_double		:Sound = new _wheel_sound_double();
+		private var key_click				:Sound = new _key_click();
+		private var principles_of_lust		:Sound = new _principles_of_lust();
+		private var back_channel			:SoundChannel = new SoundChannel();
+		private var s_transform				:SoundTransform;
+		private var channel_volume			:Number = 0.25;
+		private var default_channel_volume	:Number;
+		private var pausePosition			:int;
 		
 		private var rot_duration:Number = 3000; // мс, устанавливать не менее 2000 
 		private var Timer_DurationRot	:Timer = new Timer(250);
@@ -50,13 +53,17 @@ package
 		
 		private var phraza_temp:String;
 		
+		private var copy_words_arr:Array = [];
+		private var copy_verb_arr:Array = [];
 		
 		
 		
 		
-		public function Scene(_data:Model) { 
+		
+		public function Scene(_data:Model, _stage:Stage) { 
 			
 			model = _data;
+			myStage = _stage;
 		
 			pusk_block.button1.addEventListener(MouseEvent.MOUSE_DOWN, button1_MOUSE_DOWN);
 			config_bar_on.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_on_MOUSE_DOWN);
@@ -64,10 +71,13 @@ package
 			Timer_DurationRot.addEventListener(TimerEvent.TIMER, func_Timer_DurationRot);
 			Timer_Listing.addEventListener(TimerEvent.TIMER, func_Timer_Listing);
 			
+			myStage.addEventListener(Event.ACTIVATE, act);
+			myStage.addEventListener(Event.DEACTIVATE, act);
+			
 			lineStart_y = left_type.y;
 			left_type.w1.text = Phrazes_arr[2]; // Сделать
 			right_type.w1.text = Phrazes_arr[3]; // что-то :)
-			right_type.w2.text = Verb_arr[1]; // что-то :)
+			right_type.w2.text = Verb_arr[2]; // что-то :)
 			
 			pusk_block.statusbar.text = Phrazes_arr[0];
 			changeTurn();
@@ -75,9 +85,32 @@ package
 			config_bar_on.buttonMode = true;
 			
 			s_transform = new SoundTransform (channel_volume);
+			default_channel_volume = channel_volume;
 			
-			if (!MUTE) back_channel = principles_of_lust.play(0, 1, s_transform);
+			if (MUTE) setVolume(0);
+		
+			back_channel = principles_of_lust.play(0, 1, s_transform);
 			back_channel.addEventListener(Event.SOUND_COMPLETE, loopSound);
+		}
+		
+		
+		
+		
+		/*********************************************
+		 *           Выключении фоновой музыки       *
+		 *           при активации/деактивации       *
+		 */ //****************************************
+		private function act(event:Event):void{ 
+		
+			if (event.type == 'deactivate') {
+				pausePosition = back_channel.position;
+				back_channel.stop();
+			}
+			else if (event.type == 'activate') {
+				back_channel.stop();
+				back_channel = principles_of_lust.play(pausePosition, 1, s_transform);
+			}
+			
 		}
 		
 		
@@ -85,7 +118,7 @@ package
 		
 		
 		
-		
+		// зацикливание фоновой музыки
 		private function loopSound(event:Event):void{ 
 		
 			back_channel.removeEventListener(Event.SOUND_COMPLETE, loopSound);
@@ -115,7 +148,7 @@ package
 				// создание маски для экрана настроек
 				mask_config = new Sprite();
 				mask_config.graphics.beginFill(0x000000, 1);
-				mask_config.graphics.drawRect(0, 0, 640, 560);
+				mask_config.graphics.drawRect(0, 0, 640, 1136);
 				mask_config.graphics.endFill();
 				addChild(mask_config);
 				config_bar.mask = mask_config;
@@ -124,9 +157,15 @@ package
 					open_config = new Tween (config_bar, 'x', Strong.easeOut, 0, 640, 1, true);
 					open_config.addEventListener(TweenEvent.MOTION_FINISH, after_MOTION_FINISH);
 				}
+				config_bar.mute.addEventListener(MouseEvent.MOUSE_DOWN, mute_MOUSE_DOWN);
+				config_bar.mute.buttonMode = true;
+
 			}
 		}
 		
+		
+
+	
 		
 		
 		
@@ -143,7 +182,35 @@ package
 		
 		
 		
+		/*********************************************
+		 *              Кнопка "MUTE"                *
+		 *                                           *
+		 */ //****************************************
+		private function mute_MOUSE_DOWN(event:MouseEvent):void {
 		
+			key_click.play();
+			
+			if (MUTE) {
+				MUTE = false;
+				config_bar.mute.gotoAndStop('sound_on');
+				setVolume(default_channel_volume);
+			}
+			else {
+				MUTE = true;
+				config_bar.mute.gotoAndStop('sound_off');
+				setVolume(0);
+			}
+		}
+		
+		
+		private function setVolume(vol:Number):void{ 
+		
+			channel_volume = vol;
+			
+			s_transform = back_channel.soundTransform;
+			s_transform.volume = channel_volume;
+			back_channel.soundTransform = s_transform;
+		}
 		
 		
 		
@@ -173,6 +240,7 @@ package
 		public function Kill_config(event:TweenEvent):void {
 			
 			config_bar.config_bar_off.removeEventListener(MouseEvent.MOUSE_DOWN, config_bar_off_MOUSE_DOWN);
+			config_bar.mute.removeEventListener(MouseEvent.MOUSE_DOWN, mute_MOUSE_DOWN);
 			removeChild(mask_config);
 			mask_config = null;
 			removeChild(config_bar);
@@ -256,12 +324,12 @@ package
 			if (spinning_flag) {
 				circles++;
 				wheel_sound.play();
-				if (circles == Words_arr.length) circles = 1;
-				left_type.w1.text = Words_arr[circles];
-				left_type.w2.text = Words_arr[circles];
+				if (circles == copy_words_arr.length) circles = 1;
+				left_type.w1.text = copy_words_arr[circles];
+				left_type.w2.text = copy_words_arr[circles];
 				
-				right_type.w1.text = Verb_arr[circles];
-				right_type.w2.text = Verb_arr[circles];
+				right_type.w1.text = copy_verb_arr[circles];
+				right_type.w2.text = copy_verb_arr[circles];
 			}
 		}
 		
@@ -326,9 +394,9 @@ package
 		public function startMoove():void {
 		
 			if (anim_flag != 'Наполовину') {
-				roleTween1 = new Tween (left_type, 'y', None.easeInOut, lineStart_y, lineStart_y + 47, tween_duration, true);
+				roleTween1 = new Tween (left_type, 'y', None.easeInOut, lineStart_y, lineStart_y + 75, tween_duration, true); //136
 			}
-			roleTween2 = new Tween (right_type, 'y', None.easeInOut, lineStart_y, lineStart_y + 47, tween_duration, true);
+			roleTween2 = new Tween (right_type, 'y', None.easeInOut, lineStart_y, lineStart_y + 75, tween_duration, true);
 			roleTween2.addEventListener(TweenEvent.MOTION_FINISH, Loop);
 		}
 		
@@ -347,14 +415,14 @@ package
 				circles++;
 	
 				// запись в первое поле
-				left_type.w1.text = Words_arr[circles];
-				right_type.w1.text = Verb_arr[circles];
+				left_type.w1.text = copy_words_arr[circles];
+				right_type.w1.text = copy_verb_arr[circles];
 				
-				if (circles == Words_arr.length - 1) circles = 0;
+				if (circles == copy_words_arr.length - 1) circles = 0;
 
 				// запись во второе поле
-				left_type.w2.text = Words_arr[circles + 1];
-				right_type.w2.text = Verb_arr[circles + 1];
+				left_type.w2.text = copy_words_arr[circles + 1];
+				right_type.w2.text = copy_verb_arr[circles + 1];
 				
 				startMoove();
 			}
@@ -374,13 +442,17 @@ package
 		 *              Случайная сортировка         *
 		 *                   массива                 *
 		 */ //****************************************
-		private function SortMe():void { 
+		private function SortMe():void {
 			
-			Words_arr.sort(randomSortFunc);
-			Verb_arr.sort(randomSortFunc);
+			copy_words_arr = Words_arr.slice();
+			copy_verb_arr = Verb_arr.slice();
+			
+			
+			copy_words_arr.sort(randomSortFunc);
+			copy_verb_arr.sort(randomSortFunc);
 			// перемещение элемента 'not used' на 0-е место:
-			Words_arr = replaceNotUsed(Words_arr);
-			Verb_arr = replaceNotUsed(Verb_arr);
+			copy_words_arr = replaceNotUsed(copy_words_arr);
+			copy_verb_arr = replaceNotUsed(copy_verb_arr);
 			
 		}
 		 
@@ -488,17 +560,10 @@ package
 		
 		
 		
-		//TODO: добавить кнопку сброса архива
-		//TODO: перенести кнопку МУТЭ в класс Scene
-		
-		
-		
+		//TODO: дизайнерское оформление
 		
 		//TODO: добавить пароль на просмотр архива
-		
-		//TODO: возможность изменения названия действия
-		
-		//TODO: дизайнерское оформление
+
 		
 		
 		
@@ -588,6 +653,11 @@ package
 		
 		public function get MUTE():Boolean {
 			return model.mute_flag;
+		}
+		public function set MUTE(value:Boolean):void {
+			model.mute_flag = value;
+			model.SharedObj.data.mute_flag = model.mute_flag;
+			model.SharedObj.flush();
 		}
 		
 	}

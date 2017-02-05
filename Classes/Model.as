@@ -37,7 +37,7 @@ package
 		public function Model(){
 		
 			// тут будут все данные приложения
-			words_arr = ['not_used', 'Тискать', 'Лизать', 'Ласкать', 'Покусать', 'Поцеловать', 'Массажировать'];
+			words_arr = ['not_used', 'Щекотать', 'Лизать', 'Прикосн.', 'Покусать', 'Поцеловать', 'Массажир.'];
 			// кусать, ласкать, щекотать, сосать, прикоснуться
 			
 			verb_arr = ['not_used', 'ухо', '?', 'шею', 'грудь', 'губы', 'соски'];
@@ -47,7 +47,7 @@ package
 			animation_kind = ['Вращение', 'Листание', 'Наполовину'];
 			
 
-			phrazes_arr[0] = ['След.ход'];
+			phrazes_arr[0] = ['След. ход'];
 			phrazes_arr[1] = ['. . .'];
 			phrazes_arr[2] = ['Сделать'];
 			phrazes_arr[3] = ['что-то :)'];
@@ -55,6 +55,7 @@ package
 			phrazes_arr[5] = ['Игроку2'];
 			phrazes_arr[6] = [' нужно:'];
 			phrazes_arr[7] = ['Ходит '];
+			phrazes_arr[8] = ['Сброс'];
 			
 			phrazes_arr[10] = ["LoversGame v.1.0"];
 			phrazes_arr[11] = ['Игра для влюбленных. Просто кликайте по очереди на кнопку и делайте друг другу приятно :)'];
@@ -92,7 +93,7 @@ package
 			}
 			else storage = SharedObj.data.storage;
 			
-			if (SharedObj.data.players_names == null) players_names = ['Оля', 'Саша']; // default
+			if (SharedObj.data.players_names == null) players_names = ['Оля', 'Коля']; // default
 			else players_names = SharedObj.data.players_names;
 			
 			if (SharedObj.data.anim_flag == null) anim_flag = animation_kind[0]; // default 
