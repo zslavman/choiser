@@ -56,6 +56,8 @@ package
 		private var copy_words_arr:Array = [];
 		private var copy_verb_arr:Array = [];
 		
+		private var phrazes_arr:Array = [];
+		
 		
 		
 		
@@ -64,8 +66,9 @@ package
 			
 			model = _data;
 			myStage = _stage;
+			phrazes_arr = Model.phrazes_arr;
 		
-			pusk_block.button1.addEventListener(MouseEvent.MOUSE_DOWN, button1_MOUSE_DOWN);
+			pusk_block.button1.addEventListener(MouseEvent.CLICK, button1_MOUSE_DOWN);
 			config_bar_on.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_on_MOUSE_DOWN);
 			
 			Timer_DurationRot.addEventListener(TimerEvent.TIMER, func_Timer_DurationRot);
@@ -75,11 +78,11 @@ package
 			myStage.addEventListener(Event.DEACTIVATE, act);
 			
 			lineStart_y = left_type.y;
-			left_type.w1.text = Phrazes_arr[2]; // Сделать
-			right_type.w1.text = Phrazes_arr[3]; // что-то :)
+			left_type.w1.text = phrazes_arr[2]; // Сделать
+			right_type.w1.text = phrazes_arr[3]; // что-то :)
 			right_type.w2.text = Verb_arr[2]; // что-то :)
 			
-			pusk_block.statusbar.text = Phrazes_arr[0];
+			pusk_block.statusbar.text = phrazes_arr[0];
 			changeTurn();
 			pusk_block.button1.buttonMode = true;
 			config_bar_on.buttonMode = true;
@@ -283,8 +286,8 @@ package
 				names_padej[i] = Players_names[i].slice(0, Players_names[i].length - 1) + 'е';
 			}
 			
-			turn.text = Phrazes_arr[7] + Players_names[digit1]; // Ходит Игрок1
-			who.text = names_padej[digit0] + Phrazes_arr[6]; //Игроку2 нужно:
+			turn.text = phrazes_arr[7] + Players_names[digit1]; // Ходит Игрок1
+			who.text = names_padej[digit0] + phrazes_arr[6]; //Игроку2 нужно:
 			whom.text = names_padej[digit1]; // Игроку1;
 			pusk_block.tip.text = '(' + Players_names[digit0] + ')';
 
@@ -350,9 +353,9 @@ package
 				key_click.play();
 				spinning_flag = true;
 				
-				pusk_block.alpha = 0.4;
-				pusk_block.button1.buttonMode = false;
-				
+				//pusk_block.button1.addEventListener(MouseEvent.MOUSE_UP, button1_MOUSE_UP_OUT);
+				//pusk_block.button1.addEventListener(MouseEvent.MOUSE_OUT, button1_MOUSE_UP_OUT);
+
 				Games_count++;
 				if (Games_count != 1) changeTurn();
 				
@@ -362,7 +365,21 @@ package
 				Timer_DurationRot.start();
 				if (anim_flag == 'Вращение' || anim_flag == 'Наполовину') startMoove(); // запуск твина вращения слов
 				else if (anim_flag == 'Листание') Timer_Listing.start(); // запуск перебора слов (слова будут просто перечисляться по таймеру)
+				
+				pusk_block.alpha = 0.4;
+				pusk_block.button1.buttonMode = false;
+				
 			}
+		}
+		
+		
+		
+		// при отпускании кнопки Пуск
+		private function button1_MOUSE_UP_OUT(event:MouseEvent):void{ 
+		
+			pusk_block.button1.removeEventListener(MouseEvent.MOUSE_UP, button1_MOUSE_UP_OUT);
+			pusk_block.alpha = 0.4;
+			pusk_block.button1.buttonMode = false;
 		}
 		
 		
@@ -551,7 +568,7 @@ package
 			
 			var temp_str:Array = [];
 			// 15 - с 16-го числа начинается месяца в массиве фраз
-			temp_str['chislo'] = '[' + temp_arr[3] + ' ' + Phrazes_arr[temp_arr[4] + 15] + ' '; 
+			temp_str['chislo'] = '[' + temp_arr[3] + ' ' + phrazes_arr[temp_arr[4] + 15] + ' '; 
 			temp_str['vremya'] = temp_arr[0] + ':' + temp_arr[1] + ':' + temp_arr[2] + ']' + ' ';
 			
 			return temp_str;
@@ -600,12 +617,12 @@ package
 		}
 		
 		
-		public function get Phrazes_arr():* {
-			return model.phrazes_arr;
-		}
-		public function set Phrazes_arr(value:*):void {
-			model.phrazes_arr = value;
-		}
+		//public function get phrazes_arr():* {
+			//return model.phrazes_arr;
+		//}
+		//public function set phrazes_arr(value:*):void {
+			//model.phrazes_arr = value;
+		//}
 		
 		
 		public function get spinning_flag():Boolean {

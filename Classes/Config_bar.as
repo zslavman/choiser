@@ -11,10 +11,9 @@ package
 	import fl.transitions.easing.*;
 	import flash.utils.Timer;
 	
-	import flash.events.TextEvent;
-	import flash.net.URLRequest;
-	import flash.net.navigateToURL;
-	import flash.text.*;
+	import flash.filters.BlurFilter;
+	
+
 	
 	
 	/**
@@ -29,14 +28,17 @@ package
 		private var model:Model;
 		private var myScroll:CustomScroll;
 		private var myStage:Stage;
+		public var about_scr:About;
 		
 		private var key_click:Sound = new _key_click();
 		private var chpok:Sound = new _chpok();
 		private var mode_count:uint; // номер элемента массива, настройки которого сейчас включены
 		
-		private var mailCSS:StyleSheet = new StyleSheet();
-		
 		private var Timer_Press:Timer = new Timer (50); // таймер зажимания кн. сброса
+		
+		private var blurFilter:BlurFilter;
+		
+		private var phrazes_arr:Array = [];
 
 		
 		
@@ -47,6 +49,7 @@ package
 
 			model = _data;	
 			myStage = stage;
+			phrazes_arr = Model.phrazes_arr;
 			
 			button_change_mode.addEventListener(MouseEvent.MOUSE_DOWN, mode_MOUSE_DOWN);
 			button_change_mode.buttonMode = true;
@@ -58,11 +61,6 @@ package
 			about_button.addEventListener(MouseEvent.MOUSE_DOWN, about_button_MOUSE_DOWN);
 			about_button.buttonMode = true;
 			
-			about_scr.addEventListener(MouseEvent.CLICK, about_scr_CLICK);
-			
-			about_scr.visible = false;
-			about_scr.buttonMode = true;
-			about_scr.container.mouseChildren = false;
 			
 			name1.addEventListener(Event.CHANGE, textInputCapture);
 			name2.addEventListener(Event.CHANGE, textInputCapture);
@@ -79,18 +77,12 @@ package
 			if (!MUTE) mute.gotoAndStop('sound_on');
 			else mute.gotoAndStop('sound_off');
 			
+			// Добавление класса Скрола текстового поля
 			myScroll = new CustomScroll(myStage, track4_mc, output, up4_btn, down4_btn);
 		
 			// ф-ция заполнения текстового поля скрола
 			scrollertextFill();
 				
-			// линка с почтой:
-			mailCSS.setStyle("a:link", {color:'#000000', textDecoration:'none'}); // 0000CC
-			mailCSS.setStyle("a:hover", {color:'#B4FAF9', textDecoration:'underline'}); // 0000FF
-			
-			about_scr.author.styleSheet = mailCSS;
-			about_scr.author.addEventListener(TextEvent.LINK, linkHandler); // слушатель линка в тексте
- 
 			// заполнение текстовых полей
 			TextFill();
 			
@@ -128,7 +120,7 @@ package
 			button_reset.removeEventListener(MouseEvent.MOUSE_OUT, button_reset_MOUSE_UP_OUT);
 			button_reset.removeEventListener(MouseEvent.MOUSE_UP, button_reset_MOUSE_UP_OUT);
 			
-			reset_txt.text = Phrazes_arr[8];
+			reset_txt.text = phrazes_arr[8];
 			reset_level.visible = false;
 			reset_level.line.scaleX = 0;
 			
@@ -156,7 +148,7 @@ package
 
 			chpok.play();
 			
-			reset_txt.text = Phrazes_arr[8];
+			reset_txt.text = phrazes_arr[8];
 			reset_level.visible = false;
 			reset_level.line.scaleX = 0;
 			
@@ -192,12 +184,7 @@ package
 			name1.text = Players_names[0];
 			name2.text = Players_names[1];
 			what.text = Verb_arr[2];
-			
-			about_scr.container.ver.text = Phrazes_arr[10];
-			about_scr.container.about_pro.text = Phrazes_arr[11]; 
-			about_scr.container.ksiu.text = Phrazes_arr[12];
-			about_scr.author.text = Phrazes_arr[13];
-			//about_scr.container.author.htmlText = Phrazes_arr[13];
+
 		}
 		
 		
@@ -247,14 +234,30 @@ package
 		private function textInputCapture(event:Event):void{ 
 			
 			if (event.currentTarget.name == 'name1') {
+				if (name1.text.length > 11) {
+					//name1.text = name1.text.slice(0, 11);
+					cuterStr(11, name1);
+				}
 				Players_names[0] = name1.text;
 			}
 			else if (event.currentTarget.name == 'name2') {
+				if (name2.text.length > 11) {
+					name2.text = name2.text.slice(0, 11);
+				}
 				Players_names[1] = name2.text;
 			}
 			else if (event.currentTarget.name == 'what') {
+				if (what.text.length > 8) {
+					what.text = what.text.slice(0, 8);
+				}
 				Verb_arr[2] = what.text;
 			}
+		}
+		
+		
+		
+		private function cuterStr(len:uint, txt:*):void {
+			txt.text = txt.text.slice(0, len);
 		}
 		
 		
@@ -290,9 +293,15 @@ package
 		 */ //****************************************
 		private function about_button_MOUSE_DOWN(event:MouseEvent):void {
 			
-			about_scr.visible = true;
+			about_scr = new About();
+			//about_scr.x = -640;
+			about_scr.addEventListener(MouseEvent.CLICK, about_scr_CLICK);
+			parent.addChild(about_scr);
+			Blur('forward');
+			
 			key_click.play();
 		}
+		
 		
 		
 		/*********************************************
@@ -301,26 +310,38 @@ package
 		 */ //****************************************
 		private function about_scr_CLICK(event:MouseEvent):void {
 			
-			about_scr.visible = false;
+			about_scr.removeEventListener(MouseEvent.CLICK, about_scr_CLICK);
+			parent.removeChild(about_scr);
+			about_scr = null;
+			
+			Blur('revers');
+			//key_click.play();
 		}
 		
 		
 		
 		
 		
-		
-		/*********************************************
-		 *                 Л и н к и                 *
-		 *                                           *
-		 */ //****************************************
-		public function linkHandler(linkEvent:TextEvent):void {
+		public function Blur(direction:String):void {
 			
-			if (linkEvent.text == "myMail") {
-				var myRequest:URLRequest = new URLRequest(Phrazes_arr[14]);
-				navigateToURL(myRequest);
+			// прямое направление
+			if (direction == 'forward') {
+				
+				blurFilter = new BlurFilter();
+				blurFilter.blurX = blurFilter.blurY = 16;
+				blurFilter.quality = 3;
+				
+				// наложение фильтров
+				this.filters = [blurFilter];
+			}
+
+			// обратное направление
+			else if (direction == 'revers') {
+
+				// снятие фильтров
+				this.filters = null;
 			}
 		}
-		
 		
 		
 		
@@ -343,12 +364,12 @@ package
 		 *              GETTERS/SETTERS              *
 		 *                                           *
 		 */ //****************************************
-		public function get Phrazes_arr():* {
-			return model.phrazes_arr;
-		}
-		public function set Phrazes_arr(value:*):void {
-			model.phrazes_arr = value;
-		}
+		//public function get phrazes_arr():* {
+			//return model.phrazes_arr;
+		//}
+		//public function set phrazes_arr(value:*):void {
+			//model.phrazes_arr = value;
+		//}
 		
 		
 		

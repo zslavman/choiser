@@ -14,7 +14,7 @@ package
 	 
 	public class Model{
 	
-		public var phrazes_arr:Array = [];
+		public static var phrazes_arr:Array = [];
 		public var words_arr:Array = [];
 		public var verb_arr:Array = [];
 		public var animation_kind:Array = [];
@@ -38,7 +38,7 @@ package
 		
 			// тут будут все данные приложения
 			words_arr = ['not_used', 'Щекотать', 'Лизать', 'Прикосн.', 'Покусать', 'Поцеловать', 'Массажир.'];
-			// кусать, ласкать, щекотать, сосать, прикоснуться
+			// ласкать, сосать
 			
 			verb_arr = ['not_used', 'ухо', '?', 'шею', 'грудь', 'губы', 'соски'];
 			

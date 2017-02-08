@@ -135,7 +135,9 @@ package
 				if (view.config_bar != null) {
 					if (event.keyCode == 27 || event.keyCode == 32) { // клавиша "Space"
 						view.config_bar.config_bar_off.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN));
-						view.config_bar.about_scr.visible = false;
+						if (view.config_bar.about_scr != null) {
+							view.config_bar.about_scr.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+						}
 					}
 				}
 				else if (view.config_bar == null) {
