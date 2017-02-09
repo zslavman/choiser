@@ -282,9 +282,8 @@ package
 			var names_padej = []; // массив имен в дательном падеже
 			
 			// создание массива имен в дательном падеже
-			for (var i:int = 0; i < Players_names.length; i++){ 
-				names_padej[i] = Players_names[i].slice(0, Players_names[i].length - 1) + 'е';
-			}
+			names_padej[0] = changeName(Players_names[0], 'fem'); // женское
+			names_padej[1] = changeName(Players_names[1], 'mal'); // мужское
 			
 			turn.text = phrazes_arr[7] + Players_names[digit1]; // Ходит Игрок1
 			who.text = names_padej[digit0] + phrazes_arr[6]; //Игроку2 нужно:
@@ -294,6 +293,86 @@ package
 			// выполнять след. строку при любой команде кроме 'dont_turn'
 			if (comand != 'dont_turn') Player_flag = !Player_flag; // инверсия флага хода игрока
 		}
+		
+		
+		
+		
+		
+		
+		/*********************************************
+		 *           Ф-ция склоняющая имена          *
+		 *                                           *
+		 */ //****************************************
+		private function changeName(name:String, sex:String):String{ 
+		
+			// вырезаем последнюю букву
+			var last_letter:String = name.substr(name.length - 1, name.length);
+			last_letter = last_letter.toLowerCase();
+			
+			var new_last_letter:String;
+			var flag_add:Boolean = false; // флаг, что нужно добавлять к имени (без удаления посл. буквы)
+			
+			switch (last_letter){
+				
+				case 'а':
+				case 'я':
+					new_last_letter = 'е';
+				break;
+				
+				case 'б':
+				case 'в':
+				case 'г':
+				case 'д':
+				case 'ё':
+				case 'ж':
+				case 'з':
+				case 'к':
+				case 'л':
+				case 'м':
+				case 'н':
+				case 'п':
+				case 'р':
+				case 'с':
+				case 'т':
+				case 'ф':
+				case 'х':
+				case 'ц':
+				case 'ч':
+				case 'ш':
+				case 'щ':
+				case 'ь':
+					if (sex == 'mal') new_last_letter = 'у';
+					else if (sex == 'fem') new_last_letter = 'е';
+					flag_add = true;
+				break;
+
+				case 'й':
+					new_last_letter = 'ю';
+				break;
+				
+				case 'е':
+				case 'и':
+				case 'о':
+				case 'у':
+				case 'ъ':
+				case 'э':
+				case 'ю':
+					new_last_letter = null;
+				break;
+					
+				default:
+					new_last_letter = null;
+			}
+			
+			if (new_last_letter != null) {
+				if (flag_add) name = name + new_last_letter; // просто добавление
+				else name = name.slice(0, name.length - 1) + new_last_letter; // удаление с добавлением
+			}
+			return name;
+		}
+		
+		
+		
 		
 		
 		
