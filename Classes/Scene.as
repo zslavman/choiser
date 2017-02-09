@@ -9,6 +9,7 @@ package
 	import fl.transitions.TweenEvent;
 	import fl.transitions.easing.*;
 	import flash.events.TimerEvent;
+	import flash.geom.Point;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.media.SoundTransform;
@@ -59,6 +60,15 @@ package
 		private var phrazes_arr:Array = [];
 		
 		
+		private var point1		: Point;
+		private var noMOVE		: Boolean = false; // флаг запрета таскания конфига
+		private var Lock_Y		: Number; // переменная для блокировки таскания меню по оси Y
+		private var Start_X		: Number; // х-координата точки хвата конфига
+		private var Start_Y		: Number; // y-координата точки хвата конфига
+		private var sliderLock_Y: Number; // переменная для блокировки таскания слайдера по оси Y
+		private var TweenSpeed	: Number = 0.35;
+		private var TweenSmClass = Regular.easeOut; //Strong.easeOut
+		
 		
 		
 		
@@ -94,7 +104,84 @@ package
 		
 			back_channel = principles_of_lust.play(0, 1, s_transform);
 			back_channel.addEventListener(Event.SOUND_COMPLETE, loopSound);
+			
+			
 		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/*********************************************
+		 *             Двигание Configbar'a          *
+		 *                                           *
+		 */ //****************************************
+		private function config_bar_MOUSE_DOWN(event: MouseEvent): void {
+
+			myStage.addEventListener(MouseEvent.MOUSE_MOVE, config_bar_MOUSE_MOVE); // слушатель обработки движения
+			myStage.addEventListener(MouseEvent.MOUSE_UP, config_bar_MOUSE_UP);
+			Start_X = mouseX; // определение координат точки хвата
+			Start_Y = mouseY;
+			point1 = new Point(mouseX, mouseY);
+		}
+
+		private function config_bar_MOUSE_MOVE(event: MouseEvent): void {
+
+			if (config_bar.y != Lock_Y) config_bar.y = Lock_Y; //ограничение двигания по оси У
+			if (config_bar.x > 640) config_bar.x = 640; // ограничения двигания по оси Х
+
+			var point2: Point = new Point(mouseX, mouseY);
+			var distance: Number = Point.distance(point1, point2); // вычисл. расст. между двумя точками
+			if (distance >= 20) config_bar.startDrag(); // начать перетаскивать
+		}
+
+		private function config_bar_MOUSE_UP(event: MouseEvent): void {
+
+			myStage.removeEventListener(MouseEvent.MOUSE_MOVE, config_bar_MOUSE_MOVE);
+			myStage.removeEventListener(MouseEvent.MOUSE_UP, config_bar_MOUSE_UP);
+
+			config_bar.stopDrag();
+			config_bar.y = Lock_Y;
+
+			//var Stop_X: Number = mouseX; // определение координат точки отпускания (для скорости)
+			//var Delta_X: Number = Start_X - Stop_X; // определение координат точки хвата (для скорости)
+
+			var Position_X: Number = config_bar.x; // точка в которой отпустили мувиклип
+			if (Position_X > 500 && !noMOVE) { // если менюшку отпустили на позиции Х-координаты больше 500 то возвращаем менюшку вправо
+				open_config = new Tween(config_bar, "x", TweenSmClass, config_bar.x, 640, TweenSpeed, true);
+				
+			} 
+			else { // иначе влево
+				close_config = new Tween(config_bar, "x", TweenSmClass, config_bar.x, 0, TweenSpeed, true);
+				close_config.addEventListener(TweenEvent.MOTION_FINISH, Kill_config);
+			}
+		}
+		
+		//TODO: прописать переключение флага в слайдер прокрутки скроллбара noMOVE = true;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -146,7 +233,9 @@ package
 			if (config_bar == null) {
 				
 				config_bar = new Config_bar(model, stage);
+				config_bar.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_MOUSE_DOWN);
 				addChild(config_bar);
+				Lock_Y = config_bar.y;
 				
 				// создание маски для экрана настроек
 				mask_config = new Sprite();
@@ -237,7 +326,7 @@ package
 		
 		
 		/*********************************************
-		 *         Удаления класса Config            *
+		 *         Удаление класса Config            *
 		 *                                           *
 		 */ //****************************************
 		public function Kill_config(event:TweenEvent):void {
@@ -307,6 +396,11 @@ package
 		
 			// вырезаем последнюю букву
 			var last_letter:String = name.substr(name.length - 1, name.length);
+			
+			// определение заглавная ли буква
+			var flag_up_Case:Boolean = false; // флаг заглавной буквы
+			if (last_letter === last_letter.toUpperCase()) flag_up_Case = true;
+			
 			last_letter = last_letter.toLowerCase();
 			
 			var new_last_letter:String;
@@ -340,13 +434,13 @@ package
 				case 'ч':
 				case 'ш':
 				case 'щ':
-				case 'ь':
 					if (sex == 'mal') new_last_letter = 'у';
 					else if (sex == 'fem') new_last_letter = 'е';
 					flag_add = true;
 				break;
 
 				case 'й':
+				case 'ь':
 					new_last_letter = 'ю';
 				break;
 				
@@ -363,6 +457,8 @@ package
 				default:
 					new_last_letter = null;
 			}
+			
+			if (flag_up_Case) new_last_letter = new_last_letter.toUpperCase();
 			
 			if (new_last_letter != null) {
 				if (flag_add) name = name + new_last_letter; // просто добавление
