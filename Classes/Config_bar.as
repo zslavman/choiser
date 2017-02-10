@@ -39,6 +39,7 @@ package
 		private var blurFilter:BlurFilter;
 		
 		private var phrazes_arr:Array = [];
+		private var words_count:uint = 1; // число для листания слов
 
 		
 		
@@ -53,6 +54,9 @@ package
 			
 			button_change_mode.addEventListener(MouseEvent.MOUSE_DOWN, mode_MOUSE_DOWN);
 			button_change_mode.buttonMode = true;
+			
+			chg.addEventListener(MouseEvent.MOUSE_DOWN, chg_MOUSE_DOWN);
+			chg.buttonMode = true;
 			
 			button_reset.addEventListener(MouseEvent.MOUSE_DOWN, button_reset_MOUSE_DOWN);
 			button_reset.buttonMode = true;
@@ -93,6 +97,31 @@ package
 
 		
 
+		
+		
+		
+		
+		
+		
+		/*********************************************
+		 *                Кнопка "Chg"               *
+		 *                                           *
+		 */ //****************************************
+		private function chg_MOUSE_DOWN(event:MouseEvent):void {
+			
+			words_count++;
+			
+			if (words_count > 6) {
+				words_count = 1;
+				//TODO: не работает условие длинны массива
+			}
+			what.text = Verb_arr[words_count];
+		}
+		
+		
+		
+		
+		
 		
 		
 		
@@ -183,7 +212,7 @@ package
 			mode.text = Anim_flag;
 			name1.text = Players_names[0];
 			name2.text = Players_names[1];
-			what.text = Verb_arr[2];
+			what.text = Verb_arr[1];
 
 		}
 		

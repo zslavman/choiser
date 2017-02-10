@@ -63,10 +63,8 @@ package
 		
 		private var point1		: Point;
 		private var need_noMOVE	: Boolean = false; // флаг запрета таскания конфига
-		private var Lock_Y		: Number; // переменная для блокировки таскания меню по оси Y
 		private var Start_X		: Number; // х-координата точки хвата конфига
 		private var Start_Y		: Number; // y-координата точки хвата конфига
-		private var sliderLock_Y: Number; // переменная для блокировки таскания слайдера по оси Y
 		private var TweenSpeed	: Number = 0.35;
 		private var TweenSmClass = Regular.easeOut; //Strong.easeOut
 		
@@ -145,9 +143,6 @@ package
 
 		private function config_bar_MOUSE_MOVE(event: MouseEvent): void {
 
-			//if (config_bar.y != Lock_Y) config_bar.y = Lock_Y; //ограничение двигания по оси У
-			//if (config_bar.x > 640) config_bar.x = 640; // ограничения двигания по оси Х
-
 			var point2: Point = new Point(mouseX, mouseY);
 			var distance: Number = Point.distance(point1, point2); // вычисл. расст. между двумя точками
 			if (distance >= 20) config_bar.startDrag(false, boundingBox); // начать перетаскивать
@@ -159,10 +154,6 @@ package
 			myStage.removeEventListener(MouseEvent.MOUSE_UP, config_bar_MOUSE_UP);
 
 			config_bar.stopDrag();
-			config_bar.y = Lock_Y;
-
-			//var Stop_X: Number = mouseX; // определение координат точки отпускания (для скорости)
-			//var Delta_X: Number = Start_X - Stop_X; // определение координат точки хвата (для скорости)
 
 			var Position_X: Number = config_bar.x; // точка в которой отпустили мувиклип
 			
@@ -241,8 +232,7 @@ package
 				config_bar = new Config_bar(model, stage);
 				config_bar.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_MOUSE_DOWN);
 				addChild(config_bar);
-				Lock_Y = config_bar.y;
-				
+			
 				// создание маски для экрана настроек
 				mask_config = new Sprite();
 				mask_config.graphics.beginFill(0x000000, 1);
