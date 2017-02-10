@@ -10,6 +10,7 @@ package
 	import fl.transitions.easing.*;
 	import flash.events.TimerEvent;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
 	import flash.media.SoundTransform;
@@ -61,13 +62,21 @@ package
 		
 		
 		private var point1		: Point;
-		private var noMOVE		: Boolean = false; // флаг запрета таскания конфига
+		private var need_noMOVE	: Boolean = false; // флаг запрета таскания конфига
 		private var Lock_Y		: Number; // переменная для блокировки таскания меню по оси Y
 		private var Start_X		: Number; // х-координата точки хвата конфига
 		private var Start_Y		: Number; // y-координата точки хвата конфига
 		private var sliderLock_Y: Number; // переменная для блокировки таскания слайдера по оси Y
 		private var TweenSpeed	: Number = 0.35;
 		private var TweenSmClass = Regular.easeOut; //Strong.easeOut
+		
+		private var mySliderLength:uint = 640;
+		private var boundingBox	:Rectangle;
+		private var close_config_manualy:Tween;
+		
+		
+		
+		
 		
 		
 		
@@ -105,6 +114,7 @@ package
 			back_channel = principles_of_lust.play(0, 1, s_transform);
 			back_channel.addEventListener(Event.SOUND_COMPLETE, loopSound);
 			
+			boundingBox = new Rectangle(0, 0, mySliderLength, 0);
 			
 		}
 		
@@ -135,12 +145,12 @@ package
 
 		private function config_bar_MOUSE_MOVE(event: MouseEvent): void {
 
-			if (config_bar.y != Lock_Y) config_bar.y = Lock_Y; //ограничение двигания по оси У
-			if (config_bar.x > 640) config_bar.x = 640; // ограничения двигания по оси Х
+			//if (config_bar.y != Lock_Y) config_bar.y = Lock_Y; //ограничение двигания по оси У
+			//if (config_bar.x > 640) config_bar.x = 640; // ограничения двигания по оси Х
 
 			var point2: Point = new Point(mouseX, mouseY);
 			var distance: Number = Point.distance(point1, point2); // вычисл. расст. между двумя точками
-			if (distance >= 20) config_bar.startDrag(); // начать перетаскивать
+			if (distance >= 20) config_bar.startDrag(false, boundingBox); // начать перетаскивать
 		}
 
 		private function config_bar_MOUSE_UP(event: MouseEvent): void {
@@ -155,27 +165,23 @@ package
 			//var Delta_X: Number = Start_X - Stop_X; // определение координат точки хвата (для скорости)
 
 			var Position_X: Number = config_bar.x; // точка в которой отпустили мувиклип
-			if (Position_X > 500 && !noMOVE) { // если менюшку отпустили на позиции Х-координаты больше 500 то возвращаем менюшку вправо
-				open_config = new Tween(config_bar, "x", TweenSmClass, config_bar.x, 640, TweenSpeed, true);
-				
-			} 
-			else { // иначе влево
-				close_config = new Tween(config_bar, "x", TweenSmClass, config_bar.x, 0, TweenSpeed, true);
-				close_config.addEventListener(TweenEvent.MOTION_FINISH, Kill_config);
+			
+			if (!need_noMOVE) {
+				if (Position_X > 500) { // если менюшку отпустили на позиции Х-координаты больше 500 то возвращаем менюшку вправо
+					open_config = new Tween(config_bar, "x", TweenSmClass, config_bar.x, 640, TweenSpeed, true);
+					
+				} 
+				else { // иначе влево
+					close_config_manualy = new Tween(config_bar, "x", TweenSmClass, config_bar.x, 0, TweenSpeed, true);
+					close_config_manualy.addEventListener(TweenEvent.MOTION_FINISH, Kill_config);
+				}
 			}
 		}
 		
 		//TODO: прописать переключение флага в слайдер прокрутки скроллбара noMOVE = true;
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
+
 		
 		
 		
@@ -315,6 +321,7 @@ package
 			key_click.play();
 			
 			if (config_bar.x == 640) {
+				need_noMOVE = true;
 				close_config = new Tween (config_bar, 'x', Strong.easeOut, 640, 0, 1, true);
 				close_config.addEventListener(TweenEvent.MOTION_FINISH, Kill_config);
 				changeTurn('dont_turn');
@@ -331,12 +338,15 @@ package
 		 */ //****************************************
 		public function Kill_config(event:TweenEvent):void {
 			
+			//changeTurn('dont_turn');
+			
 			config_bar.config_bar_off.removeEventListener(MouseEvent.MOUSE_DOWN, config_bar_off_MOUSE_DOWN);
 			config_bar.mute.removeEventListener(MouseEvent.MOUSE_DOWN, mute_MOUSE_DOWN);
 			removeChild(mask_config);
 			mask_config = null;
 			removeChild(config_bar);
 			config_bar = null;
+			need_noMOVE = false;
 		}
 		
 		
