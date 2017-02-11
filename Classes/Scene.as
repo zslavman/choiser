@@ -165,6 +165,7 @@ package
 				else { // иначе влево
 					close_config_manualy = new Tween(config_bar, "x", TweenSmClass, config_bar.x, 0, TweenSpeed, true);
 					close_config_manualy.addEventListener(TweenEvent.MOTION_FINISH, Kill_config);
+					//TODO: все еще вылетает ошибка с ранним удалением конфигбара
 				}
 			}
 		}

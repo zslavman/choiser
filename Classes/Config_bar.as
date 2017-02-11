@@ -40,6 +40,7 @@ package
 		
 		private var phrazes_arr:Array = [];
 		private var words_count:uint = 1; // число для листания слов
+		private var selector_flag:Boolean = false; // флаг для определения что выводить 
 
 		
 		
@@ -55,8 +56,11 @@ package
 			button_change_mode.addEventListener(MouseEvent.MOUSE_DOWN, mode_MOUSE_DOWN);
 			button_change_mode.buttonMode = true;
 			
-			chg.addEventListener(MouseEvent.MOUSE_DOWN, chg_MOUSE_DOWN);
-			chg.buttonMode = true;
+			chg_up.addEventListener(MouseEvent.MOUSE_DOWN, chg_MOUSE_DOWN);
+			chg_up.buttonMode = true;
+			
+			chg_down.addEventListener(MouseEvent.MOUSE_DOWN, chg_MOUSE_DOWN);
+			chg_down.buttonMode = true;
 			
 			button_reset.addEventListener(MouseEvent.MOUSE_DOWN, button_reset_MOUSE_DOWN);
 			button_reset.buttonMode = true;
@@ -109,13 +113,27 @@ package
 		 */ //****************************************
 		private function chg_MOUSE_DOWN(event:MouseEvent):void {
 			
-			words_count++;
+			key_click.play();
 			
-			if (words_count > 6) {
-				words_count = 1;
-				//TODO: не работает условие длинны массива
+			if (event.currentTarget.name == 'chg_down') {
+				words_count--;
+				if (words_count < 2) {
+					words_count = Verb_arr.length - 1;
+					selector_flag = !selector_flag;
+				}
 			}
-			what.text = Verb_arr[words_count];
+			else if (event.currentTarget.name == 'chg_up') {
+				words_count++;
+				if (words_count > Verb_arr.length - 1) {
+					words_count = 1;
+					selector_flag = !selector_flag;
+				}
+			}
+			
+			trace ("words_count = " + words_count);
+			
+			if (selector_flag) what.text = Verb_arr[words_count];
+			else what.text = Words_arr[words_count];
 		}
 		
 		
@@ -212,7 +230,7 @@ package
 			mode.text = Anim_flag;
 			name1.text = Players_names[0];
 			name2.text = Players_names[1];
-			what.text = Verb_arr[1];
+			what.text = Words_arr[1];
 
 		}
 		
@@ -472,6 +490,13 @@ package
 		//public function set Verb_arr(value:*):void {
 			//model.verb_arr = value;
 		//}
+		
+		
+		
+		
+		public function get Words_arr():* {
+			return model.words_arr;
+		}
 
 	}
 }
