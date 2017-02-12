@@ -17,6 +17,8 @@ package
 		public static var phrazes_arr:Array = [];
 		public var words_arr:Array = [];
 		public var verb_arr:Array = [];
+		public var copy_words_arr:Array = [];
+		public var copy_verb_arr:Array = [];
 		public var animation_kind:Array = [];
 		public var players_names:Array;
 		
@@ -41,6 +43,9 @@ package
 			// ласкать, сосать
 			
 			verb_arr = ['not_used', 'ухо', '?', 'шею', 'грудь', 'губы', 'соски'];
+			
+			// копии массивов для их восстановления
+			//copy_words_arr = words_arr.slice();
 			
 			//animation_kind = ['rotate', 'list', 'half']; // rotate - вращаются оба, list - замена слов в обоих полях, 
 			// half - первое поле вращается а второе листается

@@ -215,6 +215,8 @@ package
 			TextFill();
 			output.text = '';
 			mode_count = 0;
+			//TODO: восстанавливать массив слов () копию
+			
 		}
 		
 		
@@ -297,7 +299,8 @@ package
 				if (what.text.length > 8) {
 					what.text = what.text.slice(0, 8);
 				}
-				Verb_arr[2] = what.text;
+				Verb_arr[words_count] = what.text;
+				//
 			}
 		}
 		

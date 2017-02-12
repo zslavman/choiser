@@ -639,6 +639,7 @@ package
 			
 			copy_words_arr = Words_arr.slice();
 			copy_verb_arr = Verb_arr.slice();
+			//copy_verb_arr = model.
 			
 			
 			copy_words_arr.sort(randomSortFunc);
@@ -753,8 +754,7 @@ package
 		
 		
 		
-		//TODO: дизайнерское оформление
-		
+	
 		//TODO: добавить пароль на просмотр архива
 
 		
@@ -792,14 +792,7 @@ package
 			model.verb_arr = value;
 		}
 		
-		
-		//public function get phrazes_arr():* {
-			//return model.phrazes_arr;
-		//}
-		//public function set phrazes_arr(value:*):void {
-			//model.phrazes_arr = value;
-		//}
-		
+
 		
 		public function get spinning_flag():Boolean {
 			return model.spinning_flag;
