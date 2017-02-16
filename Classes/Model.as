@@ -81,7 +81,8 @@ package
 			phrazes_arr[25] = ['окт'];
 			phrazes_arr[26] = ['ноя'];
 			phrazes_arr[27] = ['дек'];
-			phrazes_arr[28] = [''];
+			phrazes_arr[28] = ['имя существительное'];
+			phrazes_arr[29] = ['глагол'];
 		
 			// создаем регулярное выражение для поиска пробелов в названии
 			var reg:RegExp = / /g; // парамерт /g маска для всех " " в выражении
@@ -129,21 +130,25 @@ package
 		 
 		
 
-		 public function get Words_arr():* {
+		 public function get Words_arr():Array {
 			return words_arr;
 		}
-		public function set Words_arr(value:*):void {
-			words_arr = value;
-		}
+		
+		// через геттер можно менять элементы массива по одному,
+		// потому сеттер не используется!!!
+		
+		//public function set Words_arr(value:*):void {
+			//words_arr = value;
+		//}
 		
 		
 		
-		public function get Verb_arr():* {
+		public function get Verb_arr():Array {
 			return verb_arr;
 		}
-		public function set Verb_arr(value:*):void {
-			verb_arr = value;
-		}
+		//public function set Verb_arr(value:*):void {
+			//verb_arr = value;
+		//}
 		
 
 		

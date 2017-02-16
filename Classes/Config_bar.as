@@ -40,7 +40,7 @@ package
 		
 		private var phrazes_arr:Array = [];
 		private var words_count:uint = 1; // число для листания слов
-		private var selector_flag:Boolean = false; // флаг для определения что выводить 
+		private var selector_flag:Boolean = false; // флаг для определения что выводить (глагол или имя существ.) 
 
 		
 		
@@ -117,7 +117,7 @@ package
 			
 			if (event.currentTarget.name == 'chg_down') {
 				words_count--;
-				if (words_count < 2) {
+				if (words_count < 1) {
 					words_count = model.Verb_arr.length - 1;
 					selector_flag = !selector_flag;
 				}
@@ -130,10 +130,14 @@ package
 				}
 			}
 			
-			trace ("words_count = " + words_count);
-			
-			if (selector_flag) what.text = model.Verb_arr[words_count];
-			else what.text = model.Words_arr[words_count];
+			if (selector_flag) {
+				what.text = model.Verb_arr[words_count];
+				glagol.text = phrazes_arr[28] + ' ' + words_count;
+			}
+			else {
+				what.text = model.Words_arr[words_count];
+				glagol.text = phrazes_arr[29] + ' ' + words_count;
+			}
 		}
 		
 		
@@ -233,7 +237,7 @@ package
 			name1.text = model.Players_names[0];
 			name2.text = model.Players_names[1];
 			what.text = model.Words_arr[1];
-
+			glagol.text = phrazes_arr[29] + ' ' + words_count;
 		}
 		
 		
@@ -263,7 +267,13 @@ package
 				//}
 				
 				// обратный порядок вывода инфы
-				for (var i:int = model.Storage.phraza.length - 1; i >= 0; i--) { 
+				//for (var i:int = model.Storage.phraza.length - 1; i >= 0; i--) { 
+					//toSend += model.Storage.cur_date[i] + model.Storage.cur_time[i] + model.Storage.phraza[i] + '\r';
+				//}
+				
+				// быстрый способ обойти массив с конца
+				var i:uint = model.Storage.phraza.length;
+				while(i--) {
 					toSend += model.Storage.cur_date[i] + model.Storage.cur_time[i] + model.Storage.phraza[i] + '\r';
 				}
 				output.text = toSend;
@@ -299,8 +309,13 @@ package
 				if (what.text.length > 8) {
 					what.text = what.text.slice(0, 8);
 				}
-				model.Verb_arr[words_count] = what.text;
-				//
+				if (selector_flag) model.Verb_arr[words_count] = what.text;
+				else model.Words_arr[words_count] = what.text;
+				
+				//var temp_arr:Array = model.Verb_arr;
+				//temp_arr[words_count] = what.text;
+				//model.Verb_arr = temp_arr;
+				//trace ("temp_arr = " + temp_arr);
 			}
 		}
 		

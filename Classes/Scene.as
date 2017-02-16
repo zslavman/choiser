@@ -91,8 +91,8 @@ package
 			Timer_DurationRot.addEventListener(TimerEvent.TIMER, func_Timer_DurationRot);
 			Timer_Listing.addEventListener(TimerEvent.TIMER, func_Timer_Listing);
 			
-			myStage.addEventListener(Event.ACTIVATE, act);
-			myStage.addEventListener(Event.DEACTIVATE, act);
+			//myStage.addEventListener(Event.ACTIVATE, act);
+			//myStage.addEventListener(Event.DEACTIVATE, act);
 			
 			lineStart_y = left_type.y;
 			left_type.w1.text = phrazes_arr[2]; // Сделать
@@ -400,7 +400,21 @@ package
 			
 			// определение заглавная ли буква
 			var flag_up_Case:Boolean = false; // флаг заглавной буквы
-			if (last_letter === last_letter.toUpperCase()) flag_up_Case = true;
+			//var reg:RegExp = /[:alpha:]/ig; // все буквы
+			var reg:RegExp = /\w\D/ig; // все буквы
+			// reg.test(last_letter - поиск строки в регулярке, выдает false/true
+			if (/*last_letter === last_letter.toUpperCase() &&*/ last_letter.search(reg) >= 0) flag_up_Case = true;
+			
+			trace ("last_letter.search(reg) = " + last_letter.search(reg));
+			
+			//if (last_letter.charCodeAt() == last_letter.toUpperCase().charCodeAt()) flag_up_Case = true;
+			//
+			//trace ("код до увеличения = " + last_letter.charCodeAt());
+			//trace ("код после увеличения = " + last_letter.toUpperCase().charCodeAt());
+			//trace ("flag_up_Case = " + flag_up_Case);
+			
+			//TODO: не работает поиск на любую букву
+			
 			
 			last_letter = last_letter.toLowerCase();
 			
@@ -465,6 +479,7 @@ package
 				if (flag_add) name = name + new_last_letter; // просто добавление
 				else name = name.slice(0, name.length - 1) + new_last_letter; // удаление с добавлением
 			}
+			//trace ("flag_up_Case = " + flag_up_Case);
 			return name;
 		}
 		
