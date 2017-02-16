@@ -15,24 +15,24 @@ package
 	public class Model{
 	
 		public static var phrazes_arr:Array = [];
-		public var words_arr:Array = [];
-		public var verb_arr:Array = [];
-		public var copy_words_arr:Array = [];
-		public var copy_verb_arr:Array = [];
-		public var animation_kind:Array = [];
-		public var players_names:Array;
+		private var words_arr:Array = [];
+		private var verb_arr:Array = [];
+		private var copy_words_arr:Array = [];
+		private var copy_verb_arr:Array = [];
+		private var animation_kind:Array = [];
+		private var players_names:Array;
 		
-		public var spinning_flag:Boolean = false; // флаг наличия вращения колеса
-		public var player_flag:Boolean = true; // флаг какой игрок ходит, true - первый, false - второй
-		public var mute_flag:Boolean; // флаг mute
+		private var spinning_flag:Boolean = false; // флаг наличия вращения колеса
+		private var player_flag:Boolean = true; // флаг какой игрок ходит, true - первый, false - второй
+		private var mute_flag:Boolean; // флаг mute
 		
-		public var anim_flag:String; // флаг - вид анимации колес
+		private var anim_flag:String; // флаг - вид анимации колес
 		
-		public var games_count:uint = 0; // для того что бы не менять ход игроков при первом запуске
+		private var games_count:uint = 0; // для того что бы не менять ход игроков при первом запуске
 		
-		public var SharedObj:SharedObject;
+		private var SharedObj:SharedObject;
 		
-		public var storage:Object; // архив-хранилище
+		private var storage:Object; // архив-хранилище
 		
 		
 
@@ -106,15 +106,125 @@ package
 			
 			if (SharedObj.data.mute_flag == null) mute_flag = false; // default 
 			else mute_flag = SharedObj.data.mute_flag;
-			
-			
-			
-			
-			
-			
-			
 		}
-	
-	}
+		
+		
+		
+		
+		
+		/*********************************************
+		 *              GETTERS/SETTERS              *
+		 *                                           *
+		 */ //****************************************
+		
+		public static function get Phrazes_arr():* {
+			return phrazes_arr;
+		} 
+		
+		
+		
+		public function get Animation_kind():* {
+			return animation_kind;
+		}
+		 
+		
 
+		 public function get Words_arr():* {
+			return words_arr;
+		}
+		public function set Words_arr(value:*):void {
+			words_arr = value;
+		}
+		
+		
+		
+		public function get Verb_arr():* {
+			return verb_arr;
+		}
+		public function set Verb_arr(value:*):void {
+			verb_arr = value;
+		}
+		
+
+		
+		public function get Spinning_flag():Boolean {
+			return spinning_flag;
+		}
+		public function set Spinning_flag(value:Boolean):void {
+			spinning_flag = value;
+		}
+		
+		
+		
+		
+		public function get Anim_flag():String {
+			return anim_flag;
+		}
+		public function set Anim_flag(value:String):void {
+			anim_flag = value;
+			SharedObj.data.anim_flag = anim_flag;
+			SharedObj.flush();
+		}
+		
+
+		
+		
+		public function get Players_names():* {
+			// запись в лок.хранил. из геттера потому что при установке Players_names[x] используется 
+			// именно геттер а не сеттер
+			SharedObj.data.players_names = players_names;
+			SharedObj.flush();
+			return players_names;
+		}
+		public function set Players_names(value:*):void {
+			players_names = value;
+			SharedObj.data.players_names = players_names;
+			SharedObj.flush();
+		}
+
+		
+		
+		
+		public function get Player_flag():Boolean {
+			return player_flag;
+		}
+		public function set Player_flag(value:Boolean):void {
+			player_flag = value;
+		}
+		
+		
+		
+		
+		public function get Games_count():uint {
+			return games_count;
+		}
+		public function set Games_count(value:uint):void {
+			games_count = value;
+		}
+		
+		
+
+		
+		
+		public function get Storage():Object {
+			SharedObj.data.storage = storage;
+			SharedObj.flush();
+			return storage;
+		}
+		public function set Storage(value:Object):void {
+			storage = value;
+			SharedObj.data.storage = storage;
+			SharedObj.flush();
+		}
+		
+		
+		public function get MUTE():Boolean {
+			return mute_flag;
+		}
+		public function set MUTE(value:Boolean):void {
+			mute_flag = value;
+			SharedObj.data.mute_flag = mute_flag;
+			SharedObj.flush();
+		}
+	}
 }

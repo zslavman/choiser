@@ -51,7 +51,7 @@ package
 
 			model = _data;	
 			myStage = stage;
-			phrazes_arr = Model.phrazes_arr;
+			phrazes_arr = Model.Phrazes_arr;
 			
 			button_change_mode.addEventListener(MouseEvent.MOUSE_DOWN, mode_MOUSE_DOWN);
 			button_change_mode.buttonMode = true;
@@ -76,13 +76,13 @@ package
 			
 			
 			// определение числа mode_count (какой режим включен)
-			for (var i:int = 0; i < Animation_kind.length; i++){ 
-				if (Animation_kind[i] == Anim_flag) {
+			for (var i:int = 0; i < model.Animation_kind.length; i++){ 
+				if (model.Animation_kind[i] == model.Anim_flag) {
 					mode_count = i;
 				}
 			}
 			
-			if (!MUTE) mute.gotoAndStop('sound_on');
+			if (!model.MUTE) mute.gotoAndStop('sound_on');
 			else mute.gotoAndStop('sound_off');
 			
 			// Добавление класса Скрола текстового поля
@@ -118,13 +118,13 @@ package
 			if (event.currentTarget.name == 'chg_down') {
 				words_count--;
 				if (words_count < 2) {
-					words_count = Verb_arr.length - 1;
+					words_count = model.Verb_arr.length - 1;
 					selector_flag = !selector_flag;
 				}
 			}
 			else if (event.currentTarget.name == 'chg_up') {
 				words_count++;
-				if (words_count > Verb_arr.length - 1) {
+				if (words_count > model.Verb_arr.length - 1) {
 					words_count = 1;
 					selector_flag = !selector_flag;
 				}
@@ -132,8 +132,8 @@ package
 			
 			trace ("words_count = " + words_count);
 			
-			if (selector_flag) what.text = Verb_arr[words_count];
-			else what.text = Words_arr[words_count];
+			if (selector_flag) what.text = model.Verb_arr[words_count];
+			else what.text = model.Words_arr[words_count];
 		}
 		
 		
@@ -199,14 +199,14 @@ package
 			reset_level.visible = false;
 			reset_level.line.scaleX = 0;
 			
-			Anim_flag = 'Вращение';
-			Players_names = ['Оля', 'Саша'];
-			Verb_arr[2] = '?';
+			model.Anim_flag = 'Вращение';
+			model.Players_names = ['Оля', 'Саша'];
+			model.Verb_arr[2] = '?';
 			
-			MUTE = false;
+			model.MUTE = false;
 			mute.gotoAndStop('sound_on');
 			
-			Storage = {
+			model.Storage = {
 				phraza:[],
 				cur_date:[],
 				cur_time:[]
@@ -229,10 +229,10 @@ package
 		 */ //****************************************
 		public function TextFill():void{ 
 		
-			mode.text = Anim_flag;
-			name1.text = Players_names[0];
-			name2.text = Players_names[1];
-			what.text = Words_arr[1];
+			mode.text = model.Anim_flag;
+			name1.text = model.Players_names[0];
+			name2.text = model.Players_names[1];
+			what.text = model.Words_arr[1];
 
 		}
 		
@@ -255,7 +255,7 @@ package
 			
 			var toSend:String = '';
 			
-			if (Storage.phraza.length) {
+			if (model.Storage.phraza.length) {
 				
 				// прямой порядок вывода инфы
 				//for (var i:int = 0; i < Storage.phraza.length; i++){ 
@@ -263,8 +263,8 @@ package
 				//}
 				
 				// обратный порядок вывода инфы
-				for (var i:int = Storage.phraza.length - 1; i >= 0; i--) { 
-					toSend += Storage.cur_date[i] + Storage.cur_time[i] + Storage.phraza[i] + '\r';
+				for (var i:int = model.Storage.phraza.length - 1; i >= 0; i--) { 
+					toSend += model.Storage.cur_date[i] + model.Storage.cur_time[i] + model.Storage.phraza[i] + '\r';
 				}
 				output.text = toSend;
 			}
@@ -287,19 +287,19 @@ package
 					//name1.text = name1.text.slice(0, 11);
 					cuterStr(11, name1);
 				}
-				Players_names[0] = name1.text;
+				model.Players_names[0] = name1.text;
 			}
 			else if (event.currentTarget.name == 'name2') {
 				if (name2.text.length > 11) {
 					name2.text = name2.text.slice(0, 11);
 				}
-				Players_names[1] = name2.text;
+				model.Players_names[1] = name2.text;
 			}
 			else if (event.currentTarget.name == 'what') {
 				if (what.text.length > 8) {
 					what.text = what.text.slice(0, 8);
 				}
-				Verb_arr[words_count] = what.text;
+				model.Verb_arr[words_count] = what.text;
 				//
 			}
 		}
@@ -320,12 +320,12 @@ package
 		 */ //****************************************
 		private function mode_MOUSE_DOWN(event:MouseEvent):void{ 
 			
-			if (!Spinning_flag){
+			if (!model.Spinning_flag){
 				key_click.play();
 				mode_count++;
-				if (mode_count == Animation_kind.length) mode_count = 0;
-				Anim_flag = Animation_kind[mode_count];
-				mode.text = Anim_flag;
+				if (mode_count == model.Animation_kind.length) mode_count = 0;
+				model.Anim_flag = model.Animation_kind[mode_count];
+				mode.text = model.Anim_flag;
 			}
 		}
 		
@@ -392,114 +392,5 @@ package
 				this.filters = null;
 			}
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		/*********************************************
-		 *              GETTERS/SETTERS              *
-		 *                                           *
-		 */ //****************************************
-		//public function get phrazes_arr():* {
-			//return model.phrazes_arr;
-		//}
-		//public function set phrazes_arr(value:*):void {
-			//model.phrazes_arr = value;
-		//}
-		
-		
-		
-		
-		public function get Animation_kind():* {
-			return model.animation_kind;
-		}
-
-		
-		
-		public function get Anim_flag():String {
-			return model.anim_flag;
-		}
-		public function set Anim_flag(value:String):void {
-			model.anim_flag = value;
-			model.SharedObj.data.anim_flag = model.anim_flag;
-			model.SharedObj.flush();
-		}
-		
-		
-		
-		
-		public function get Spinning_flag():Boolean {
-			return model.spinning_flag;
-		}
-		
-		
-		public function get MUTE():Boolean {
-			return model.mute_flag;
-		}
-		public function set MUTE(value:Boolean):void {
-			model.mute_flag = value;
-			model.SharedObj.data.mute_flag = model.mute_flag;
-			model.SharedObj.flush();
-		}
-		
-		
-		
-		public function get Players_names():* {
-			// запись в лок.хранил. из геттера потому что при установке Players_names[x] используется 
-			// именно геттер а не сеттер
-			model.SharedObj.data.players_names = model.players_names;
-			model.SharedObj.flush();
-			return model.players_names;
-		}
-		public function set Players_names(value:*):void {
-			model.players_names = value;
-			model.SharedObj.data.players_names = model.players_names;
-			model.SharedObj.flush();
-		}
-	
-		
-	
-		public function get Storage():Object {
-			model.SharedObj.data.storage = model.storage;
-			model.SharedObj.flush();
-			return model.storage;
-		}
-		public function set Storage(value:Object):void {
-			model.storage = value;
-			model.SharedObj.data.storage = model.storage;
-			model.SharedObj.flush();
-		}
-		
-		
-		
-		
-		public function get Verb_arr():* {
-			return model.verb_arr;
-		}
-		//public function set Verb_arr(value:*):void {
-			//model.verb_arr = value;
-		//}
-		
-		
-		
-		
-		public function get Words_arr():* {
-			return model.words_arr;
-		}
-
 	}
 }

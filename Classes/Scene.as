@@ -23,8 +23,8 @@ package
 	 */
 	public class Scene extends Sprite {
 	
-		private var model		:Model;
 		public var config_bar	:Config_bar;
+		private var model		:Model;
 		private var mask_config	:Sprite;
 		private var myStage		:Stage;
 		
@@ -83,7 +83,7 @@ package
 			
 			model = _data;
 			myStage = _stage;
-			phrazes_arr = Model.phrazes_arr;
+			phrazes_arr = Model.Phrazes_arr;
 		
 			pusk_block.button1.addEventListener(MouseEvent.CLICK, button1_MOUSE_DOWN);
 			config_bar_on.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_on_MOUSE_DOWN);
@@ -97,7 +97,7 @@ package
 			lineStart_y = left_type.y;
 			left_type.w1.text = phrazes_arr[2]; // Сделать
 			right_type.w1.text = phrazes_arr[3]; // что-то :)
-			right_type.w2.text = Verb_arr[2]; // что-то :)
+			right_type.w2.text = model.Verb_arr[2]; // что-то :)
 			
 			pusk_block.statusbar.text = phrazes_arr[0];
 			changeTurn();
@@ -107,7 +107,7 @@ package
 			s_transform = new SoundTransform (channel_volume);
 			default_channel_volume = channel_volume;
 			
-			if (MUTE) setVolume(0);
+			if (model.MUTE) setVolume(0);
 		
 			back_channel = principles_of_lust.play(0, 1, s_transform);
 			back_channel.addEventListener(Event.SOUND_COMPLETE, loopSound);
@@ -279,13 +279,13 @@ package
 		
 			key_click.play();
 			
-			if (MUTE) {
-				MUTE = false;
+			if (model.MUTE) {
+				model.MUTE = false;
 				config_bar.mute.gotoAndStop('sound_on');
 				setVolume(default_channel_volume);
 			}
 			else {
-				MUTE = true;
+				model.MUTE = true;
 				config_bar.mute.gotoAndStop('sound_off');
 				setVolume(0);
 			}
@@ -361,7 +361,7 @@ package
 			var digit0:uint;
 			var digit1:uint;
 			
-			if (Player_flag) {
+			if (model.Player_flag) {
 				digit0 = 0;
 				digit1 = 1;
 			}
@@ -372,16 +372,16 @@ package
 			var names_padej = []; // массив имен в дательном падеже
 			
 			// создание массива имен в дательном падеже
-			names_padej[0] = changeName(Players_names[0], 'fem'); // женское
-			names_padej[1] = changeName(Players_names[1], 'mal'); // мужское
+			names_padej[0] = changeName(model.Players_names[0], 'fem'); // женское
+			names_padej[1] = changeName(model.Players_names[1], 'mal'); // мужское
 			
-			turn.text = phrazes_arr[7] + Players_names[digit1]; // Ходит Игрок1
+			turn.text = phrazes_arr[7] + model.Players_names[digit1]; // Ходит Игрок1
 			who.text = names_padej[digit0] + phrazes_arr[6]; //Игроку2 нужно:
 			whom.text = names_padej[digit1]; // Игроку1;
-			pusk_block.tip.text = '(' + Players_names[digit0] + ')';
+			pusk_block.tip.text = '(' + model.Players_names[digit0] + ')';
 
 			// выполнять след. строку при любой команде кроме 'dont_turn'
-			if (comand != 'dont_turn') Player_flag = !Player_flag; // инверсия флага хода игрока
+			if (comand != 'dont_turn') model.Player_flag = !model.Player_flag; // инверсия флага хода игрока
 		}
 		
 		
@@ -500,7 +500,7 @@ package
 		 */ //****************************************
 		private function func_Timer_Listing(event:TimerEvent):void { 
 			
-			if (spinning_flag) {
+			if (model.Spinning_flag) {
 				circles++;
 				wheel_sound.play();
 				if (circles == copy_words_arr.length) circles = 1;
@@ -524,23 +524,23 @@ package
 		 */ //****************************************
 		public function button1_MOUSE_DOWN(event:MouseEvent):void {
 			
-			if (!spinning_flag && roleTween2 == null) {
+			if (!model.Spinning_flag && roleTween2 == null) {
 				
 				key_click.play();
-				spinning_flag = true;
+				model.Spinning_flag = true;
 				
 				//pusk_block.button1.addEventListener(MouseEvent.MOUSE_UP, button1_MOUSE_UP_OUT);
 				//pusk_block.button1.addEventListener(MouseEvent.MOUSE_OUT, button1_MOUSE_UP_OUT);
 
-				Games_count++;
-				if (Games_count != 1) changeTurn();
+				model.Games_count++;
+				if (model.Games_count != 1) changeTurn();
 				
 				// запуск случайной сортировки массива:
 				SortMe();
 				
 				Timer_DurationRot.start();
-				if (anim_flag == 'Вращение' || anim_flag == 'Наполовину') startMoove(); // запуск твина вращения слов
-				else if (anim_flag == 'Листание') Timer_Listing.start(); // запуск перебора слов (слова будут просто перечисляться по таймеру)
+				if (model.Anim_flag == 'Вращение' || model.Anim_flag == 'Наполовину') startMoove(); // запуск твина вращения слов
+				else if (model.Anim_flag == 'Листание') Timer_Listing.start(); // запуск перебора слов (слова будут просто перечисляться по таймеру)
 				
 				pusk_block.alpha = 0.4;
 				pusk_block.button1.buttonMode = false;
@@ -569,13 +569,13 @@ package
 		public function stopMoove():void{ 
 		
 			Timer_DurationRot.reset();
-			spinning_flag = false;
+			model.Spinning_flag = false;
 			
 			tween_duration = 0.1;
 			Timer_Listing.reset();
 			Timer_Listing.delay = 80;
 			
-			if (anim_flag == 'Листание') lastStep();
+			if (model.Anim_flag == 'Листание') lastStep();
 			//stopMoove(); // твин доходит до цикла след. запуска и останавливается
 		}
 		
@@ -586,7 +586,7 @@ package
 		 */ //****************************************
 		public function startMoove():void {
 		
-			if (anim_flag != 'Наполовину') {
+			if (model.Anim_flag != 'Наполовину') {
 				roleTween1 = new Tween (left_type, 'y', None.easeInOut, lineStart_y, lineStart_y + 75, tween_duration, true); //136
 			}
 			roleTween2 = new Tween (right_type, 'y', None.easeInOut, lineStart_y, lineStart_y + 75, tween_duration, true);
@@ -604,7 +604,7 @@ package
 
 			wheel_sound.play();
 			
-			if (spinning_flag) {
+			if (model.Spinning_flag) {
 				circles++;
 	
 				// запись в первое поле
@@ -637,11 +637,10 @@ package
 		 */ //****************************************
 		private function SortMe():void {
 			
-			copy_words_arr = Words_arr.slice();
-			copy_verb_arr = Verb_arr.slice();
-			//copy_verb_arr = model.
-			
-			
+			//copy_words_arr = Words_arr.slice();
+			copy_words_arr = model.Words_arr.slice();
+			copy_verb_arr = model.Verb_arr.slice();
+
 			copy_words_arr.sort(randomSortFunc);
 			copy_verb_arr.sort(randomSortFunc);
 			// перемещение элемента 'not used' на 0-е место:
@@ -702,16 +701,15 @@ package
 			
 			var current_time:Array = getTimeNow();
 			
-			Storage.phraza.push(phraza_temp);
-			Storage.cur_date.push(current_time['chislo']);
-			Storage.cur_time.push(current_time['vremya']);
+			model.Storage.phraza.push(phraza_temp);
+			model.Storage.cur_date.push(current_time['chislo']);
+			model.Storage.cur_time.push(current_time['vremya']);
 			
 			// обновление отчёта если конфиг открыт
 			if (config_bar != null) config_bar.scrollertextFill();
 
 			// т.к. при пуше не используется сеттер, то вызовем его принудительно
-			Storage = Storage;
-			
+			model.Storage = model.Storage;
 			
 			//Storage = {
 				//phraza:phraza_temp,
@@ -758,93 +756,6 @@ package
 		//TODO: добавить пароль на просмотр архива
 
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		/*********************************************
-		 *              GETTERS/SETTERS              *
-		 *                                           *
-		 */ //****************************************
-		public function get Words_arr():* {
-			return model.words_arr;
-		}
-		public function set Words_arr(value:*):void {
-			model.words_arr = value;
-		}
-		
-		
-		public function get Verb_arr():* {
-			return model.verb_arr;
-		}
-		public function set Verb_arr(value:*):void {
-			model.verb_arr = value;
-		}
-		
-
-		
-		public function get spinning_flag():Boolean {
-			return model.spinning_flag;
-		}
-		public function set spinning_flag(value:Boolean):void {
-			model.spinning_flag = value;
-		}
-		
-		
-		public function get anim_flag():String {
-			return model.anim_flag;
-		}
-		
-		public function get Players_names():* {
-			return model.players_names;
-		}
-
-		
-		public function get Player_flag():Boolean {
-			return model.player_flag;
-		}
-		public function set Player_flag(value:Boolean):void {
-			model.player_flag = value;
-		}
-		
-		
-		public function get Games_count():uint {
-			return model.games_count;
-		}
-		public function set Games_count(value:uint):void {
-			model.games_count = value;
-		}
-		
-		
-		public function get Storage():Object {
-			return model.storage;
-		}
-		public function set Storage(value:Object):void {
-			model.storage = value;
-			model.SharedObj.data.storage = model.storage;
-			model.SharedObj.flush();
-		}
-		
-		
-		public function get MUTE():Boolean {
-			return model.mute_flag;
-		}
-		public function set MUTE(value:Boolean):void {
-			model.mute_flag = value;
-			model.SharedObj.data.mute_flag = model.mute_flag;
-			model.SharedObj.flush();
-		}
-		
+	
 	}
 }

@@ -25,8 +25,7 @@ package
 		
 		
 		public function About(){ 
-			
-			//this.filters = null;
+
 			phrazes_arr = Model.phrazes_arr;
 			this.buttonMode = true;
 			this.container.mouseChildren = false;
@@ -77,27 +76,7 @@ package
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		/*********************************************
-		 *              GETTERS/SETTERS              *
-		 *                                           *
-		 */ //****************************************
+
 
 		
 	}
