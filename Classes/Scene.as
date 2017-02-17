@@ -72,7 +72,7 @@ package
 		private var boundingBox	:Rectangle;
 		private var close_config_manualy:Tween;
 		
-		
+		//TODO: перенести флаг need_noMOVE в класс Model
 		
 		
 		
@@ -398,23 +398,10 @@ package
 			// вырезаем последнюю букву
 			var last_letter:String = name.substr(name.length - 1, name.length);
 			
-			// определение заглавная ли буква
+			// определение заглавная ли буква в конце
 			var flag_up_Case:Boolean = false; // флаг заглавной буквы
-			//var reg:RegExp = /[:alpha:]/ig; // все буквы
-			var reg:RegExp = /\w\D/ig; // все буквы
-			// reg.test(last_letter - поиск строки в регулярке, выдает false/true
-			if (/*last_letter === last_letter.toUpperCase() &&*/ last_letter.search(reg) >= 0) flag_up_Case = true;
-			
-			trace ("last_letter.search(reg) = " + last_letter.search(reg));
-			
-			//if (last_letter.charCodeAt() == last_letter.toUpperCase().charCodeAt()) flag_up_Case = true;
-			//
-			//trace ("код до увеличения = " + last_letter.charCodeAt());
-			//trace ("код после увеличения = " + last_letter.toUpperCase().charCodeAt());
-			//trace ("flag_up_Case = " + flag_up_Case);
-			
-			//TODO: не работает поиск на любую букву
-			
+			//var reg:RegExp = /[а-яА-Яa-zA-Z]/g; // все буквы
+			if (last_letter === last_letter.toUpperCase() /*&& reg.test(last_letter)*/) flag_up_Case = true;
 			
 			last_letter = last_letter.toLowerCase();
 			
@@ -466,20 +453,18 @@ package
 				case 'ъ':
 				case 'э':
 				case 'ю':
-					new_last_letter = null;
+					new_last_letter = last_letter;
 				break;
 					
 				default:
-					new_last_letter = null;
+					new_last_letter = last_letter;
 			}
 			
 			if (flag_up_Case) new_last_letter = new_last_letter.toUpperCase();
 			
-			if (new_last_letter != null) {
-				if (flag_add) name = name + new_last_letter; // просто добавление
-				else name = name.slice(0, name.length - 1) + new_last_letter; // удаление с добавлением
-			}
-			//trace ("flag_up_Case = " + flag_up_Case);
+			if (flag_add) name = name + new_last_letter; // просто добавление
+			else name = name.slice(0, name.length - 1) + new_last_letter; // удаление с добавлением
+
 			return name;
 		}
 		

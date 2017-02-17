@@ -17,8 +17,8 @@ package
 		public static var phrazes_arr:Array = [];
 		private var words_arr:Array = [];
 		private var verb_arr:Array = [];
-		private var copy_words_arr:Array = [];
-		private var copy_verb_arr:Array = [];
+		//private var words_arr_reserve:Array = [];
+		//private var verb_arr_reserve:Array = [];
 		private var animation_kind:Array = [];
 		private var players_names:Array;
 		
@@ -42,7 +42,7 @@ package
 			words_arr = ['not_used', 'Щекотать', 'Лизать', 'Прикосн.', 'Покусать', 'Поцеловать', 'Массажир.'];
 			// ласкать, сосать
 			
-			verb_arr = ['not_used', 'ухо', '?', 'шею', 'грудь', 'губы', 'соски'];
+			verb_arr = ['not_used', '?', 'ухо', 'шею', 'грудь', 'губы', 'соски'];
 			
 			// копии массивов для их восстановления
 			//copy_words_arr = words_arr.slice();
@@ -107,6 +107,13 @@ package
 			
 			if (SharedObj.data.mute_flag == null) mute_flag = false; // default 
 			else mute_flag = SharedObj.data.mute_flag;
+			
+			// резервирование массивов слов для восстановления
+			if (SharedObj.data.words_arr_reserve == null) {
+				
+				SharedObj.data.words_arr_reserve = words_arr.slice();
+				SharedObj.data.verb_arr_reserve = verb_arr.slice();
+			}
 		}
 		
 		
@@ -223,6 +230,11 @@ package
 		}
 		
 		
+		
+		
+		
+		
+		
 		public function get MUTE():Boolean {
 			return mute_flag;
 		}
@@ -231,5 +243,20 @@ package
 			SharedObj.data.mute_flag = mute_flag;
 			SharedObj.flush();
 		}
+		
+		
+		
+		public function get Words_arr_reserve():Array {
+			return SharedObj.data.words_arr_reserve;
+		}
+		
+		
+		
+		public function get Verb_arr_reserve():Array {
+			return SharedObj.data.verb_arr_reserve;
+		}
+		
+		
+		
 	}
 }

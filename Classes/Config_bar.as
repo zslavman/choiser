@@ -204,8 +204,8 @@ package
 			reset_level.line.scaleX = 0;
 			
 			model.Anim_flag = 'Вращение';
-			model.Players_names = ['Оля', 'Саша'];
-			model.Verb_arr[2] = '?';
+			model.Players_names = ['Оля', 'Коля'];
+			//model.Verb_arr[2] = '?';
 			
 			model.MUTE = false;
 			mute.gotoAndStop('sound_on');
@@ -216,13 +216,25 @@ package
 				cur_time:[]
 			};
 				
+			Recovery_array(model.Words_arr, model.Words_arr_reserve);
+			Recovery_array(model.Verb_arr, model.Verb_arr_reserve);
+			words_count = 1;
+			selector_flag = false;
 			TextFill();
 			output.text = '';
 			mode_count = 0;
-			//TODO: восстанавливать массив слов () копию
-			
+	
 		}
 		
+		
+		// ф-ция восстанавливающая массивы из резерва
+		private function Recovery_array(destination:Array, from:Array):void {
+			
+			for (var i:int = 0; i < destination.length; i++){ 
+				var temp:String = from[i];
+				destination[i] = temp;
+			}
+		}
 		
 		
 
