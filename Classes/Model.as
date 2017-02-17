@@ -15,24 +15,23 @@ package
 	public class Model{
 	
 		public static var phrazes_arr:Array = [];
-		private var words_arr:Array = [];
-		private var verb_arr:Array = [];
-		//private var words_arr_reserve:Array = [];
-		//private var verb_arr_reserve:Array = [];
-		private var animation_kind:Array = [];
-		private var players_names:Array;
+		private var words_arr		:Array = [];
+		private var verb_arr		:Array = [];
+		private var animation_kind	:Array = [];
+		private var players_names	:Array;
 		
-		private var spinning_flag:Boolean = false; // флаг наличия вращения колеса
-		private var player_flag:Boolean = true; // флаг какой игрок ходит, true - первый, false - второй
-		private var mute_flag:Boolean; // флаг mute
+		private var spinning_flag	:Boolean = false; // флаг наличия вращения колеса
+		private var player_flag		:Boolean = true; // флаг какой игрок ходит, true - первый, false - второй
+		private var mute_flag		:Boolean; // флаг mute
 		
-		private var anim_flag:String; // флаг - вид анимации колес
+		private var anim_flag		:String; // флаг - вид анимации колес
 		
-		private var games_count:uint = 0; // для того что бы не менять ход игроков при первом запуске
+		private var games_count		:uint = 0; // для того что бы не менять ход игроков при первом запуске
 		
-		private var SharedObj:SharedObject;
+		private var SharedObj		:SharedObject;
 		
-		private var storage:Object; // архив-хранилище
+		private var storage			:Object; // архив-хранилище
+		private var need_noMOVE		:Boolean = false; // флаг запрета таскания конфига
 		
 		
 
@@ -43,9 +42,6 @@ package
 			// ласкать, сосать
 			
 			verb_arr = ['not_used', '?', 'ухо', 'шею', 'грудь', 'губы', 'соски'];
-			
-			// копии массивов для их восстановления
-			//copy_words_arr = words_arr.slice();
 			
 			//animation_kind = ['rotate', 'list', 'half']; // rotate - вращаются оба, list - замена слов в обоих полях, 
 			// half - первое поле вращается а второе листается
@@ -258,5 +254,12 @@ package
 		
 		
 		
+		
+		public function get Need_noMOVE():Boolean {
+			return need_noMOVE;
+		}
+		public function set Need_noMOVE(value:Boolean):void {
+			need_noMOVE = value;
+		}
 	}
 }

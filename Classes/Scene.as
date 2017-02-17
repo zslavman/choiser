@@ -42,18 +42,18 @@ package
 		private var wheel_sound				:Sound = new _wheel_sound();
 		private var wheel_sound_double		:Sound = new _wheel_sound_double();
 		private var key_click				:Sound = new _key_click();
-		private var principles_of_lust		:Sound = new _principles_of_lust();
+		private var dawning_sound			:Sound = new _dawning_sound();
 		private var back_channel			:SoundChannel = new SoundChannel();
 		private var s_transform				:SoundTransform;
-		private var channel_volume			:Number = 0.25;
+		private var channel_volume			:Number = 0.99; //0.25
 		private var default_channel_volume	:Number;
 		private var pausePosition			:int;
 		
-		private var rot_duration:Number = 3000; // мс, устанавливать не менее 2000 
+		private var rot_duration		:Number = 3000; // мс, устанавливать не менее 2000 
 		private var Timer_DurationRot	:Timer = new Timer(250);
 		private var Timer_Listing		:Timer = new Timer(80);
 		
-		private var phraza_temp:String;
+		private var phraza_temp:String; // сформировавшаяся фраза из имён и действия
 		
 		private var copy_words_arr:Array = [];
 		private var copy_verb_arr:Array = [];
@@ -62,7 +62,6 @@ package
 		
 		
 		private var point1		: Point;
-		private var need_noMOVE	: Boolean = false; // флаг запрета таскания конфига
 		private var Start_X		: Number; // х-координата точки хвата конфига
 		private var Start_Y		: Number; // y-координата точки хвата конфига
 		private var TweenSpeed	: Number = 0.35;
@@ -71,8 +70,6 @@ package
 		private var mySliderLength:uint = 640;
 		private var boundingBox	:Rectangle;
 		private var close_config_manualy:Tween;
-		
-		//TODO: перенести флаг need_noMOVE в класс Model
 		
 		
 		
@@ -109,11 +106,10 @@ package
 			
 			if (model.MUTE) setVolume(0);
 		
-			back_channel = principles_of_lust.play(0, 1, s_transform);
+			back_channel = dawning_sound.play(0, 1, s_transform);
 			back_channel.addEventListener(Event.SOUND_COMPLETE, loopSound);
 			
 			boundingBox = new Rectangle(0, 0, mySliderLength, 0);
-			
 		}
 		
 		
@@ -145,7 +141,7 @@ package
 
 			var point2: Point = new Point(mouseX, mouseY);
 			var distance: Number = Point.distance(point1, point2); // вычисл. расст. между двумя точками
-			if (distance >= 20) config_bar.startDrag(false, boundingBox); // начать перетаскивать
+			if (distance >= 20 && !model.Need_noMOVE) config_bar.startDrag(false, boundingBox); // начать перетаскивать
 		}
 
 		private function config_bar_MOUSE_UP(event: MouseEvent): void {
@@ -157,7 +153,7 @@ package
 
 			var Position_X: Number = config_bar.x; // точка в которой отпустили мувиклип
 			
-			if (!need_noMOVE) {
+			if (!model.Need_noMOVE) {
 				if (Position_X > 500) { // если менюшку отпустили на позиции Х-координаты больше 500 то возвращаем менюшку вправо
 					open_config = new Tween(config_bar, "x", TweenSmClass, config_bar.x, 640, TweenSpeed, true);
 					
@@ -196,7 +192,7 @@ package
 			}
 			else if (event.type == 'activate') {
 				back_channel.stop();
-				back_channel = principles_of_lust.play(pausePosition, 1, s_transform);
+				back_channel = dawning_sound.play(pausePosition, 1, s_transform);
 			}
 			
 		}
@@ -211,7 +207,7 @@ package
 		
 			back_channel.removeEventListener(Event.SOUND_COMPLETE, loopSound);
 			
-			back_channel = principles_of_lust.play(0, 1, s_transform);
+			back_channel = dawning_sound.play(0, 1, s_transform);
 			back_channel.addEventListener(Event.SOUND_COMPLETE, loopSound);
 		}
 		
@@ -312,7 +308,7 @@ package
 			key_click.play();
 			
 			if (config_bar.x == 640) {
-				need_noMOVE = true;
+				model.Need_noMOVE = true;
 				close_config = new Tween (config_bar, 'x', Strong.easeOut, 640, 0, 1, true);
 				close_config.addEventListener(TweenEvent.MOTION_FINISH, Kill_config);
 				changeTurn('dont_turn');
@@ -337,7 +333,9 @@ package
 			mask_config = null;
 			removeChild(config_bar);
 			config_bar = null;
-			need_noMOVE = false;
+			model.Need_noMOVE = false;
+			//NOTE: принудительная установка фокуса для возможности послед. нажатия Space
+			stage.focus = config_bar_on;
 		}
 		
 		

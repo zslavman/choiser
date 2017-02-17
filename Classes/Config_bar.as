@@ -86,7 +86,7 @@ package
 			else mute.gotoAndStop('sound_off');
 			
 			// Добавление класса Скрола текстового поля
-			myScroll = new CustomScroll(myStage, track4_mc, output, up4_btn, down4_btn);
+			myScroll = new CustomScroll(myStage, track4_mc, output, up4_btn, down4_btn, model);
 		
 			// ф-ция заполнения текстового поля скрола
 			scrollertextFill();
