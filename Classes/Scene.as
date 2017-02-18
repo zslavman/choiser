@@ -83,7 +83,7 @@ package
 			phrazes_arr = Model.Phrazes_arr;
 		
 			pusk_block.button1.addEventListener(MouseEvent.CLICK, button1_MOUSE_DOWN);
-			config_bar_on.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_on_MOUSE_DOWN);
+			config_bar_on.addEventListener(MouseEvent.CLICK, config_bar_on_MOUSE_DOWN);
 			
 			Timer_DurationRot.addEventListener(TimerEvent.TIMER, func_Timer_DurationRot);
 			Timer_Listing.addEventListener(TimerEvent.TIMER, func_Timer_Listing);
@@ -92,9 +92,8 @@ package
 			//myStage.addEventListener(Event.DEACTIVATE, act);
 			
 			lineStart_y = left_type.y;
-			left_type.w1.text = phrazes_arr[2]; // Сделать
-			right_type.w1.text = phrazes_arr[3]; // что-то :)
-			right_type.w2.text = model.Verb_arr[2]; // что-то :)
+			
+			resetData_on_Circles();
 			
 			pusk_block.statusbar.text = phrazes_arr[0];
 			changeTurn();
@@ -161,22 +160,19 @@ package
 				else { // иначе влево
 					close_config_manualy = new Tween(config_bar, "x", TweenSmClass, config_bar.x, 0, TweenSpeed, true);
 					close_config_manualy.addEventListener(TweenEvent.MOTION_FINISH, Kill_config);
+					changeTurn('dont_turn');
+					resetData_on_Circles();
 					//TODO: все еще вылетает ошибка с ранним удалением конфигбара
 				}
 			}
 		}
-		
-		//TODO: прописать переключение флага в слайдер прокрутки скроллбара noMOVE = true;
-		
+	
 		
 
 		
 		
 		
-		
-		
-		
-		
+	
 		
 		
 		
@@ -312,6 +308,7 @@ package
 				close_config = new Tween (config_bar, 'x', Strong.easeOut, 640, 0, 1, true);
 				close_config.addEventListener(TweenEvent.MOTION_FINISH, Kill_config);
 				changeTurn('dont_turn');
+				resetData_on_Circles();
 			}
 		}
 		
@@ -625,6 +622,14 @@ package
 		}
 		
 
+		// сброс данных колеса при выходе из кофигбар
+		public function resetData_on_Circles():void {
+		
+			left_type.w1.text = phrazes_arr[2]; // Сделать
+			left_type.w2.text = phrazes_arr[2]; // Сделать
+			right_type.w1.text = phrazes_arr[3]; // что-то :)
+			right_type.w2.text = phrazes_arr[3]; // что-то :)
+		}
 		
 
 		
@@ -720,7 +725,7 @@ package
 		
 		
 		
-		// ф-ция получения текущей даты и время
+		// ф-ция получения текущей даты и времени
 		private function getTimeNow():Array {
 		
 			var currentDate:Date = new Date();
