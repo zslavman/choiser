@@ -203,9 +203,9 @@ package
 			reset_level.visible = false;
 			reset_level.line.scaleX = 0;
 			
-			model.Anim_flag = 'Вращение';
-			model.Players_names = ['Оля', 'Коля'];
-			//model.Verb_arr[2] = '?';
+			//model.Players_names = [phrazes_arr[4], phrazes_arr[5]];
+			model.Anim_flag = model.Animation_kind[0];
+			model.First_time = true;
 			
 			model.MUTE = false;
 			mute.gotoAndStop('sound_on');
@@ -312,17 +312,19 @@ package
 				model.Players_names[0] = name1.text;
 			}
 			else if (event.currentTarget.name == 'name2') {
-				if (name2.text.length > 11) {
-					name2.text = name2.text.slice(0, 11);
-				}
+				if (name2.text.length > 11) cuterStr(11, name2);
 				model.Players_names[1] = name2.text;
 			}
 			else if (event.currentTarget.name == 'what') {
-				if (what.text.length > 8) {
-					what.text = what.text.slice(0, 8);
+			
+				if (selector_flag) {
+					model.Verb_arr[words_count] = what.text;
+					if (what.text.length > 10) cuterStr(10, what);
 				}
-				if (selector_flag) model.Verb_arr[words_count] = what.text;
-				else model.Words_arr[words_count] = what.text;
+				else {
+					if (what.text.length > 8) cuterStr(8, what);
+					model.Words_arr[words_count] = what.text;
+				}
 				
 				//var temp_arr:Array = model.Verb_arr;
 				//temp_arr[words_count] = what.text;

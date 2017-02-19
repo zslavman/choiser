@@ -24,8 +24,9 @@ package
 	 */
 	public class Scene extends Sprite {
 	
-		private var fountain	:Fountain;
+		public var splash_screen:Splash_screen;
 		public var config_bar	:Config_bar;
+		private var fountain	:Fountain;
 		private var model		:Model;
 		private var mask_config	:Sprite;
 		private var myStage		:Stage;
@@ -111,10 +112,16 @@ package
 			
 			boundingBox = new Rectangle(0, 0, mySliderLength, 0);
 			
-			fountain = new Fountain();
-			fountain.mouseChildren = false;
-			fountain.mouseEnabled = false;
-			addChild(fountain);
+			if (model.First_time) {
+				splash_screen = new Splash_screen(model);
+				addChild(splash_screen);
+				addEventListener(Event.ENTER_FRAME, checkClosed);
+			}
+			
+			//fountain = new Fountain();
+			//fountain.mouseChildren = false;
+			//fountain.mouseEnabled = false;
+			//addChild(fountain);
 		}
 		
 		
@@ -122,8 +129,17 @@ package
 		
 		
 		
-		
-		
+		// ф-ция проверяющая закрылось ли окно приветствия
+		// вызовется лишь при первом запуске
+		private function checkClosed(event: Event) {
+			
+			if (!model.First_time) {
+			
+				changeTurn('dont_turn');
+				splash_screen = null;
+				removeEventListener(Event.ENTER_FRAME, checkClosed);
+			}
+		}
 		
 		
 		
@@ -357,7 +373,7 @@ package
 		 *           Ф-ция меняющая фразы при        *
 		 *               смене хода игроков          *
 		 */ //****************************************
-		private function changeTurn(comand:String = ''):void {
+		public function changeTurn(comand:String = ''):void {
 			
 			var digit0:uint;
 			var digit1:uint;

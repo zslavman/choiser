@@ -28,11 +28,11 @@ package
 		
 		private var games_count		:uint = 0; // для того что бы не менять ход игроков при первом запуске
 		
-		private var SharedObj		:SharedObject;
-		
 		private var storage			:Object; // архив-хранилище
 		private var need_noMOVE		:Boolean = false; // флаг запрета таскания конфига
+		private var first_time		:Boolean; // флаг первого запуска игры
 		
+		private var SharedObj		:SharedObject;
 		
 
 		public function Model(){
@@ -52,8 +52,8 @@ package
 			phrazes_arr[1] = ['. . .'];
 			phrazes_arr[2] = ['Сделать'];
 			phrazes_arr[3] = ['что-то :)'];
-			phrazes_arr[4] = ['Игроку1'];
-			phrazes_arr[5] = ['Игроку2'];
+			phrazes_arr[4] = ['Игрок1'];
+			phrazes_arr[5] = ['Игрок2'];
 			phrazes_arr[6] = [' нужно:'];
 			phrazes_arr[7] = ['Ходит '];
 			phrazes_arr[8] = ['Сброс'];
@@ -63,7 +63,7 @@ package
 			phrazes_arr[12] = ['Посвящается Ксюшеньке.'];
 			phrazes_arr[13] = ['© Вячеслав Зинько, 2017г.\r E-mail: <a href="event:myMail">zslavman@gmail.com</a>'];
 			phrazes_arr[14] = ["mailto:zslavman@gmail.com"];
-			phrazes_arr[15] = [''];
+			phrazes_arr[15] = ['16+']; // возраст аудитории игры
 			
 			phrazes_arr[16] = ['янв'];
 			phrazes_arr[17] = ['фев'];
@@ -79,6 +79,12 @@ package
 			phrazes_arr[27] = ['дек'];
 			phrazes_arr[28] = ['имя существительное'];
 			phrazes_arr[29] = ['глагол'];
+			
+			phrazes_arr[30] = ['При каждом ходе случайным образом выпадает пара слов (желание) которое необходимо исполнить Вашему апоненту.\rВ настройках Вы можете задавать свои желания.'];
+			
+			phrazes_arr[31] = ['Введите свои имена, ведь Вы не хотите быть "Игрок1" и "Игрок2"?'];
+			
+			
 		
 			// создаем регулярное выражение для поиска пробелов в названии
 			var reg:RegExp = / /g; // парамерт /g маска для всех " " в выражении
@@ -95,7 +101,7 @@ package
 			}
 			else storage = SharedObj.data.storage;
 			
-			if (SharedObj.data.players_names == null) players_names = ['Оля', 'Коля']; // default
+			if (SharedObj.data.players_names == null) players_names = ['Игрок1', 'Игрок2']; // default
 			else players_names = SharedObj.data.players_names;
 			
 			if (SharedObj.data.anim_flag == null) anim_flag = animation_kind[0]; // default 
@@ -110,6 +116,15 @@ package
 				SharedObj.data.words_arr_reserve = words_arr.slice();
 				SharedObj.data.verb_arr_reserve = verb_arr.slice();
 			}
+			
+			// проверяем наличие пользовательских массивов данных
+			// если в кукисах есть такой массив, то перезаписываем тот что в программе:
+			if (SharedObj.data.words_arr != null) words_arr = SharedObj.data.words_arr.slice();
+			if (SharedObj.data.verb_arr != null) verb_arr = SharedObj.data.verb_arr.slice();
+			
+			if (SharedObj.data.first_time == null) first_time = true; // default
+			else first_time = SharedObj.data.first_time;
+			
 		}
 		
 		
@@ -120,6 +135,8 @@ package
 		 *              GETTERS/SETTERS              *
 		 *                                           *
 		 */ //****************************************
+		// через геттер можно менять элементы массива по одному,
+		// потому иногда сеттер не используется!!!
 		
 		public static function get Phrazes_arr():* {
 			return phrazes_arr;
@@ -134,12 +151,9 @@ package
 		
 
 		 public function get Words_arr():Array {
+			SharedObj.data.words_arr = words_arr;
 			return words_arr;
 		}
-		
-		// через геттер можно менять элементы массива по одному,
-		// потому сеттер не используется!!!
-		
 		//public function set Words_arr(value:*):void {
 			//words_arr = value;
 		//}
@@ -147,10 +161,10 @@ package
 		
 		
 		public function get Verb_arr():Array {
+			SharedObj.data.verb_arr = verb_arr;
 			return verb_arr;
 		}
 		//public function set Verb_arr(value:*):void {
-			//verb_arr = value;
 		//}
 		
 
@@ -260,6 +274,17 @@ package
 		}
 		public function set Need_noMOVE(value:Boolean):void {
 			need_noMOVE = value;
+		}
+		
+		
+		
+		
+		public function get First_time():Boolean {
+			return first_time;
+		}
+		public function set First_time(value:Boolean):void {
+			first_time = value;
+			SharedObj.data.first_time = first_time;
 		}
 	}
 }

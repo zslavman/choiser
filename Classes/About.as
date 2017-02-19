@@ -31,7 +31,7 @@ package
 			this.container.mouseChildren = false;
 
 			// линка с почтой:
-			mailCSS.setStyle("a:link", {color:'#CC9966', textDecoration:'none'}); // 0000CC
+			mailCSS.setStyle("a:link", {color:'#C1C1C1', textDecoration:'none'}); // 0000CC
 			mailCSS.setStyle("a:hover", { color:'#BB0A0A', textDecoration:'underline' } ); // 0000FF
 			
 			author.styleSheet = mailCSS;

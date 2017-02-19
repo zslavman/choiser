@@ -140,7 +140,7 @@ package
 						}
 					}
 				}
-				else if (view.config_bar == null) {
+				else if (view.config_bar == null && view.splash_screen == null) {
 					if (event.keyCode == 32) { // нажатие "Space"
 						view.config_bar_on.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN));
 					}
