@@ -1,5 +1,6 @@
 package 
 {
+	import adobe.utils.CustomActions;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.display.Stage;
@@ -23,6 +24,7 @@ package
 	 */
 	public class Scene extends Sprite {
 	
+		private var fountain	:Fountain;
 		public var config_bar	:Config_bar;
 		private var model		:Model;
 		private var mask_config	:Sprite;
@@ -33,7 +35,6 @@ package
 		private var open_config	:Tween;
 		private var close_config:Tween;
 		private var lineStart_y;
-		
 		private var tween_duration:Number = 0.1;
 		
 		private var circles:uint = 1; // начало с 1 т.к. в массиве слов первое (нулевое) значение не учитывается
@@ -109,6 +110,11 @@ package
 			back_channel.addEventListener(Event.SOUND_COMPLETE, loopSound);
 			
 			boundingBox = new Rectangle(0, 0, mySliderLength, 0);
+			
+			fountain = new Fountain();
+			fountain.mouseChildren = false;
+			fountain.mouseEnabled = false;
+			addChild(fountain);
 		}
 		
 		
@@ -540,6 +546,11 @@ package
 				pusk_block.alpha = 0.4;
 				pusk_block.button1.buttonMode = false;
 				
+			}
+			if (fountain != null) {
+				fountain.destroy();
+				removeChild(fountain);
+				fountain = null;
 			}
 		}
 		
