@@ -30,8 +30,11 @@ package
 			ok_button.addEventListener(MouseEvent.CLICK, ok_button_CLICK);
 			ok_button.buttonMode = true;
 			
-			textFill();
+			about_pro1.defaultTextFormat = Model.myFormat;
+			about_pro2.defaultTextFormat = Model.myFormat;
+			enter_names.defaultTextFormat = Model.myFormat;
 			
+			textFill();
 		}
 	
 		

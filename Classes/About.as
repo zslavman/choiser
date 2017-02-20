@@ -22,8 +22,6 @@ package
 		
 		
 		
-		
-		
 		public function About(){ 
 
 			phrazes_arr = Model.phrazes_arr;
@@ -36,6 +34,9 @@ package
 			
 			author.styleSheet = mailCSS;
 			author.addEventListener(TextEvent.LINK, linkHandler); // слушатель линка в тексте
+			
+			container.about_pro.defaultTextFormat = Model.myFormat;
+			//author.defaultTextFormat = Model.myFormat; // нельзя применять стили на StyleSheet !!!!!!
 			
 			textFill();
 		}
@@ -54,6 +55,7 @@ package
 			container.about_pro.text = phrazes_arr[11]; 
 			container.ksiu.text = phrazes_arr[12];
 			author.text = phrazes_arr[13];
+			//container.about_pro.text.setTextFormat(myFormat);
 		}
 		
 		
@@ -75,10 +77,5 @@ package
 		
 		
 		
-		
-
-
-		
 	}
-
 }

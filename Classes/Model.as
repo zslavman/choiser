@@ -7,6 +7,7 @@ package
 	 */
 	
 	 
+	import flash.text.*;
 	import flash.net.SharedObject;
 	 
 	 
@@ -14,7 +15,9 @@ package
 	 
 	public class Model{
 	
+		public static var myFormat	:TextFormat = new TextFormat();
 		public static var phrazes_arr:Array = [];
+		
 		private var words_arr		:Array = [];
 		private var verb_arr		:Array = [];
 		private var animation_kind	:Array = [];
@@ -35,7 +38,10 @@ package
 		private var SharedObj		:SharedObject;
 		
 
-		public function Model(){
+		public function Model() {
+		
+			// принудительная установка формата, для того, что бы строки не скукоживались, флеш почемуто ставит минусовой кернинг многострочникам
+			myFormat.leading = 6;
 		
 			// тут будут все данные приложения
 			words_arr = ['not_used', 'Щекотать', 'Лизать', 'Прикосн.', 'Покусать', 'Поцеловать', 'Массажир.'];
@@ -80,7 +86,7 @@ package
 			phrazes_arr[28] = ['имя существительное'];
 			phrazes_arr[29] = ['глагол'];
 			
-			phrazes_arr[30] = ['При каждом ходе случайным образом выпадает пара слов (желание) которое необходимо исполнить Вашему апоненту.\rВ настройках Вы можете задавать свои желания.'];
+			phrazes_arr[30] = ['При каждом ходе случайным образом выпадает пара слов (желание) которое необходимо исполнить Вашему сопернику.\rВ настройках Вы можете задавать свои желания.'];
 			
 			phrazes_arr[31] = ['Введите свои имена, ведь Вы не хотите быть "Игрок1" и "Игрок2"?'];
 			

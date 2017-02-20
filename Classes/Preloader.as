@@ -29,7 +29,7 @@ package
 		
 		private var bLoaded: uint = loaderInfo.bytesLoaded;
 		private var bTotal: uint = loaderInfo.bytesTotal;
-		private var Timer_Test:Timer = new Timer(10, 5); //50 
+		private var Timer_Test:Timer = new Timer(10, 50); //50 
 		private var my_menu:ContextMenu;
 		
 		
