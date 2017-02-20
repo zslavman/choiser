@@ -132,17 +132,20 @@ package
 		public	function Key_DOWN(event: KeyboardEvent) {
 		
 			if (view != null) {
-				if (view.config_bar != null) {
-					if (event.keyCode == 27 || event.keyCode == 32) { // клавиша "Space"
-						view.config_bar.config_bar_off.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN));
-						if (view.config_bar.about_scr != null) {
+				if (view.config_bar != null) { // если открыт конфигбар
+					if (event.keyCode == 27 || event.keyCode == 32) { // клавиша "Esc"/"Space"
+						if (view.config_bar.about_scr != null) { // если открыто окно "О программе"
 							view.config_bar.about_scr.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 						}
+						if (!view.open_config.isPlaying) {
+							view.config_bar.config_bar_off.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN));
+							view.config_bar.config_bar_off.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP)); // для устранения перетаскивания конфигбара
+						}
 					}
-				}
+				} // если закрыт конфигбар
 				else if (view.config_bar == null && view.splash_screen == null) {
 					if (event.keyCode == 32) { // нажатие "Space"
-						view.config_bar_on.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN));
+						view.config_bar_on.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 					}
 				}
 			}

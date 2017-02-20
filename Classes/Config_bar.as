@@ -29,6 +29,7 @@ package
 		private var myScroll:CustomScroll;
 		private var myStage:Stage;
 		public var about_scr:About;
+		private var mask_about:Sprite;
 		
 		private var key_click:Sound = new _key_click();
 		private var chpok:Sound = new _chpok();
@@ -378,6 +379,14 @@ package
 			parent.addChild(about_scr);
 			Blur('forward');
 			
+			// создание маски для экрана О программе
+			mask_about = new Sprite();
+			mask_about.graphics.beginFill(0x000000, 1);
+			mask_about.graphics.drawRect(0, 0, 640, 1136);
+			mask_about.graphics.endFill();
+			parent.addChild(mask_about);
+			parent.mask = mask_about;
+			
 			key_click.play();
 		}
 		
@@ -391,10 +400,11 @@ package
 			
 			about_scr.removeEventListener(MouseEvent.CLICK, about_scr_CLICK);
 			parent.removeChild(about_scr);
+			parent.removeChild(mask_about);
+			mask_about = null;
 			about_scr = null;
 			
 			Blur('revers');
-			//key_click.play();
 		}
 		
 		

@@ -30,10 +30,11 @@ package
 		private var model		:Model;
 		private var mask_config	:Sprite;
 		private var myStage		:Stage;
+		private var noise		:PerLin_Noise;
 		
+		public var open_config	:Tween;
 		private var roleTween1	:Tween;
 		private var roleTween2	:Tween;
-		private var open_config	:Tween;
 		private var close_config:Tween;
 		private var lineStart_y;
 		private var tween_duration:Number = 0.1;
@@ -85,7 +86,7 @@ package
 			phrazes_arr = Model.Phrazes_arr;
 		
 			pusk_block.button1.addEventListener(MouseEvent.CLICK, button1_MOUSE_DOWN);
-			config_bar_on.addEventListener(MouseEvent.CLICK, config_bar_on_MOUSE_DOWN);
+			config_bar_on.addEventListener(MouseEvent.CLICK, config_bar_on_CLICK);
 			
 			Timer_DurationRot.addEventListener(TimerEvent.TIMER, func_Timer_DurationRot);
 			Timer_Listing.addEventListener(TimerEvent.TIMER, func_Timer_Listing);
@@ -122,6 +123,9 @@ package
 			//fountain.mouseChildren = false;
 			//fountain.mouseEnabled = false;
 			//addChild(fountain);
+			noise = new PerLin_Noise(BG_movie.perlin1);
+			addChild (noise);
+			//BG_movie.perlin1.alpha = 0.75;
 		}
 		
 		
@@ -238,7 +242,7 @@ package
 		 *                Кнопка "Config"            *
 		 *                 (вызов меню)              *
 		 */ //****************************************
-		private function config_bar_on_MOUSE_DOWN(event:MouseEvent):void{ 
+		private function config_bar_on_CLICK(event:MouseEvent):void{ 
 
 			key_click.play();
 			
@@ -262,7 +266,6 @@ package
 				}
 				config_bar.mute.addEventListener(MouseEvent.MOUSE_DOWN, mute_MOUSE_DOWN);
 				config_bar.mute.buttonMode = true;
-
 			}
 		}
 		
