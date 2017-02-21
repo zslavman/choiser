@@ -12,11 +12,8 @@ package
 	public class Fountain extends MovieClip {
 	
 		private var maska:Sprite;
-		
-		private var temp:uint = 0;
-		private var temp1:uint = 0;
-		private var temp2:uint = 0;
-		
+		private var frame:uint = 0;
+	
 		
 	
 		
@@ -31,6 +28,9 @@ package
 			addChild(maska);
 			this.mask = maska;
 			
+			this.mouseChildren = false;
+			this.mouseEnabled = false;
+			
 			addEventListener(Event.ENTER_FRAME, beam);
 		}
 		
@@ -40,38 +40,57 @@ package
 		
 		
 
-		
+		/*********************************************
+		 *               Создает частицы             *
+		 *                                           *
+		 */ //****************************************
 		private function beam(event: Event) {
 
-			var spray = new spray_mc();
+			frame++;
+			
+			if (frame == 10) {
+				frame = 0;
+				
+				var spray = new spray_mc();
+				spray.x = Math.random() * 640;
+				spray.y = 1140; 
+	
+				// создание свойства созданного объекта (уравнения прямых)
+				spray.mov_x = 3 * Math.random() - 1.5;
+				spray.mov_y = 1 * Math.random() + 2; //5
+	
+				spray.alpha = Math.random() * Math.random() + 0.5;
+				spray.width = spray.height = 6 + Math.random() * 40;
+				addChild(spray);
+	
+				// создаем обработчик события ентер_фрейм для каждой добавленной на сцену частицы.
+				spray.addEventListener(Event.ENTER_FRAME, Propagation);
+			}
 
-			spray.x = Math.random() * 640;
-			//spray.x = 600;
-			spray.y = 1136; 
-
-			// создание свойства созданного объекта (уравнения прямых)
-			spray.mov_x = 3 * Math.random() - 1.5;
-			spray.mov_y = 1 * Math.random() + 2; //5
-
-			spray.alpha = Math.random() * Math.random() + 0.5;
-			spray.width = spray.height = 6 + Math.random() * 40;
-			//spray.mouseEnabled = false;
-			addChild(spray);
-
-			// создаем обработчик события ентер_фрейм для каждой добавленной на сцену капли.
-			spray.addEventListener(Event.ENTER_FRAME, radio_Wave_Propagation);
 		}
 
 
-
-		private function radio_Wave_Propagation(event: Event) {
-
-			var particle: MovieClip = event.currentTarget as MovieClip;
-
+		
+		
+		
+		
+		
+		
+		
+		/*********************************************
+		 *               Двигает частицы             *
+		 *                                           *
+		 */ //****************************************
+		private function Propagation(event: Event) {
+			
+			var particle: MovieClip;
+				
+			particle = event.currentTarget as MovieClip;
+				
 			particle.x = particle.x - particle.mov_x;
 			particle.y = particle.y - particle.mov_y;
-
-			//if (particle.y < 800) {
+	
+			//if (particle.y < 400) {
 				//particle.alpha -= 0.02;
 				//particle.scaleX += 0.02;
 				//particle.scaleY += 0.02;
@@ -79,7 +98,7 @@ package
 
 			// уничтожение частиц
 			if (particle.y < -10) {
-				particle.removeEventListener(Event.ENTER_FRAME, radio_Wave_Propagation);
+				particle.removeEventListener(Event.ENTER_FRAME, Propagation);
 				removeChild(particle);
 				particle = null;
 			}

@@ -30,7 +30,9 @@ package
 		private var model		:Model;
 		private var mask_config	:Sprite;
 		private var myStage		:Stage;
-		private var noise		:PerLin_Noise;
+		private var noise1		:PerLin_Noise;
+		private var noise2		:PerLin_Noise;
+		private var stars		:StarrySky;
 		
 		public var open_config	:Tween;
 		private var roleTween1	:Tween;
@@ -119,13 +121,21 @@ package
 				addEventListener(Event.ENTER_FRAME, checkClosed);
 			}
 			
-			//fountain = new Fountain();
-			//fountain.mouseChildren = false;
-			//fountain.mouseEnabled = false;
-			//addChild(fountain);
-			noise = new PerLin_Noise(BG_movie.perlin1);
-			addChild (noise);
-			//BG_movie.perlin1.alpha = 0.75;
+			// фонтан сердечек
+			fountain = new Fountain();
+			addChild(fountain);
+			
+			// вода
+			noise1 = new PerLin_Noise(BG_movie.obj1, BG_movie.obj1.width, BG_movie.obj1.height, 800, 5); //800, 5
+			addChild(noise1);
+			
+			noise2 = new PerLin_Noise(BG_movie.obj2, BG_movie.obj2.width, BG_movie.obj2.height, 900, 50, 600, 50);
+			addChild(noise2);
+			//trace ("W x H = " + BG_movie.obj2.width + 'x' + BG_movie.obj2.height);
+			
+			// звезды
+			stars = new StarrySky(myStage.stageWidth, 380);
+			BG_movie.addChildAt(stars, 5);
 		}
 		
 		
@@ -188,7 +198,6 @@ package
 					close_config_manualy.addEventListener(TweenEvent.MOTION_FINISH, Kill_config);
 					changeTurn('dont_turn');
 					resetData_on_Circles();
-					//TODO: все еще вылетает ошибка с ранним удалением конфигбара
 				}
 			}
 		}
