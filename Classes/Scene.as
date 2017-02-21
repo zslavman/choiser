@@ -17,6 +17,11 @@ package
 	import flash.media.SoundTransform;
 	import flash.utils.Timer;
 	
+	import com.google.analytics.AnalyticsTracker;
+	import com.google.analytics.GATracker;
+	import com.google.analytics.utils.URL;
+	
+	
 	
 	/**
 	 * ...
@@ -76,6 +81,12 @@ package
 		private var boundingBox	:Rectangle;
 		private var close_config_manualy:Tween;
 		
+		//Аналитика
+		private var ACCOUNT_ID	:String = "UA-92344155-1";
+		private var BRIDGE_MODE	:String = "AS3";
+		private var DEBUG_MODE	:Boolean = false;
+		private var love_tracker:GATracker;
+		
 		
 		
 		
@@ -122,20 +133,22 @@ package
 			}
 			
 			// фонтан сердечек
-			fountain = new Fountain();
-			addChild(fountain);
+			//fountain = new Fountain();
+			//addChild(fountain);
 			
 			// вода
-			noise1 = new PerLin_Noise(BG_movie.obj1, BG_movie.obj1.width, BG_movie.obj1.height, 800, 5); //800, 5
+			noise1 = new PerLin_Noise(BG_movie.obj1, BG_movie.obj1.width, BG_movie.obj1.height, 400, 5); //800, 5
 			addChild(noise1);
-			
+			//
 			noise2 = new PerLin_Noise(BG_movie.obj2, BG_movie.obj2.width, BG_movie.obj2.height, 900, 50, 600, 50);
 			addChild(noise2);
-			//trace ("W x H = " + BG_movie.obj2.width + 'x' + BG_movie.obj2.height);
 			
 			// звезды
 			stars = new StarrySky(myStage.stageWidth, 380);
 			BG_movie.addChildAt(stars, 5);
+			
+			// гугл
+			love_tracker = new GATracker(myStage, ACCOUNT_ID, BRIDGE_MODE, DEBUG_MODE);
 		}
 		
 		
@@ -367,10 +380,41 @@ package
 			model.Need_noMOVE = false;
 			//NOTE: принудительная установка фокуса для возможности послед. нажатия Space
 			stage.focus = config_bar_on;
+			
+			// сравнение массивов с эталонными
+			// TODO: вместо words выводится verbs (и наоборот) + какогото хрена выводит различие в первом слове
+			var tempvar:String = compareUnique(model.Verb_arr, model.Verb_arr_reserve);
+			if (tempvar != '') {
+				//love_tracker.trackPageview('A: ' + tempvar);
+				trace ("tempvar = " + tempvar);
+			}
 		}
 		
 		
 		
+		
+		// ф-ция сравнение массивов с эталонными, оставляющая лишь уникальные значения в массиве
+		private function compareUnique(my_ar:Array, etalon:Array):String {
+			
+			var temp_arr:Array = my_ar.slice();
+		
+			for (var i:Number = 0; i < temp_arr.length; i++){ 
+				for (var j:Number = 0; j < temp_arr.length; j++) {
+					
+					// если эл.массива равен эл.эталонного массива - удаляем его
+					if (temp_arr[i] == etalon[j]) {
+						temp_arr.splice(j, 1);
+						j = -1;
+					}
+				}
+			}
+			
+			// сшиваем массивы, если они не пустые
+			var str1:String = '';
+			if (temp_arr.length) str1 = temp_arr.join(', ');
+
+			return str1;
+		}
 		
 		
 		

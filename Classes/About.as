@@ -17,9 +17,8 @@ package
 	public class About extends Sprite{
 		
 
-		private var mailCSS:StyleSheet = new StyleSheet();
-		private var phrazes_arr:Array = [];
-		
+		private var mailCSS		:StyleSheet = new StyleSheet();
+		private var phrazes_arr	:Array = [];
 		
 		
 		public function About(){ 

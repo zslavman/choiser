@@ -18,7 +18,7 @@ package
 	public class PerLin_Noise extends Sprite{
 		
 		
-		public static var numOctaves:uint = 10; // кл-во октав или индивидуальных функций шума 3
+		public static var numOctaves:uint = 3; // кл-во октав или индивидуальных функций шума 3
 		
 		internal var waterBitmap	:BitmapData;
 		internal var displacement	:DisplacementMapFilter;
@@ -47,7 +47,7 @@ package
 			
 			// создаём фильтр DisplacementMapFilter
 			displacement = new DisplacementMapFilter(waterBitmap,  	// Объект BitmapData, содержащий данные карты замещения.  
-													new Point(0, 15),// Значение, содержащее смещение левого верхнего угла целевого экранного объекта из левого верхнего угла изображения карты
+													new Point(0, 25),// Значение, содержащее смещение левого верхнего угла целевого экранного объекта из левого верхнего угла изображения карты
 													3, 				// Указывает цветовой канал, который следует использовать в изображении карты для замещения  результата x. Возможными значениями являются константы BitmapDataChannel
 													4, 	 			// тоже самое для 'y'
 													scalX,			// Множитель, с помощью которого масштабируется результат 'x' замещения, полученного в ходе вычисления карты

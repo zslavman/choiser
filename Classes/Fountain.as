@@ -13,13 +13,11 @@ package
 	
 		private var maska:Sprite;
 		private var frame:uint = 0;
-	
-		
+		private var items:Array = [];
 	
 		
 		public function Fountain(){
 		
-			
 			// создание маски для экрана настроек
 			maska = new Sprite();
 			maska.graphics.beginFill(0x000000, 1);
@@ -48,22 +46,28 @@ package
 
 			frame++;
 			
-			if (frame == 10) {
+			if (frame == 14) {
 				frame = 0;
 				
-				var spray = new spray_mc();
+				var spray:MovieClip = new Fountain_particle();
 				spray.x = Math.random() * 640;
-				spray.y = 1140; 
+				spray.y = 1200; 
 	
-				// создание свойства созданного объекта (уравнения прямых)
+				// задание свойства созданого объекта (уравнения прямых)
 				spray.mov_x = 3 * Math.random() - 1.5;
 				spray.mov_y = 1 * Math.random() + 2; //5
 	
-				spray.alpha = Math.random() * Math.random() + 0.5;
-				spray.width = spray.height = 6 + Math.random() * 40;
+				spray.alpha = Math.random() * Math.random() + 0.75;
+				spray.width = spray.height = 25 + Math.random() * 50;
+				
+				// добавляем в массив, для дальнейшего удаления слушателя каждой частицы
+				items.push(spray);
+				
 				addChild(spray);
+				
+				trace ("items = " + items);
 	
-				// создаем обработчик события ентер_фрейм для каждой добавленной на сцену частицы.
+				// создаем энтер_фрейм для каждой добавленной на сцену частицы.
 				spray.addEventListener(Event.ENTER_FRAME, Propagation);
 			}
 
@@ -73,15 +77,14 @@ package
 		
 		
 		
-		
-		
-		
-		
+
 		/*********************************************
 		 *               Двигает частицы             *
 		 *                                           *
 		 */ //****************************************
 		private function Propagation(event: Event) {
+			
+			trace ("numChildren = " + numChildren);
 			
 			var particle: MovieClip;
 				
@@ -99,7 +102,7 @@ package
 			// уничтожение частиц
 			if (particle.y < -10) {
 				particle.removeEventListener(Event.ENTER_FRAME, Propagation);
-				removeChild(particle);
+				particle.parent.removeChild(particle);
 				particle = null;
 			}
 		}
@@ -110,6 +113,14 @@ package
 		public function destroy():void {
 		
 			removeEventListener(Event.ENTER_FRAME, beam);
+			
+			if (items.length) {
+				for (var i:int = 0; i < items.length; i++){ 
+				items[i].removeEventListener(Event.ENTER_FRAME, Propagation);
+				}
+			}
+			// очистка класса от всех потомков
+			while (numChildren > 0) removeChildAt(0);
 		}
 		
 		
