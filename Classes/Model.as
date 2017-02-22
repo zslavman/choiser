@@ -37,6 +37,12 @@ package
 		
 		private var SharedObj		:SharedObject;
 		
+		
+		
+		
+		
+		
+		
 
 		public function Model() {
 		
@@ -44,22 +50,21 @@ package
 			myFormat.leading = 6;
 		
 			// тут будут все данные приложения
-			words_arr = ['not_used', 'Щекотать', 'Лизать', 'Прикосн.', 'Покусать', 'Поцеловать', 'Массажир.'];
-			// ласкать, сосать
+			words_arr = ['not_used', '?', 'ухо', 'шею', 'грудь', 'губы', 'соски'];
 			
-			verb_arr = ['not_used', '?', 'ухо', 'шею', 'грудь', 'губы', 'соски'];
+			verb_arr = ['not_used', 'Щекотать', 'Лизать', 'Прикосн.', 'Покусать', 'Поцеловать', 'Массажир.'];
+			// ласкать, сосать
 			
 			//animation_kind = ['rotate', 'list', 'half']; // rotate - вращаются оба, list - замена слов в обоих полях, 
 			// half - первое поле вращается а второе листается
 			animation_kind = ['Вращение', 'Листание', 'Наполовину'];
 			
-
 			phrazes_arr[0] = ['След. ход'];
 			phrazes_arr[1] = ['. . .'];
 			phrazes_arr[2] = ['Сделать'];
 			phrazes_arr[3] = ['что-то :)'];
-			phrazes_arr[4] = ['Игрок1'];
-			phrazes_arr[5] = ['Игрок2'];
+			phrazes_arr[4] = ['Партнер1'];
+			phrazes_arr[5] = ['Партнер2'];
 			phrazes_arr[6] = [' нужно:'];
 			phrazes_arr[7] = ['Ходит '];
 			phrazes_arr[8] = ['Сброс'];
@@ -86,9 +91,9 @@ package
 			phrazes_arr[28] = ['имя существительное'];
 			phrazes_arr[29] = ['глагол'];
 			
-			phrazes_arr[30] = ['При каждом ходе случайным образом выпадает пара слов (желание) которое необходимо исполнить Вашему сопернику.\rВ настройках Вы можете задавать свои желания.'];
+			phrazes_arr[30] = ['При каждом ходе случайным образом выпадает пара слов (желание) которое необходимо исполнить Вашему партнеру.\rВ настройках Вы можете задавать свои желания.'];
 			
-			phrazes_arr[31] = ['Введите свои имена, ведь Вы не хотите быть "Игрок1" и "Игрок2"?'];
+			phrazes_arr[31] = ['Введите свои имена, ведь Вы не хотите быть "Партнер1" и "Партнер2"?'];
 			
 			
 		
@@ -107,7 +112,7 @@ package
 			}
 			else storage = SharedObj.data.storage;
 			
-			if (SharedObj.data.players_names == null) players_names = ['Игрок1', 'Игрок2']; // default
+			if (SharedObj.data.players_names == null) players_names = [phrazes_arr[4], phrazes_arr[5]]; // default
 			else players_names = SharedObj.data.players_names;
 			
 			if (SharedObj.data.anim_flag == null) anim_flag = animation_kind[0]; // default 

@@ -131,13 +131,13 @@ package
 				}
 			}
 			
-			if (selector_flag) {
+			if (!selector_flag) {
 				what.text = model.Verb_arr[words_count];
-				glagol.text = phrazes_arr[28] + ' ' + words_count;
+				glagol.text = phrazes_arr[29] + ' ' + words_count;
 			}
 			else {
 				what.text = model.Words_arr[words_count];
-				glagol.text = phrazes_arr[29] + ' ' + words_count;
+				glagol.text = phrazes_arr[28] + ' ' + words_count;
 			}
 		}
 		
@@ -249,7 +249,7 @@ package
 			mode.text = model.Anim_flag;
 			name1.text = model.Players_names[0];
 			name2.text = model.Players_names[1];
-			what.text = model.Words_arr[1];
+			what.text = model.Verb_arr[1];
 			glagol.text = phrazes_arr[29] + ' ' + words_count;
 		}
 		
@@ -318,7 +318,7 @@ package
 			}
 			else if (event.currentTarget.name == 'what') {
 			
-				if (selector_flag) {
+				if (!selector_flag) {
 					model.Verb_arr[words_count] = what.text;
 					if (what.text.length > 10) cuterStr(10, what);
 				}

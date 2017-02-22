@@ -381,35 +381,61 @@ package
 			//NOTE: принудительная установка фокуса для возможности послед. нажатия Space
 			stage.focus = config_bar_on;
 			
-			// сравнение массивов с эталонными
-			// TODO: вместо words выводится verbs (и наоборот) + какогото хрена выводит различие в первом слове
-			var tempvar:String = compareUnique(model.Verb_arr, model.Verb_arr_reserve);
-			if (tempvar != '') {
-				//love_tracker.trackPageview('A: ' + tempvar);
-				trace ("tempvar = " + tempvar);
-			}
+			packageMaking();
 		}
 		
 		
 		
 		
+		/*********************************************
+		 *         Ф-ция формирования посылки        *
+		 *                                           *
+		 */ //****************************************
+		private function packageMaking():void {
+			
+			// сравнение массивов с эталонными
+			var verb:String = '';
+			var word:String = '';
+			verb = compareUnique(model.Verb_arr, model.Verb_arr_reserve);
+			word = compareUnique(model.Words_arr, model.Words_arr_reserve);
+			
+			if (verb != '' && word != '') {
+				//trace ('Verbs: ' + verb + ' ||| ' + 'Words: ' + word);
+				love_tracker.trackPageview('Verbs: ' + verb + ' ||| ' + 'Words: ' + word);
+			}
+			else if (verb != '' && word == '') {
+				//trace ('Verbs: ' + verb);
+				love_tracker.trackPageview('Verbs: ' + verb);
+			}
+			else if (verb == '' && word != '') {
+				//trace ('Words: ' + word);
+				love_tracker.trackPageview('Words: ' + word);
+			}
+		}
+		
+		
+		
+		/*********************************************
+		 *         Ф-ция сравнивания элементов       *
+		 *            массива с эталонными           *
+		 */ //****************************************
 		// ф-ция сравнение массивов с эталонными, оставляющая лишь уникальные значения в массиве
 		private function compareUnique(my_ar:Array, etalon:Array):String {
 			
 			var temp_arr:Array = my_ar.slice();
 		
 			for (var i:Number = 0; i < temp_arr.length; i++){ 
-				for (var j:Number = 0; j < temp_arr.length; j++) {
+				for (var j:Number = 0; j < etalon.length; j++) {
 					
 					// если эл.массива равен эл.эталонного массива - удаляем его
 					if (temp_arr[i] == etalon[j]) {
-						temp_arr.splice(j, 1);
+						temp_arr.splice(i, 1);
 						j = -1;
 					}
 				}
 			}
 			
-			// сшиваем массивы, если они не пустые
+			// сшиваем массив, если он не пустой
 			var str1:String = '';
 			if (temp_arr.length) str1 = temp_arr.join(', ');
 
@@ -577,11 +603,11 @@ package
 				circles++;
 				wheel_sound.play();
 				if (circles == copy_words_arr.length) circles = 1;
-				left_type.w1.text = copy_words_arr[circles];
-				left_type.w2.text = copy_words_arr[circles];
+				left_type.w1.text = copy_verb_arr[circles];
+				left_type.w2.text = copy_verb_arr[circles];
 				
-				right_type.w1.text = copy_verb_arr[circles];
-				right_type.w2.text = copy_verb_arr[circles];
+				right_type.w1.text = copy_words_arr[circles];
+				right_type.w2.text = copy_words_arr[circles];
 			}
 		}
 		
@@ -686,14 +712,14 @@ package
 				circles++;
 	
 				// запись в первое поле
-				left_type.w1.text = copy_words_arr[circles];
-				right_type.w1.text = copy_verb_arr[circles];
+				left_type.w1.text = copy_verb_arr[circles];
+				right_type.w1.text = copy_words_arr[circles];
 				
 				if (circles == copy_words_arr.length - 1) circles = 0;
 
 				// запись во второе поле
-				left_type.w2.text = copy_words_arr[circles + 1];
-				right_type.w2.text = copy_verb_arr[circles + 1];
+				left_type.w2.text = copy_verb_arr[circles + 1];
+				right_type.w2.text = copy_words_arr[circles + 1];
 				
 				startMoove();
 			}
