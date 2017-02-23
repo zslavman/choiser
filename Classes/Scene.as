@@ -35,9 +35,10 @@ package
 		private var model		:Model;
 		private var mask_config	:Sprite;
 		private var myStage		:Stage;
-		private var noise1		:PerLin_Noise;
-		private var noise2		:PerLin_Noise;
+		private var noise1		:Water;
+		private var noise2		:Water;
 		private var stars		:StarrySky;
+		private var clouds		:Clouds;
 		
 		public var open_config	:Tween;
 		private var roleTween1	:Tween;
@@ -137,15 +138,19 @@ package
 			//addChild(fountain);
 			
 			// вода
-			noise1 = new PerLin_Noise(BG_movie.obj1, BG_movie.obj1.width, BG_movie.obj1.height, 400, 5); //800, 5
+			noise1 = new Water(BG_movie.obj1, BG_movie.obj1.width, BG_movie.obj1.height, 400, 5); //800, 5
 			addChild(noise1);
 			//
-			noise2 = new PerLin_Noise(BG_movie.obj2, BG_movie.obj2.width, BG_movie.obj2.height, 900, 50, 600, 50);
+			noise2 = new Water(BG_movie.obj2, BG_movie.obj2.width, BG_movie.obj2.height, 900, 50, 600, 50);
 			addChild(noise2);
 			
 			// звезды
 			stars = new StarrySky(myStage.stageWidth, 380);
 			BG_movie.addChildAt(stars, 5);
+			
+			// тучки
+			clouds = new Clouds(640, 350, 1, 0, false);
+			BG_movie.addChildAt(clouds, 6);
 			
 			// гугл
 			love_tracker = new GATracker(myStage, ACCOUNT_ID, BRIDGE_MODE, DEBUG_MODE);
@@ -400,15 +405,15 @@ package
 			word = compareUnique(model.Words_arr, model.Words_arr_reserve);
 			
 			if (verb != '' && word != '') {
-				//trace ('Verbs: ' + verb + ' ||| ' + 'Words: ' + word);
+				trace ('Verbs: ' + verb + ' ||| ' + 'Words: ' + word);
 				love_tracker.trackPageview('Verbs: ' + verb + ' ||| ' + 'Words: ' + word);
 			}
 			else if (verb != '' && word == '') {
-				//trace ('Verbs: ' + verb);
+				trace ('Verbs: ' + verb);
 				love_tracker.trackPageview('Verbs: ' + verb);
 			}
 			else if (verb == '' && word != '') {
-				//trace ('Words: ' + word);
+				trace ('Words: ' + word);
 				love_tracker.trackPageview('Words: ' + word);
 			}
 		}
@@ -718,7 +723,7 @@ package
 				if (circles == copy_words_arr.length - 1) circles = 0;
 
 				// запись во второе поле
-				left_type.w2.text = copy_verb_arr[circles + 1];
+				left_type.w2.text = copy_verb_arr [circles + 1];
 				right_type.w2.text = copy_words_arr[circles + 1];
 				
 				startMoove();

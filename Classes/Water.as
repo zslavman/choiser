@@ -15,7 +15,7 @@ package
 	 */
 
 	
-	public class PerLin_Noise extends Sprite{
+	public class Water extends Sprite{
 		
 		
 		public static var numOctaves:uint = 3; // кл-во октав или индивидуальных функций шума 3
@@ -32,7 +32,7 @@ package
 		
 		
 		
-		public function PerLin_Noise(_mc:DisplayObject, w:uint, h:uint, _waweX:uint, _waweY:uint, scalX:uint = 500, scalY:uint = 5) {
+		public function Water(_mc:DisplayObject, w:uint, h:uint, _waweX:uint, _waweY:uint, scalX:uint = 500, scalY:uint = 5) {
 			
 			mc = _mc;
 			waweX = _waweX;
