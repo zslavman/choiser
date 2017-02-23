@@ -1,6 +1,7 @@
 package 
 {
 	import adobe.utils.CustomActions;
+	import flash.events.KeyboardEvent;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.display.Stage;
@@ -27,7 +28,12 @@ package
 	 * ...
 	 * @author zslavman
 	 */
-	public class Scene extends Sprite {
+	
+	// указывается что бы после этой строки была загрузка лишь после прелоадера 
+	[Frame(factoryClass = "Preloader")]
+	 
+	 
+	public class Scene extends MovieClip {
 	
 		public var splash_screen:Splash_screen;
 		public var config_bar	:Config_bar;
@@ -104,6 +110,8 @@ package
 			
 			Timer_DurationRot.addEventListener(TimerEvent.TIMER, func_Timer_DurationRot);
 			Timer_Listing.addEventListener(TimerEvent.TIMER, func_Timer_Listing);
+			
+			myStage.addEventListener(KeyboardEvent.KEY_DOWN, Key_DOWN);
 			
 			//myStage.addEventListener(Event.ACTIVATE, act);
 			//myStage.addEventListener(Event.DEACTIVATE, act);
@@ -871,6 +879,46 @@ package
 		
 		
 		
+		
+		
+		
+		
+		
+		/*********************************************
+		 *          Кнопка клавиатуры "Space"        *
+		 *                                           *
+		 */ //****************************************
+		 
+		// charCode - код символа; keyCode - код клавиши
+		//trace(String.fromCharCode(event.charCode));
+
+		public	function Key_DOWN(event: KeyboardEvent) {
+		
+			
+			if (config_bar != null) { // если открыт конфигбар
+				if (event.keyCode == 27 || event.keyCode == 32) { // клавиша "Esc"/"Space"
+					if (config_bar.about_scr != null) { // если открыто окно "О программе"
+						config_bar.about_scr.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+					}
+					if (!open_config.isPlaying) {
+						config_bar.config_bar_off.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN));
+						config_bar.config_bar_off.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP)); // для устранения перетаскивания конфигбара
+					}
+				}
+			} // если закрыт конфигбар
+			else if (config_bar == null && splash_screen == null) {
+				if (event.keyCode == 32) { // нажатие "Space"
+					config_bar_on.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+				}
+			}
+			
+		}
+		
+		
+		
+		
+		
+
 		
 	
 		//TODO: добавить пароль на просмотр архива
