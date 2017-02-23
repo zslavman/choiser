@@ -247,6 +247,8 @@ package
 		public function TextFill():void{ 
 		
 			mode.text = model.Anim_flag;
+			partner1.text = phrazes_arr[4];
+			partner2.text = phrazes_arr[5];
 			name1.text = model.Players_names[0];
 			name2.text = model.Players_names[1];
 			what.text = model.Verb_arr[1];
@@ -378,14 +380,14 @@ package
 			parent.addChild(about_scr);
 			Blur('forward');
 			
-			fountain = new Fountain();
+			fountain = new Fountain(myStage.stageWidth, myStage.stageHeight);
 			parent.addChild(fountain);
 			
 			
 			// создание маски для экрана 'О программе'
 			mask_about = new Sprite();
 			mask_about.graphics.beginFill(0x000000, 1);
-			mask_about.graphics.drawRect(0, 0, 640, 1136);
+			mask_about.graphics.drawRect(0, 0, myStage.stageWidth, myStage.stageHeight);
 			mask_about.graphics.endFill();
 			parent.addChild(mask_about);
 			parent.mask = mask_about;

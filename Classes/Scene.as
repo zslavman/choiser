@@ -39,6 +39,7 @@ package
 		private var noise2		:Water;
 		private var stars		:StarrySky;
 		private var clouds		:Clouds;
+		private var frameRater	:FrameRater;
 		
 		public var open_config	:Tween;
 		private var roleTween1	:Tween;
@@ -78,7 +79,6 @@ package
 		private var TweenSpeed	: Number = 0.35;
 		private var TweenSmClass = Regular.easeOut; //Strong.easeOut
 		
-		private var mySliderLength:uint = 640;
 		private var boundingBox	:Rectangle;
 		private var close_config_manualy:Tween;
 		
@@ -125,7 +125,7 @@ package
 			back_channel = dawning_sound.play(0, 1, s_transform);
 			back_channel.addEventListener(Event.SOUND_COMPLETE, loopSound);
 			
-			boundingBox = new Rectangle(0, 0, mySliderLength, 0);
+			boundingBox = new Rectangle(0, 0, myStage.stageWidth, 0);
 			
 			if (model.First_time) {
 				splash_screen = new Splash_screen(model);
@@ -149,11 +149,15 @@ package
 			BG_movie.addChildAt(stars, 5);
 			
 			// тучки
-			clouds = new Clouds(640, 350, 1, 0, false);
+			clouds = new Clouds(myStage.stageWidth, 350, 1, 0, false);
 			BG_movie.addChildAt(clouds, 6);
 			
 			// гугл
 			love_tracker = new GATracker(myStage, ACCOUNT_ID, BRIDGE_MODE, DEBUG_MODE);
+			
+			// фреймрейтер
+			frameRater = new FrameRater();
+			addChild(frameRater);
 		}
 		
 		
@@ -208,7 +212,7 @@ package
 			
 			if (!model.Need_noMOVE) {
 				if (Position_X > 500) { // если менюшку отпустили на позиции Х-координаты больше 500 то возвращаем менюшку вправо
-					open_config = new Tween(config_bar, "x", TweenSmClass, config_bar.x, 640, TweenSpeed, true);
+					open_config = new Tween(config_bar, "x", TweenSmClass, config_bar.x, myStage.stageWidth, TweenSpeed, true);
 					
 				} 
 				else { // иначе влево
@@ -278,17 +282,18 @@ package
 				config_bar = new Config_bar(model, stage);
 				config_bar.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_MOUSE_DOWN);
 				addChild(config_bar);
+				if (frameRater != null) addChild(frameRater); // для поднятия в списке отображения
 			
 				// создание маски для экрана настроек
 				mask_config = new Sprite();
 				mask_config.graphics.beginFill(0x000000, 1);
-				mask_config.graphics.drawRect(0, 0, 640, 1136);
+				mask_config.graphics.drawRect(0, 0, myStage.stageWidth, myStage.stageHeight);
 				mask_config.graphics.endFill();
 				addChild(mask_config);
 				config_bar.mask = mask_config;
 
 				if (config_bar.x == 0) {
-					open_config = new Tween (config_bar, 'x', Strong.easeOut, 0, 640, 1, true);
+					open_config = new Tween (config_bar, 'x', Strong.easeOut, 0, myStage.stageWidth, 1, true);
 					open_config.addEventListener(TweenEvent.MOTION_FINISH, after_MOTION_FINISH);
 				}
 				config_bar.mute.addEventListener(MouseEvent.MOUSE_DOWN, mute_MOUSE_DOWN);
@@ -355,9 +360,9 @@ package
 			
 			key_click.play();
 			
-			if (config_bar.x == 640) {
+			if (config_bar.x == myStage.stageWidth) {
 				model.Need_noMOVE = true;
-				close_config = new Tween (config_bar, 'x', Strong.easeOut, 640, 0, 1, true);
+				close_config = new Tween (config_bar, 'x', Strong.easeOut, myStage.stageWidth, 0, 1, true);
 				close_config.addEventListener(TweenEvent.MOTION_FINISH, Kill_config);
 				changeTurn('dont_turn');
 				resetData_on_Circles();
@@ -373,8 +378,6 @@ package
 		 *                                           *
 		 */ //****************************************
 		public function Kill_config(event:TweenEvent):void {
-			
-			//changeTurn('dont_turn');
 			
 			config_bar.config_bar_off.removeEventListener(MouseEvent.MOUSE_DOWN, config_bar_off_MOUSE_DOWN);
 			config_bar.mute.removeEventListener(MouseEvent.MOUSE_DOWN, mute_MOUSE_DOWN);
@@ -405,15 +408,15 @@ package
 			word = compareUnique(model.Words_arr, model.Words_arr_reserve);
 			
 			if (verb != '' && word != '') {
-				trace ('Verbs: ' + verb + ' ||| ' + 'Words: ' + word);
+				//trace ('Verbs: ' + verb + ' ||| ' + 'Words: ' + word);
 				love_tracker.trackPageview('Verbs: ' + verb + ' ||| ' + 'Words: ' + word);
 			}
 			else if (verb != '' && word == '') {
-				trace ('Verbs: ' + verb);
+				//trace ('Verbs: ' + verb);
 				love_tracker.trackPageview('Verbs: ' + verb);
 			}
 			else if (verb == '' && word != '') {
-				trace ('Words: ' + word);
+				//trace ('Words: ' + word);
 				love_tracker.trackPageview('Words: ' + word);
 			}
 		}

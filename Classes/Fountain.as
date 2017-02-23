@@ -14,14 +14,17 @@ package
 		private var maska:Sprite;
 		private var frame:uint = 0;
 		private var items:Array = [];
+		private var W:Number;
 	
 		
-		public function Fountain(){
+		public function Fountain(_W:Number, H:Number){
 		
+			W = _W;
+			
 			// создание маски для экрана настроек
 			maska = new Sprite();
 			maska.graphics.beginFill(0x000000, 1);
-			maska.graphics.drawRect(0, 0, 640, 1136);
+			maska.graphics.drawRect(0, 0, W, H);
 			maska.graphics.endFill();
 			addChild(maska);
 			this.mask = maska;
@@ -50,7 +53,7 @@ package
 				frame = 0;
 				
 				var spray:MovieClip = new Fountain_particle();
-				spray.x = Math.random() * 640;
+				spray.x = Math.random() * W;
 				spray.y = 1200; 
 	
 				// задание свойства созданого объекта (уравнения прямых)
@@ -65,7 +68,7 @@ package
 				
 				addChild(spray);
 				
-				trace ("items = " + items);
+				//trace ("items = " + items);
 	
 				// создаем энтер_фрейм для каждой добавленной на сцену частицы.
 				spray.addEventListener(Event.ENTER_FRAME, Propagation);
@@ -84,7 +87,7 @@ package
 		 */ //****************************************
 		private function Propagation(event: Event) {
 			
-			trace ("numChildren = " + numChildren);
+			//trace ("numChildren = " + numChildren);
 			
 			var particle: MovieClip;
 				

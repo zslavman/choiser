@@ -29,7 +29,7 @@ package
 		
 		private var bLoaded: uint = loaderInfo.bytesLoaded;
 		private var bTotal: uint = loaderInfo.bytesTotal;
-		private var Timer_Test:Timer = new Timer(10, 5); //50 
+		private var Timer_Test:Timer = new Timer(10, 50); //50 
 		private var my_menu:ContextMenu;
 		
 		
@@ -83,10 +83,10 @@ package
 		 private function checkLoading(event: TimerEvent):void {
 			
 			// формула с задержкой, что бы полюбоваться индикатором загрузки 
-			//var drop: int = 100 * (Timer_Test.currentCount * bLoaded) / (Timer_Test.repeatCount * bTotal);
+			var drop: int = 100 * (Timer_Test.currentCount * bLoaded) / (Timer_Test.repeatCount * bTotal);
 			
 			// формула без задержки
-			var drop: int = 100 * (bLoaded / bTotal);
+			//var drop: int = 100 * (bLoaded / bTotal);
 			
 			// масштабирование индикатора загрузки
 			//loading_bar.loading_mask.scaleY = drop / 100;

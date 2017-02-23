@@ -65,6 +65,10 @@ package
 			
 			adge.text = phrazes_arr[15];
 			ver.text = phrazes_arr[10];
+			
+			partner1.text = phrazes_arr[4];
+			partner2.text = phrazes_arr[5];
+			
 			about_pro1.text = phrazes_arr[11]; 
 			about_pro2.text = phrazes_arr[30]; 
 			enter_names.text = phrazes_arr[31];
