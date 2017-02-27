@@ -31,6 +31,7 @@ package
 		private var bTotal: uint = loaderInfo.bytesTotal;
 		private var Timer_Test:Timer = new Timer(10, 50); //50 
 		private var my_menu:ContextMenu;
+		private var scaler:Number; // коэф. масштабирования ролика, задается автоматически по физ. размерам SWF
 		
 		
 		
@@ -50,9 +51,12 @@ package
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			loaderInfo.addEventListener(IOErrorEvent.IO_ERROR, ioError);
 			
+			scaler = stage.stageHeight / 1136; // 1136-оригинальная высота экрана
+			
 			loading_bar = new Loading_bar();
 			//loading_bar.loading_mask.scaleY = 0;
 			loading_bar.loading_mask.scaleX = 0;
+			loading_bar.scaleX = loading_bar.scaleY = scaler;
 			addChild(loading_bar);
 			
 			Timer_Test.addEventListener(TimerEvent.TIMER, checkLoading);
@@ -127,7 +131,7 @@ package
 			
 			var view:Scene = new Scene(model_data, stage);
 			addChild(view);
-			view.scaleX = view.scaleY = Model.scaler;
+			view.scaleX = view.scaleY = scaler;
 			
 			// удаляем из stage прелодер
             //this.parent.removeChild(this);

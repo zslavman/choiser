@@ -418,14 +418,14 @@ package
 			parent.addChild(about_scr);
 			Blur('forward');
 			
-			fountain = new Fountain(myStage.stageWidth, myStage.stageHeight);
+			fountain = new Fountain(640, 1136);
 			parent.addChild(fountain);
 			
 			
 			// создание маски для экрана 'О программе'
 			mask_about = new Sprite();
 			mask_about.graphics.beginFill(0x000000, 1);
-			mask_about.graphics.drawRect(0, 0, myStage.stageWidth, myStage.stageHeight);
+			mask_about.graphics.drawRect(0, 0, 640, 1136);
 			mask_about.graphics.endFill();
 			parent.addChild(mask_about);
 			parent.mask = mask_about;
@@ -463,7 +463,7 @@ package
 			if (direction == 'forward') {
 				
 				blurFilter = new BlurFilter();
-				blurFilter.blurX = blurFilter.blurY = 16;
+				blurFilter.blurX = blurFilter.blurY = 36; //16
 				blurFilter.quality = 3;
 				
 				// наложение фильтров

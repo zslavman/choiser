@@ -53,6 +53,7 @@ package
 		private var close_config:Tween;
 		private var clouds_wee	:Tween;
 		private var stars_wee	:Tween;
+		private var pusk_block_wee:Tween;
 		private var lineStart_y;
 		private var tween_duration:Number = 0.1;
 		
@@ -63,6 +64,7 @@ package
 		private var wheel_sound_double		:Sound = new _wheel_sound_double();
 		private var key_click				:Sound = new _key_click();
 		private var dawning_sound			:Sound = new _dawning_sound();
+		private var fuh						:Sound = new _fuh();
 
 		private var back_channel			:SoundChannel = new SoundChannel();
 		private var s_transform				:SoundTransform;
@@ -71,6 +73,7 @@ package
 		private var rot_duration		:Number = 3000; // мс, устанавливать не менее 2000 
 		private var Timer_DurationRot	:Timer = new Timer(250);
 		private var Timer_Listing		:Timer = new Timer(80);
+		private var Timer_Begin_Animate	:Timer = new Timer(100);
 		
 		private var phraza_temp:String; // сформировавшаяся фраза из имён и действия
 		
@@ -107,10 +110,12 @@ package
 			phrazes_arr = Model.Phrazes_arr;
 		
 			pusk_block.button1.addEventListener(MouseEvent.CLICK, button1_MOUSE_DOWN);
+			pusk_block.alpha = 0;
 			config_bar_on.addEventListener(MouseEvent.CLICK, config_bar_on_CLICK);
 			
 			Timer_DurationRot.addEventListener(TimerEvent.TIMER, func_Timer_DurationRot);
 			Timer_Listing.addEventListener(TimerEvent.TIMER, func_Timer_Listing);
+			Timer_Begin_Animate.addEventListener(TimerEvent.TIMER, func_Timer_Begin_Animate);
 			
 			myStage.addEventListener(KeyboardEvent.KEY_DOWN, Key_DOWN);
 			
@@ -136,19 +141,9 @@ package
 			back_channel.addEventListener(Event.SOUND_COMPLETE, loopSound);
 			
 			
+			boundingBox = new Rectangle(0, 0, 640, 0);
 			
-			boundingBox = new Rectangle(0, 0, myStage.stageWidth, 0);
-			
-			if (model.First_time) {
-				splash_screen = new Splash_screen(model);
-				addChild(splash_screen);
-				addEventListener(Event.ENTER_FRAME, checkClosed);
-			}
-			
-			// фонтан сердечек
-			//fountain = new Fountain();
-			//addChild(fountain);
-			
+
 			// вода
 			noise1 = new Water(BG_movie.obj1, BG_movie.obj1.width, BG_movie.obj1.height, 400, 5); //800, 5
 			addChild(noise1);
@@ -157,22 +152,26 @@ package
 			addChild(noise2);
 			
 			// звезды
-			stars = new StarrySky(myStage.stageWidth, 380);
-			BG_movie.addChildAt(stars, 5);
-			stars_wee = new Tween(stars, "y", None.easeOut, -380, 0, 0.5, true);
+			stars = new StarrySky(640, 380);
 			
 			// тучки
-			clouds = new Clouds(myStage.stageWidth, 350, 1, 0, false);
-			clouds.x = -myStage.stageWidth;
-			BG_movie.addChildAt(clouds, 6);
-			clouds_wee = new Tween(clouds, "x", Elastic.easeOut, clouds.x, 0, 1.5, true);
-			
+			clouds = new Clouds(640, 350, 1, 0, false);
+						
 			// гугл
 			love_tracker = new GATracker(myStage, ACCOUNT_ID, BRIDGE_MODE, DEBUG_MODE);
 			
 			// фреймрейтер
 			frameRater = new FrameRater();
 			addChild(frameRater);
+			
+			Timer_Begin_Animate.start();
+			
+			if (model.First_time) {
+				Timer_Begin_Animate.reset();
+				splash_screen = new Splash_screen(model);
+				addChild(splash_screen);
+				addEventListener(Event.ENTER_FRAME, checkClosed);
+			}
 		}
 		
 		
@@ -207,6 +206,7 @@ package
 			
 			if (!model.First_time) {
 			
+				Timer_Begin_Animate.start();
 				changeTurn('dont_turn');
 				splash_screen = null;
 				removeEventListener(Event.ENTER_FRAME, checkClosed);
@@ -248,7 +248,7 @@ package
 			
 			if (!model.Need_noMOVE) {
 				if (Position_X > 500) { // если менюшку отпустили на позиции Х-координаты больше 500 то возвращаем менюшку вправо
-					open_config = new Tween(config_bar, "x", TweenSmClass, config_bar.x, myStage.stageWidth, TweenSpeed, true);
+					open_config = new Tween(config_bar, "x", TweenSmClass, config_bar.x, 640, TweenSpeed, true);
 					
 				} 
 				else { // иначе влево
@@ -318,19 +318,19 @@ package
 				config_bar = new Config_bar(model, this, stage);
 				config_bar.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_MOUSE_DOWN);
 				addChild(config_bar);
-				config_bar.scaleX = config_bar.scaleY = Model.scaler;
 				if (frameRater != null) addChild(frameRater); // для поднятия в списке отображения
 			
 				// создание маски для экрана настроек
 				mask_config = new Sprite();
 				mask_config.graphics.beginFill(0x000000, 1);
-				mask_config.graphics.drawRect(0, 0, myStage.stageWidth, myStage.stageHeight);
+				mask_config.graphics.drawRect(0, 0, 640, 1136);
 				mask_config.graphics.endFill();
 				addChild(mask_config);
+				
 				config_bar.mask = mask_config;
 
 				if (config_bar.x == 0) {
-					open_config = new Tween (config_bar, 'x', Strong.easeOut, 0, myStage.stageWidth, 1, true);
+					open_config = new Tween (config_bar, 'x', Strong.easeOut, 0, 640, 1, true);
 					open_config.addEventListener(TweenEvent.MOTION_FINISH, after_MOTION_FINISH);
 				}
 			}
@@ -367,9 +367,9 @@ package
 			
 			key_click.play();
 			
-			if (config_bar.x == myStage.stageWidth) {
+			if (config_bar.x == 640) {
 				model.Need_noMOVE = true;
-				close_config = new Tween (config_bar, 'x', Strong.easeOut, myStage.stageWidth, 0, 1, true);
+				close_config = new Tween (config_bar, 'x', Strong.easeOut, 640, 0, 1, true);
 				close_config.addEventListener(TweenEvent.MOTION_FINISH, Kill_config);
 				changeTurn('dont_turn');
 				resetData_on_Circles();
@@ -624,6 +624,54 @@ package
 				right_type.w2.text = copy_words_arr[circles];
 			}
 		}
+		
+		
+		
+		
+		
+		
+		/*********************************************
+		 *               Таймер анимации             *
+		 *               появления сцены             *
+		 */ //****************************************
+		private function func_Timer_Begin_Animate(event:TimerEvent):void { 
+			
+			switch (Timer_Begin_Animate.currentCount) {
+				
+				case 2:
+					fuh.play();
+					BG_movie.addChildAt(stars, 5);
+					stars_wee = new Tween(stars, "y", None.easeOut, -380, 0, 0.5, true);
+					break;
+					
+				case 7:
+					fuh.play();
+					BG_movie.addChildAt(clouds, 6);
+					clouds_wee = new Tween(clouds, "x", Back.easeOut, -640, 0, 1, true);
+					break;
+					
+				case 8:
+					//
+					break;
+				
+				case 9:
+					//
+					break;
+				
+				case 10:
+					fuh.play();
+					pusk_block_wee = new Tween(pusk_block, "alpha", None.easeOut, 0, 1, 0.6, true);
+					Timer_Begin_Animate.reset();
+					break;
+				
+
+			}
+			
+		}
+		
+		
+		
+		
 		
 		
 		

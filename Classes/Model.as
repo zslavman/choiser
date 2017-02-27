@@ -15,7 +15,6 @@ package
 	 
 	public class Model{
 	
-		public static var scaler:Number = 0.79;
 		public static var myFormat	:TextFormat = new TextFormat();
 		public static var phrazes_arr:Array = [];
 		
@@ -68,8 +67,8 @@ package
 			phrazes_arr[1] = ['. . .'];
 			phrazes_arr[2] = ['Сделать'];
 			phrazes_arr[3] = ['что-то :)'];
-			phrazes_arr[4] = ['Партнер1'];
-			phrazes_arr[5] = ['Партнер2'];
+			phrazes_arr[4] = ['Партнер 1:'];
+			phrazes_arr[5] = ['Партнер 2:'];
 			phrazes_arr[6] = [' нужно:'];
 			phrazes_arr[7] = ['Ходит '];
 			phrazes_arr[8] = ['Сброс'];
@@ -98,7 +97,7 @@ package
 			
 			phrazes_arr[30] = ['При каждом ходе случайным образом выпадает пара слов (желание) которое необходимо исполнить Вашему партнеру.\rВ настройках Вы можете задавать свои желания.'];
 			
-			phrazes_arr[31] = ['Введите свои имена, ведь Вы не хотите быть просто "Партнер1" и "Партнер2"?'];
+			phrazes_arr[31] = ['Введите свои имена, ведь Вы не хотите быть просто "Партнер 1" и "Партнер 2"?'];
 			
 			
 		
