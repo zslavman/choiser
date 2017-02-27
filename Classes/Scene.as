@@ -51,6 +51,8 @@ package
 		private var roleTween1	:Tween;
 		private var roleTween2	:Tween;
 		private var close_config:Tween;
+		private var clouds_wee	:Tween;
+		private var stars_wee	:Tween;
 		private var lineStart_y;
 		private var tween_duration:Number = 0.1;
 		
@@ -61,10 +63,9 @@ package
 		private var wheel_sound_double		:Sound = new _wheel_sound_double();
 		private var key_click				:Sound = new _key_click();
 		private var dawning_sound			:Sound = new _dawning_sound();
+
 		private var back_channel			:SoundChannel = new SoundChannel();
 		private var s_transform				:SoundTransform;
-		private var channel_volume			:Number = 0.99; //0.25
-		private var default_channel_volume	:Number;
 		private var pausePosition			:int;
 		
 		private var rot_duration		:Number = 3000; // мс, устанавливать не менее 2000 
@@ -125,13 +126,16 @@ package
 			pusk_block.button1.buttonMode = true;
 			config_bar_on.buttonMode = true;
 			
-			s_transform = new SoundTransform (channel_volume);
-			default_channel_volume = channel_volume;
+			
+			// фоновая музыка
+			s_transform = new SoundTransform (model.Channel_volume);
 			
 			if (model.MUTE) setVolume(0);
 		
 			back_channel = dawning_sound.play(0, 1, s_transform);
 			back_channel.addEventListener(Event.SOUND_COMPLETE, loopSound);
+			
+			
 			
 			boundingBox = new Rectangle(0, 0, myStage.stageWidth, 0);
 			
@@ -155,10 +159,13 @@ package
 			// звезды
 			stars = new StarrySky(myStage.stageWidth, 380);
 			BG_movie.addChildAt(stars, 5);
+			stars_wee = new Tween(stars, "y", None.easeOut, -380, 0, 0.5, true);
 			
 			// тучки
 			clouds = new Clouds(myStage.stageWidth, 350, 1, 0, false);
+			clouds.x = -myStage.stageWidth;
 			BG_movie.addChildAt(clouds, 6);
+			clouds_wee = new Tween(clouds, "x", Elastic.easeOut, clouds.x, 0, 1.5, true);
 			
 			// гугл
 			love_tracker = new GATracker(myStage, ACCOUNT_ID, BRIDGE_MODE, DEBUG_MODE);
@@ -172,6 +179,27 @@ package
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		// ф-ция установки громкости
+		public function setVolume(vol:Number):void{ 
+		
+			model.Channel_volume = vol;
+			
+			s_transform = back_channel.soundTransform;
+			s_transform.volume = model.Channel_volume;
+			back_channel.soundTransform = s_transform;
+		}
+		
+		
+		
+
 		
 		// ф-ция проверяющая закрылось ли окно приветствия
 		// вызовется лишь при первом запуске
@@ -287,9 +315,10 @@ package
 			
 			if (config_bar == null) {
 				
-				config_bar = new Config_bar(model, stage);
+				config_bar = new Config_bar(model, this, stage);
 				config_bar.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_MOUSE_DOWN);
 				addChild(config_bar);
+				config_bar.scaleX = config_bar.scaleY = Model.scaler;
 				if (frameRater != null) addChild(frameRater); // для поднятия в списке отображения
 			
 				// создание маски для экрана настроек
@@ -304,8 +333,6 @@ package
 					open_config = new Tween (config_bar, 'x', Strong.easeOut, 0, myStage.stageWidth, 1, true);
 					open_config.addEventListener(TweenEvent.MOTION_FINISH, after_MOTION_FINISH);
 				}
-				config_bar.mute.addEventListener(MouseEvent.MOUSE_DOWN, mute_MOUSE_DOWN);
-				config_bar.mute.buttonMode = true;
 			}
 		}
 		
@@ -328,35 +355,7 @@ package
 		
 		
 		
-		/*********************************************
-		 *              Кнопка "MUTE"                *
-		 *                                           *
-		 */ //****************************************
-		private function mute_MOUSE_DOWN(event:MouseEvent):void {
-		
-			key_click.play();
-			
-			if (model.MUTE) {
-				model.MUTE = false;
-				config_bar.mute.gotoAndStop('sound_on');
-				setVolume(default_channel_volume);
-			}
-			else {
-				model.MUTE = true;
-				config_bar.mute.gotoAndStop('sound_off');
-				setVolume(0);
-			}
-		}
-		
-		
-		private function setVolume(vol:Number):void{ 
-		
-			channel_volume = vol;
-			
-			s_transform = back_channel.soundTransform;
-			s_transform.volume = channel_volume;
-			back_channel.soundTransform = s_transform;
-		}
+
 		
 		
 		
@@ -388,7 +387,6 @@ package
 		public function Kill_config(event:TweenEvent):void {
 			
 			config_bar.config_bar_off.removeEventListener(MouseEvent.MOUSE_DOWN, config_bar_off_MOUSE_DOWN);
-			config_bar.mute.removeEventListener(MouseEvent.MOUSE_DOWN, mute_MOUSE_DOWN);
 			removeChild(mask_config);
 			mask_config = null;
 			removeChild(config_bar);

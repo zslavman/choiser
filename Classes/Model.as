@@ -15,6 +15,7 @@ package
 	 
 	public class Model{
 	
+		public static var scaler:Number = 0.79;
 		public static var myFormat	:TextFormat = new TextFormat();
 		public static var phrazes_arr:Array = [];
 		
@@ -26,6 +27,8 @@ package
 		private var spinning_flag	:Boolean = false; // флаг наличия вращения колеса
 		private var player_flag		:Boolean = true; // флаг какой игрок ходит, true - первый, false - второй
 		private var mute_flag		:Boolean; // флаг mute
+		private var channel_volume	:Number = 1; // громкость канала
+		private var default_channel_volume	:Number; // громкость канала поумолчанию
 		
 		private var anim_flag		:String; // флаг - вид анимации колес
 		
@@ -39,12 +42,14 @@ package
 		
 		
 		
-		
+
 		
 		
 		
 
 		public function Model() {
+			
+			default_channel_volume = channel_volume;
 		
 			// принудительная установка формата, для того, что бы строки не скукоживались, флеш почемуто ставит минусовой кернинг многострочникам
 			myFormat.leading = 6;
@@ -297,5 +302,22 @@ package
 			first_time = value;
 			SharedObj.data.first_time = first_time;
 		}
+		
+		
+		
+		
+		public function get Channel_volume():Number {
+			return channel_volume;
+		}
+		public function set Channel_volume(value:Number):void {
+			channel_volume = value;
+		}
+		
+		
+		public function get Default_channel_volume():Number {
+			return default_channel_volume;
+		}
+		
+		
 	}
 }

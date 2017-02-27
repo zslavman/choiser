@@ -29,7 +29,7 @@ package
 
 			// линка с почтой:
 			mailCSS.setStyle("a:link", {color:'#C1C1C1', textDecoration:'none'}); // 0000CC
-			mailCSS.setStyle("a:hover", { color:'#BB0A0A', textDecoration:'underline' } ); // 0000FF
+			mailCSS.setStyle("a:hover", { color:'#BB0A0A', textDecoration:'underline'} ); // 0000FF
 			
 			author.styleSheet = mailCSS;
 			author.addEventListener(TextEvent.LINK, linkHandler); // слушатель линка в тексте

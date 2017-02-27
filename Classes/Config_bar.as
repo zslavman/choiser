@@ -25,6 +25,7 @@ package
 	public class Config_bar extends Sprite {
 	
 		public var about_scr	:About;
+		private var scene		:Scene;
 		private var fountain	:Fountain;
 		private var model		:Model;
 		private var myScroll	:CustomScroll;
@@ -42,15 +43,15 @@ package
 		private var phrazes_arr:Array = [];
 		private var words_count:uint = 1; // число для листания слов
 		private var selector_flag:Boolean = false; // флаг для определения что выводить (глагол или имя существ.) 
+		
+		
+		
+		
+		
+		public function Config_bar(_data:Model, _scene:Scene, stage:Stage){ 
 
-		
-		
-		
-		
-		
-		public function Config_bar(_data:Model, stage:Stage){ 
-
-			model = _data;	
+			model = _data;
+			scene = _scene;
 			myStage = stage;
 			phrazes_arr = Model.Phrazes_arr;
 			
@@ -70,6 +71,11 @@ package
 			about_button.addEventListener(MouseEvent.MOUSE_DOWN, about_button_MOUSE_DOWN);
 			about_button.buttonMode = true;
 			
+			mute.addEventListener(MouseEvent.MOUSE_DOWN, mute_MOUSE_DOWN);
+			mute.buttonMode = true;
+			
+			if (!model.MUTE) mute.gotoAndStop('sound_on');
+			else mute.gotoAndStop('sound_off');
 			
 			name1.addEventListener(Event.CHANGE, textInputCapture);
 			name2.addEventListener(Event.CHANGE, textInputCapture);
@@ -83,9 +89,6 @@ package
 				}
 			}
 			
-			if (!model.MUTE) mute.gotoAndStop('sound_on');
-			else mute.gotoAndStop('sound_off');
-			
 			// Добавление класса Скрола текстового поля
 			myScroll = new CustomScroll(myStage, track4_mc, output, up4_btn, down4_btn, model);
 		
@@ -97,11 +100,45 @@ package
 			
 			reset_level.line.scaleX = 0;
 			reset_level.visible = false;
+			
 		}
 		
 
 		
 
+		
+		
+		
+		
+		
+		/*********************************************
+		 *              Кнопка "MUTE"                *
+		 *                                           *
+		 */ //****************************************
+		private function mute_MOUSE_DOWN(event:MouseEvent):void {
+		
+			key_click.play();
+			
+			if (model.MUTE) {
+				model.MUTE = false;
+				mute.gotoAndStop('sound_on');
+				scene.setVolume(model.Default_channel_volume);
+			}
+			else {
+				model.MUTE = true;
+				mute.gotoAndStop('sound_off');
+				scene.setVolume(0);
+			}
+		}
+		
+		
+
+		
+		
+		
+		
+		
+		
 		
 		
 		
@@ -208,9 +245,10 @@ package
 			model.Anim_flag = model.Animation_kind[0];
 			model.First_time = true;
 			
-			model.MUTE = false;
-			mute.gotoAndStop('sound_on');
-			
+			if (model.MUTE) {
+				mute.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN));
+			}
+
 			model.Storage = {
 				phraza:[],
 				cur_date:[],

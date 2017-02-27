@@ -127,6 +127,7 @@ package
 			
 			var view:Scene = new Scene(model_data, stage);
 			addChild(view);
+			view.scaleX = view.scaleY = Model.scaler;
 			
 			// удаляем из stage прелодер
             //this.parent.removeChild(this);

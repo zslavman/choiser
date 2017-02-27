@@ -51,7 +51,7 @@ package {
 		
 		public function Clouds(w:int = 300, h:int = 200, scX:int = -1, scY:int = 2, useBG:Boolean = true, col:uint = 0x2255aa) {
 			
-			this.alpha = 0.15;
+			this.alpha = 0.2;
 			
 			displayWidth = w;
 			displayHeight = h;
