@@ -37,9 +37,10 @@ package
 	
 		public var splash_screen:Splash_screen;
 		public var config_bar	:Config_bar;
+		public var mask_main	:Sprite
+		//private var mask_config	:Sprite;
 		private var fountain	:Fountain;
 		private var model		:Model;
-		private var mask_config	:Sprite;
 		private var myStage		:Stage;
 		private var noise1		:Water;
 		private var noise2		:Water;
@@ -51,9 +52,16 @@ package
 		private var roleTween1	:Tween;
 		private var roleTween2	:Tween;
 		private var close_config:Tween;
+		
 		private var clouds_wee	:Tween;
 		private var stars_wee	:Tween;
 		private var pusk_block_wee:Tween;
+		private var word1_wee	:Tween;
+		private var word2_wee	:Tween;
+		private var word3_wee	:Tween;
+		private var cfg_wee		:Tween;
+		
+		
 		private var lineStart_y;
 		private var tween_duration:Number = 0.1;
 		
@@ -110,7 +118,6 @@ package
 			phrazes_arr = Model.Phrazes_arr;
 		
 			pusk_block.button1.addEventListener(MouseEvent.CLICK, button1_MOUSE_DOWN);
-			pusk_block.alpha = 0;
 			config_bar_on.addEventListener(MouseEvent.CLICK, config_bar_on_CLICK);
 			
 			Timer_DurationRot.addEventListener(TimerEvent.TIMER, func_Timer_DurationRot);
@@ -147,7 +154,6 @@ package
 			// вода
 			noise1 = new Water(BG_movie.obj1, BG_movie.obj1.width, BG_movie.obj1.height, 400, 5); //800, 5
 			addChild(noise1);
-			//
 			noise2 = new Water(BG_movie.obj2, BG_movie.obj2.width, BG_movie.obj2.height, 900, 50, 600, 50);
 			addChild(noise2);
 			
@@ -156,13 +162,24 @@ package
 			
 			// тучки
 			clouds = new Clouds(640, 350, 1, 0, false);
-						
+			
 			// гугл
 			love_tracker = new GATracker(myStage, ACCOUNT_ID, BRIDGE_MODE, DEBUG_MODE);
 			
 			// фреймрейтер
 			frameRater = new FrameRater();
 			addChild(frameRater);
+			
+			
+			// маска для прятания за экраном: текстовых полей, конфига и окна "О программе"
+			createMainMask();
+			
+			// начальные состояния для анимации
+			pusk_block.alpha = 0;
+			turn.x = whom.x = who.x = -640;
+			config_bar_on.scaleX = config_bar_on.scaleY = 0;
+			BG_movie.palm1.alpha = 0;
+			
 			
 			Timer_Begin_Animate.start();
 			
@@ -319,15 +336,6 @@ package
 				config_bar.addEventListener(MouseEvent.MOUSE_DOWN, config_bar_MOUSE_DOWN);
 				addChild(config_bar);
 				if (frameRater != null) addChild(frameRater); // для поднятия в списке отображения
-			
-				// создание маски для экрана настроек
-				mask_config = new Sprite();
-				mask_config.graphics.beginFill(0x000000, 1);
-				mask_config.graphics.drawRect(0, 0, 640, 1136);
-				mask_config.graphics.endFill();
-				addChild(mask_config);
-				
-				config_bar.mask = mask_config;
 
 				if (config_bar.x == 0) {
 					open_config = new Tween (config_bar, 'x', Strong.easeOut, 0, 640, 1, true);
@@ -338,6 +346,26 @@ package
 		
 		
 
+		
+		
+		
+		
+		
+		
+		/*********************************************
+		 *          Создание основной маски          *
+		 *                                           *
+		 */ //****************************************
+		private function createMainMask():void {
+			
+			mask_main = new Sprite();
+			mask_main.graphics.beginFill(0x000000, 1);
+			mask_main.graphics.drawRect(0, 0, 640, 1136);
+			mask_main.graphics.endFill();
+			addChild(mask_main);
+			
+			this.mask = mask_main;
+		}
 	
 		
 		
@@ -387,10 +415,10 @@ package
 		public function Kill_config(event:TweenEvent):void {
 			
 			config_bar.config_bar_off.removeEventListener(MouseEvent.MOUSE_DOWN, config_bar_off_MOUSE_DOWN);
-			removeChild(mask_config);
-			mask_config = null;
 			removeChild(config_bar);
 			config_bar = null;
+			//removeChild(mask_config);
+			//mask_config = null;
 			model.Need_noMOVE = false;
 			//NOTE: принудительная установка фокуса для возможности послед. нажатия Space
 			stage.focus = config_bar_on;
@@ -651,14 +679,21 @@ package
 					break;
 					
 				case 8:
-					//
+					word1_wee = new Tween(turn, "x", Back.easeOut, -640, 33, 0.5, true);
+					fuh.play();
 					break;
 				
 				case 9:
-					//
+					word2_wee = new Tween(whom, "x", Back.easeOut, -640, 33, 0.5, true);
+					fuh.play();
 					break;
 				
 				case 10:
+					cfg_wee = new Tween(config_bar_on, "scaleX", Back.easeOut, 0, 1, 0.7, true);
+					cfg_wee = new Tween(config_bar_on, "scaleY", Back.easeOut, 0, 1, 0.7, true);
+					
+					word3_wee = new Tween(who, "x", Back.easeOut, -640, 33, 0.5, true);
+					
 					fuh.play();
 					pusk_block_wee = new Tween(pusk_block, "alpha", None.easeOut, 0, 1, 0.6, true);
 					Timer_Begin_Animate.reset();

@@ -218,15 +218,18 @@ package
 
 		
 		
+		
+		
+		
 		/*********************************************
 		 *           Таймер зажимания кнопки         *
 		 *                  "RESET"                  *
 		 */ //****************************************
 		private function func_Timer_Press(event:TimerEvent):void{ 
 
-			reset_level.line.scaleX = Timer_Press.currentCount / 50;
+			reset_level.line.scaleX = Timer_Press.currentCount / 40;
 			
-			if (Timer_Press.currentCount == 50) {
+			if (Timer_Press.currentCount == 40) {
 				Timer_Press.reset();
 				Load_default();
 			}
@@ -366,11 +369,6 @@ package
 					if (what.text.length > 8) cuterStr(8, what);
 					model.Words_arr[words_count] = what.text;
 				}
-				
-				//var temp_arr:Array = model.Verb_arr;
-				//temp_arr[words_count] = what.text;
-				//model.Verb_arr = temp_arr;
-				//trace ("temp_arr = " + temp_arr);
 			}
 		}
 		
@@ -413,6 +411,8 @@ package
 		 */ //****************************************
 		private function about_button_MOUSE_DOWN(event:MouseEvent):void {
 			
+			key_click.play();
+
 			about_scr = new About();
 			about_scr.addEventListener(MouseEvent.CLICK, about_scr_CLICK);
 			parent.addChild(about_scr);
@@ -421,16 +421,13 @@ package
 			fountain = new Fountain(640, 1136);
 			parent.addChild(fountain);
 			
-			
 			// создание маски для экрана 'О программе'
-			mask_about = new Sprite();
-			mask_about.graphics.beginFill(0x000000, 1);
-			mask_about.graphics.drawRect(0, 0, 640, 1136);
-			mask_about.graphics.endFill();
-			parent.addChild(mask_about);
-			parent.mask = mask_about;
-			
-			key_click.play();
+			//mask_about = new Sprite();
+			//mask_about.graphics.beginFill(0x000000, 1);
+			//mask_about.graphics.drawRect(0, 0, 640, 1136);
+			//mask_about.graphics.endFill();
+			//parent.addChild(mask_about);
+			//parent.mask = mask_about;
 		}
 		
 		
@@ -443,13 +440,11 @@ package
 			
 			about_scr.removeEventListener(MouseEvent.CLICK, about_scr_CLICK);
 			parent.removeChild(about_scr);
-			parent.removeChild(mask_about);
 			fountain.destroy();
 			parent.removeChild(fountain);
-			mask_about = null;
 			about_scr = null;
 			fountain = null;
-			
+
 			Blur('revers');
 		}
 		
