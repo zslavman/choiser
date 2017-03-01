@@ -60,6 +60,9 @@ package
 		private var word2_wee	:Tween;
 		private var word3_wee	:Tween;
 		private var cfg_wee		:Tween;
+		private var palm1_wee	:Tween;
+		private var palm2_wee	:Tween;
+		private var moon_wee	:Tween;
 		
 		
 		private var lineStart_y;
@@ -73,6 +76,9 @@ package
 		private var key_click				:Sound = new _key_click();
 		private var dawning_sound			:Sound = new _dawning_sound();
 		private var fuh						:Sound = new _fuh();
+		private var shrub					:Sound = new _shrub();
+		private var bung					:Sound = new _bung();
+		private var rope_fire				:Sound = new _rope_fire();
 
 		private var back_channel			:SoundChannel = new SoundChannel();
 		private var s_transform				:SoundTransform;
@@ -81,7 +87,7 @@ package
 		private var rot_duration		:Number = 3000; // мс, устанавливать не менее 2000 
 		private var Timer_DurationRot	:Timer = new Timer(250);
 		private var Timer_Listing		:Timer = new Timer(80);
-		private var Timer_Begin_Animate	:Timer = new Timer(100);
+		private var Timer_Begin_Animate	:Timer = new Timer(200);
 		
 		private var phraza_temp:String; // сформировавшаяся фраза из имён и действия
 		
@@ -178,7 +184,9 @@ package
 			pusk_block.alpha = 0;
 			turn.x = whom.x = who.x = -640;
 			config_bar_on.scaleX = config_bar_on.scaleY = 0;
-			BG_movie.palm1.alpha = 0;
+			BG_movie.palm1.tree_left.x = -400; // 0 - default
+			BG_movie.palm2.tree_right.x = 640; // 315 - default
+			BG_movie.moon.y = -200; // 157 - default
 			
 			
 			Timer_Begin_Animate.start();
@@ -666,40 +674,60 @@ package
 			
 			switch (Timer_Begin_Animate.currentCount) {
 				
+				case 1:
+					fuh.play();
+					word1_wee = new Tween(turn, "x", Back.easeOut, -640, 33, 0.5, true);
+					break;
+					
 				case 2:
 					fuh.play();
-					BG_movie.addChildAt(stars, 5);
-					stars_wee = new Tween(stars, "y", None.easeOut, -380, 0, 0.5, true);
+					word3_wee = new Tween(who, "x", Back.easeOut, -640, 33, 0.5, true);
+					break;
+					
+				case 3:
+					fuh.play();
+					word2_wee = new Tween(whom, "x", Back.easeOut, -640, 33, 0.5, true);
+					break;
+				
+				case 4:
+					rope_fire.play();
+					pusk_block_wee = new Tween(pusk_block, "alpha", None.easeOut, 0, 1, 0.3, true);
+					break;
+				
+				case 6:
+					shrub.play();
+					palm1_wee = new Tween(BG_movie.palm1.tree_left, "x", Back.easeOut, -300, 0, 1, true);
+					palm1_wee  = new Tween(BG_movie.palm1.tree_left, "rotation", Back.easeOut, -20, 0, 1, true);
+
 					break;
 					
 				case 7:
-					fuh.play();
-					BG_movie.addChildAt(clouds, 6);
-					clouds_wee = new Tween(clouds, "x", Back.easeOut, -640, 0, 1, true);
+					shrub.play();
+					palm2_wee = new Tween(BG_movie.palm2.tree_right, "x", Back.easeOut, 640, 315, 1, true);
+					palm2_wee  = new Tween(BG_movie.palm2.tree_right, "rotation", Back.easeOut, 20, 0, 1, true);
 					break;
 					
 				case 8:
-					word1_wee = new Tween(turn, "x", Back.easeOut, -640, 33, 0.5, true);
-					fuh.play();
+					BG_movie.addChildAt(stars, 5);
+					stars_wee = new Tween(stars, "y", Strong.easeOut, -380, 0, 1, true);
 					break;
-				
-				case 9:
-					word2_wee = new Tween(whom, "x", Back.easeOut, -640, 33, 0.5, true);
-					fuh.play();
-					break;
-				
+					
 				case 10:
+					moon_wee = new Tween(BG_movie.moon, "y", Strong.easeOut, -200, 157, 3, true);
+					
+					BG_movie.addChildAt(clouds, 6);
+					clouds_wee = new Tween(clouds, "x", Back.easeOut, -640, 0, 1, true);
+					
+					break;
+					
+				case 13:
+					bung.play();
 					cfg_wee = new Tween(config_bar_on, "scaleX", Back.easeOut, 0, 1, 0.7, true);
 					cfg_wee = new Tween(config_bar_on, "scaleY", Back.easeOut, 0, 1, 0.7, true);
-					
-					word3_wee = new Tween(who, "x", Back.easeOut, -640, 33, 0.5, true);
-					
-					fuh.play();
-					pusk_block_wee = new Tween(pusk_block, "alpha", None.easeOut, 0, 1, 0.6, true);
+
 					Timer_Begin_Animate.reset();
 					break;
-				
-
+					
 			}
 			
 		}

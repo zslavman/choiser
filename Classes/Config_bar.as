@@ -288,8 +288,8 @@ package
 		public function TextFill():void{ 
 		
 			mode.text = model.Anim_flag;
-			partner1.text = phrazes_arr[4];
-			partner2.text = phrazes_arr[5];
+			partner1.text = phrazes_arr[4] + ':';
+			partner2.text = phrazes_arr[5] + ':';
 			name1.text = model.Players_names[0];
 			name2.text = model.Players_names[1];
 			what.text = model.Verb_arr[1];

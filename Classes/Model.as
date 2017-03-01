@@ -67,8 +67,8 @@ package
 			phrazes_arr[1] = ['. . .'];
 			phrazes_arr[2] = ['Сделать'];
 			phrazes_arr[3] = ['что-то :)'];
-			phrazes_arr[4] = ['Партнер 1:'];
-			phrazes_arr[5] = ['Партнер 2:'];
+			phrazes_arr[4] = ['Партнер 1'];
+			phrazes_arr[5] = ['Партнер 2'];
 			phrazes_arr[6] = [' нужно:'];
 			phrazes_arr[7] = ['Ходит '];
 			phrazes_arr[8] = ['Сброс'];
